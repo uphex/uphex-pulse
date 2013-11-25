@@ -21,6 +21,9 @@ gem 'activerecord', :require => 'active_record'
 gem 'pg'
 
 # Test requirements
+group :test do
+  gem 'rspec'
+end
 
 # Padrino Stable Gem
 gem 'padrino'
