@@ -17,6 +17,9 @@ gem 'rake'
 gem 'slim'
 gem 'activerecord', :require => 'active_record'
 
+# Database
+gem 'pg'
+
 # Test requirements
 
 # Padrino Stable Gem
