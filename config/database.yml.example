@@ -1,0 +1,6 @@
+---
+development:
+  adapter: postgresql
+  username: postgres
+  database: uphex-development
+  host: localhost
