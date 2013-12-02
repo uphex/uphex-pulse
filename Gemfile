@@ -25,5 +25,5 @@ group :test do
   gem 'rspec'
 end
 
-# Padrino Stable Gem
-gem 'padrino'
+# Padrino
+gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
