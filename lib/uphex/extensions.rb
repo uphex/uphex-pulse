@@ -1,0 +1,1 @@
+require 'uphex/extensions/object'
