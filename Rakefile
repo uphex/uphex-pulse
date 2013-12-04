@@ -7,3 +7,4 @@ PadrinoTasks.init
 
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
+task :spec => 'ar:abort_if_pending_migrations'
