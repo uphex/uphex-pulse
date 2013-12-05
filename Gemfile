@@ -20,6 +20,9 @@ gem 'activerecord', :require => 'active_record'
 # Database
 gem 'pg'
 
+# Authentication
+gem 'warden'
+
 # Test requirements
 group :test do
   gem 'rspec'
