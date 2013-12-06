@@ -23,6 +23,9 @@ gem 'pg'
 # Authentication
 gem 'warden'
 
+# Encryption
+gem 'bcrypt-ruby'
+
 # Test requirements
 group :test do
   gem 'rspec'
