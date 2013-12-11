@@ -28,6 +28,7 @@ gem 'bcrypt-ruby'
 
 # Test requirements
 group :test do
+  gem 'byebug'
   gem 'rspec'
   gem 'rack-test'
   gem 'shoulda-matchers'
