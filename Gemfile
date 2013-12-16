@@ -31,7 +31,8 @@ group :test do
   gem 'byebug'
   gem 'rspec'
   gem 'rack-test'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers',
+    :git => 'git@github.com:thoughtbot/shoulda-matchers.git'
 end
 
 # Padrino
