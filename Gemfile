@@ -23,6 +23,8 @@ gem 'pg'
 # Test requirements
 group :test do
   gem 'rspec'
+  gem 'rack-test'
+  gem 'shoulda-matchers'
 end
 
 # Padrino
