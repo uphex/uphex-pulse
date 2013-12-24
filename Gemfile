@@ -14,7 +14,7 @@ source 'https://rubygems.org'
 gem 'rake'
 
 # Component requirements
-gem 'slim'
+gem 'haml'
 gem 'activerecord', :require => 'active_record'
 
 # Database

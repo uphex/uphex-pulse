@@ -3,7 +3,7 @@
 :test: rspec
 :mock: none
 :script: none
-:renderer: slim
+:renderer: haml
 :stylesheet: none
 :namespace: UpHex
 :migration_format: number
