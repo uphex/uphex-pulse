@@ -7,13 +7,23 @@ def stacked_middlewares(app, args)
   middlewares = stacks.map{|stack| stack[instance].class}
   middlewares.reject! { |m| m.to_s !~ /#{args.query}/ } if args.query.present?
   return if Padrino.middleware.empty? && middlewares.empty?
-  shell.say "\nApplication: #{app.app_class}", :yellow
+
+  header = "  Application: #{app.app_class}"
+  shell.say "\n" + header, :yellow
+
   Padrino.middleware.each do |m|
     shell.say("    #{m.first}")
   end
+
+  middleware_header = '⇑ ' + "-" * header.length + ' ⇑'
+  shell.say(middleware_header + " >> Padrino stack", :yellow)
+
   middlewares.each do |m|
     shell.say("    #{m}")
   end
+
+  middleware_header = '⇑ ' + "-" * header.length + ' ⇑'
+  shell.say(middleware_header + " >> Rack stack", :yellow)
 end
  
 desc "Displays a listing of the Rack middleware stack within a project, optionally only those matched by [query]"
