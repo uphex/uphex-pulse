@@ -1,0 +1,16 @@
+%h3 Sign In
+
+= form_for @user, '/sessions' do |f|
+  %p
+    = f.error_messages
+
+  %p
+    = f.label :email
+    = f.text_field :email
+
+  %p
+    = f.label :password
+    = f.password_field :password
+
+  %p
+    = f.submit 'sign in'

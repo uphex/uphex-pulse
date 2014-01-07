@@ -5,7 +5,78 @@ module UpHex
     register Padrino::Mailer
     register Padrino::Helpers
 
+    helpers do
+      def warden
+        request.env['warden']
+      end
+
+      def session_info(scope=nil)
+        scope ? warden.session(scope) : scope
+      end
+
+      def authenticated?(scope=nil)
+        scope ? warden.authenticated?(scope) : warden.authenticated?
+      end
+
+      def authenticate(*args)
+        warden.authenticate!(*args)
+      end
+
+      def logout(scopes=nil)
+        scopes ? warden.logout(scopes) : warden.logout
+      end
+
+      def user(scope=nil)
+        scope ? warden.user(scope) : warden.user
+      end
+      alias_method :current_user, :user
+
+      def user=(new_user, opts={})
+        warden.set_user(new_user, opts)
+      end
+      alias_method :current_user=, :user=
+    end
+
     enable :sessions
+
+    ::Warden::Strategies.add :password do
+      def valid?
+        up = params['user']
+        up['email'] || up['password']
+      end
+
+      def authenticate!
+        u = User.find_by_email params['user']['email']
+        m = password_matches?(u.password_hash, params['user']['password']) if u
+        if u && m
+          success! u
+        else
+          fail!
+          throw(:warden, :message => 'authn.failure')
+        end
+      end
+
+      def password_matches?(expected, supplied)
+        BCrypt::Password.new(expected) == supplied
+      end
+    end
+
+    use ::Warden::Manager do |manager|
+      manager.failure_app = self
+      manager.default_strategies :password
+
+      manager.scope_defaults :default,
+        :strategies => [:password],
+        :action     => 'sessions/auth/unauthenticated'
+    end
+
+    ::Warden::Manager.serialize_into_session do |user|
+      user.id
+    end
+
+    ::Warden::Manager.serialize_from_session do |id|
+      User.find_by_id id
+    end
 
     ##
     # Caching support.
