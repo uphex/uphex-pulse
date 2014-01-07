@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 # Distribute your app as a gem
 # gemspec
 
-# Server requirements
-# gem 'thin' # or mongrel
+# Server
 # gem 'trinidad', :platform => 'jruby'
 
 # Optional JSON codec (faster performance)
@@ -14,6 +13,7 @@ source 'https://rubygems.org'
 gem 'rake'
 
 # Component requirements
+gem 'thin'
 gem 'haml'
 gem 'activerecord', :require => 'active_record'
 
