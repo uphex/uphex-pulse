@@ -30,7 +30,8 @@ gem 'bcrypt-ruby'
 group :test do
   gem 'byebug'
   gem 'rspec'
-  gem 'rack-test'
+  gem 'rack-test',
+    :git => 'git@github.com:brynary/rack-test.git'
   gem 'shoulda-matchers',
     :git => 'git@github.com:thoughtbot/shoulda-matchers.git'
 end
