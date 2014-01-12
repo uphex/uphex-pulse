@@ -11,6 +11,7 @@ UpHex::Pulse.controllers :users do
       flash[:notice] = t 'user.created'
       redirect '/'
     else
+      status 422
       render 'users/new'
     end
   end
