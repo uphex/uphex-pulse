@@ -17,6 +17,9 @@ gem 'thin'
 gem 'haml'
 gem 'activerecord', :require => 'active_record'
 
+# Extensions
+gem 'activesupport', :require => false
+
 # Database
 gem 'pg'
 

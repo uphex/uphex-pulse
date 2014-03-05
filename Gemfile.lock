@@ -130,6 +130,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  activesupport
   bcrypt-ruby
   byebug
   haml
