@@ -7,45 +7,6 @@ module UpHex
 
     enable :sessions
 
-    ::Warden::Strategies.add :password do
-      def valid?
-        up = params['user']
-        up['email'] || up['password']
-      end
-
-      def authenticate!
-        u = User.find_by_email params['user']['email']
-        m = password_matches?(u.password_hash, params['user']['password']) if u
-        if u && m
-          success! u
-        else
-          fail!
-          throw(:warden, :message => 'authn.failure')
-        end
-      end
-
-      def password_matches?(expected, supplied)
-        BCrypt::Password.new(expected) == supplied
-      end
-    end
-
-    use ::Warden::Manager do |manager|
-      manager.failure_app = self
-      manager.default_strategies :password
-
-      manager.scope_defaults :default,
-        :strategies => [:password],
-        :action     => 'sessions/auth/unauthenticated'
-    end
-
-    ::Warden::Manager.serialize_into_session do |user|
-      user.id
-    end
-
-    ::Warden::Manager.serialize_from_session do |id|
-      User.find_by_id id
-    end
-
     ##
     # Caching support.
     #
