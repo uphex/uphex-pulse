@@ -92,7 +92,7 @@ GEM
     minitest (4.7.5)
     moneta (0.7.20)
     multi_json (1.9.0)
-    pg (0.17.0)
+    pg (0.17.1)
     polyglot (0.3.4)
     rack (1.5.2)
     rack-protection (1.5.2)
