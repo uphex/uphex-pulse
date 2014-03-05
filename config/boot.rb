@@ -43,3 +43,7 @@ Padrino.after_load do
 end
 
 Padrino.load!
+
+Dir.glob(File.join Padrino.root, 'config', 'initializers', '**', '*').each do |file|
+  require file
+end
