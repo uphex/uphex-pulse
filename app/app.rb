@@ -5,38 +5,6 @@ module UpHex
     register Padrino::Mailer
     register Padrino::Helpers
 
-    helpers do
-      def warden
-        request.env['warden']
-      end
-
-      def session_info(scope=nil)
-        scope ? warden.session(scope) : scope
-      end
-
-      def authenticated?(scope=nil)
-        scope ? warden.authenticated?(scope) : warden.authenticated?
-      end
-
-      def authenticate(*args)
-        warden.authenticate!(*args)
-      end
-
-      def logout(scopes=nil)
-        scopes ? warden.logout(scopes) : warden.logout
-      end
-
-      def user(scope=nil)
-        scope ? warden.user(scope) : warden.user
-      end
-      alias_method :current_user, :user
-
-      def user=(new_user, opts={})
-        warden.set_user(new_user, opts)
-      end
-      alias_method :current_user=, :user=
-    end
-
     enable :sessions
 
     ::Warden::Strategies.add :password do
