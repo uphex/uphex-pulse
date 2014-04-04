@@ -34,6 +34,9 @@ Padrino::Logger::Config[:development][:log_static] = true
 # Add your before (RE)load hooks here
 #
 Padrino.before_load do
+  Dir.glob(File.join Padrino.root, 'config', 'initializers', '**', '*').each do |file|
+    require file
+  end
 end
 
 ##
@@ -43,7 +46,3 @@ Padrino.after_load do
 end
 
 Padrino.load!
-
-Dir.glob(File.join Padrino.root, 'config', 'initializers', '**', '*').each do |file|
-  require file
-end
