@@ -3,7 +3,6 @@ require 'bcrypt'
 
 class User < ActiveRecord::Base
   attr_accessor :password
-  attr_accessor :password_confirmation
 
   validates :name,
     :presence => true
@@ -15,10 +14,6 @@ class User < ActiveRecord::Base
     :presence => true
 
   validates :password,
-    :presence => true,
-    :confirmation => true
-
-  validates :password_confirmation,
     :presence => true
 
   def password=(unencrypted_password)
@@ -28,7 +23,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def password_confirmation=(unencrypted_password)
-    @password_confirmation = unencrypted_password
+  def clear_password
+    @password = ''
   end
 end
