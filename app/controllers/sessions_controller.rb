@@ -4,18 +4,17 @@ UpHex::Pulse.controllers :sessions do
     render 'sessions/new'
   end
 
-  post '/' do    
+  post '/' do
     @user = User.new(params['user'])
     auth = AuthenticationService.new request
     auth.authenticate
 
-    logger.debug "new authn request: #{env['warden.options']}"
-
     if auth.authenticated?
+      logger.info "sessions#/: with #{auth.user}"
       flash[:notice] = I18n.t 'authn.signed_in'
       redirect '/'
     else
-      raise
+      logger.info "sessions#/: authentication failed"
       redirect 'sessions/new'
     end
   end
@@ -28,7 +27,7 @@ UpHex::Pulse.controllers :sessions do
 
   post '/auth/unauthenticated' do
     flash[:notice] = I18n.t 'authn.failure'
-    logger.debug "sessions#auth/unauthenticated failure!"
+    logger.debug "sessions#auth/unauthenticated: failure!"
 
     @user = User.new(params['user'])
     redirect 'sessions/new'
