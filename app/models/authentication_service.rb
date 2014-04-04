@@ -12,7 +12,7 @@ class AuthenticationService
   end
 
   def authenticate
-    service.authenticate! self.scope
+    service.authenticate!
   end
 
   def authenticated?
