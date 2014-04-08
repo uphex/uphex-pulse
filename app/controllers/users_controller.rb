@@ -5,11 +5,12 @@ UpHex::Pulse.controllers :users do
   end
 
   post '/' do
-    @user = User.new params['user']
+    @user = User.new params[:user]
 
     if @user.save
       flash[:notice] = t 'user.created'
-      redirect '/'
+      status 201
+      render 'users/show'
     else
       @user.clear_password
       status 422

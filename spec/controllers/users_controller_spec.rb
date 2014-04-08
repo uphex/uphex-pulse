@@ -24,11 +24,11 @@ describe 'UsersController' do
       expect(last_response.status).to eq 422
     end
 
-    it "save success responds with redirect" do
+    it "save success responds with created" do
       User.any_instance.stub(:save => true)
       post '/users', :user => {}
 
-      expect(last_response.status).to eq 302
+      expect(last_response.status).to eq 201
     end
   end
 end
