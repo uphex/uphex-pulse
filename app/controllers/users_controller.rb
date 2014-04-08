@@ -4,6 +4,16 @@ UpHex::Pulse.controllers :users do
     render 'users/new'
   end
 
+  get '/:id' do
+    @user = User.find params[:id]
+    render 'users/show'
+  end
+
+  get '/me' do
+    @user = current_user
+    render 'users/show'
+  end
+
   post '/' do
     @user = User.new params[:user]
 
