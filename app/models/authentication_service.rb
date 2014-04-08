@@ -8,11 +8,13 @@ class AuthenticationService
   end
 
   def service
-    request.env['warden']
+    warden = request.env['warden']
+    raise RuntimeError.new("Warden not found at env['warden']") unless warden
+    warden
   end
 
   def authenticate
-    service.authenticate! self.scope
+    service.authenticate!
   end
 
   def authenticated?

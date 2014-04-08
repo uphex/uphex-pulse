@@ -6,6 +6,7 @@ module UpHex
     register Padrino::Helpers
 
     enable :sessions
+    register UpHex::Initializers::Warden
 
     ##
     # Caching support.

@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 1) do
   enable_extension "plpgsql"
 
   create_table "users", force: true do |t|
+    t.text     "name",          null: false
     t.text     "email",         null: false
     t.text     "password_hash", null: false
     t.datetime "created_at"
@@ -24,5 +25,6 @@ ActiveRecord::Schema.define(version: 1) do
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["name"], name: "index_users_on_name", using: :btree
 
 end
