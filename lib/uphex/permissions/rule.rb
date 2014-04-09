@@ -2,9 +2,9 @@ module UpHex
   module Permissions
     class Rule
       def initialize(action, subject, block)
-        @action  = action
-        @subject = subject
-        @block   = block ||= Proc.new { |subject| true }
+        @rule_action  = action
+        @rule_subject = subject
+        @rule_block   = block ||= Proc.new { |subject| true }
       end
 
       def relevant?(action, subject)
@@ -19,15 +19,31 @@ module UpHex
       end
 
       def matches_action?(action)
-        @action == action
+        @rule_action == action
       end
 
       def matches_subject?(subject)
-        @subject == subject
+        matches_subject_exactly?(subject) ||
+          matches_subject_as_instance?(subject) ||
+          matches_subject_as_module?(subject)
+      end
+
+      def matches_subject_exactly?(subject)
+        @rule_subject == subject
+      end
+
+      def matches_subject_as_instance?(subject)
+        subject.kind_of? @rule_subject
+      end
+
+      def matches_subject_as_module?(subject)
+        @rule_subject.kind_of?(Module) &&
+          subject.kind_of?(Module) &&
+          @rule_subject >= subject
       end
 
       def block_passes?(subject)
-        @block && @block.call(subject)
+        @rule_block && @rule_block.call(subject)
       end
     end
   end
