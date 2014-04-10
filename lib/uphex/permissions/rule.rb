@@ -1,10 +1,25 @@
 module UpHex
   module Permissions
     class Rule
-      def initialize(action, subject, block)
-        @rule_action  = action
-        @rule_subject = subject
-        @rule_block   = block ||= Proc.new { |subject| true }
+      attr_accessor :action
+      attr_accessor :subject
+      attr_accessor :block
+
+      def initialize(options = {})
+        options = options.dup
+
+        self.action     = options.delete :action
+        self.subject    = options.delete :subject
+        self.block      = options.delete(:block) || Proc.new { |subject| true }
+
+        if !options.keys.empty?
+          raise ArgumentError.new "unrecognized keys: #{options.keys}"
+        end
+      end
+
+      def block=(callable)
+        raise ArgumentError.new "not a Proc" unless callable.is_a? Proc
+        @block = callable
       end
 
       def relevant?(action, subject)
@@ -19,7 +34,7 @@ module UpHex
       end
 
       def matches_action?(action)
-        @rule_action == action
+        self.action == action
       end
 
       def matches_subject?(subject)
@@ -29,21 +44,21 @@ module UpHex
       end
 
       def matches_subject_exactly?(subject)
-        @rule_subject == subject
+        self.subject == subject
       end
 
       def matches_subject_as_instance?(subject)
-        subject.kind_of? @rule_subject
+        subject.kind_of? self.subject
       end
 
       def matches_subject_as_module?(subject)
-        @rule_subject.kind_of?(Module) &&
+        self.subject.kind_of?(Module) &&
           subject.kind_of?(Module) &&
-          @rule_subject >= subject
+          self.subject >= subject
       end
 
       def block_passes?(subject)
-        @rule_block && @rule_block.call(subject)
+        self.block && self.block.call(subject)
       end
     end
   end

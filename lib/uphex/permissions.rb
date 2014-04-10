@@ -8,7 +8,11 @@ module UpHex
     end
 
     def allow(action, subject, &block)
-      rules.push Rule.new(action, subject, block)
+      rules.push Rule.new(
+        :action => action,
+        :subject => subject,
+        :block => block
+      )
     end
 
     def allowed?(action, subject)
