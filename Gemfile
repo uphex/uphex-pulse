@@ -37,6 +37,9 @@ group :test do
     :git => 'git@github.com:brynary/rack-test.git'
   gem 'shoulda-matchers',
     :git => 'git@github.com:thoughtbot/shoulda-matchers.git'
+
+  # Code enforcement.
+  gem 'rubocop', :require => false
 end
 
 # Padrino
