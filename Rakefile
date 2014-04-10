@@ -18,3 +18,5 @@ Rubocop::RakeTask.new(:rubocop) do |task|
   task.options = ['--lint']
   task.formatters = ['fuubar']
 end
+
+task :test => [:spec, :rubocop]
