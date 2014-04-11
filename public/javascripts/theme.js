@@ -265,7 +265,7 @@
   };
 
   this.setSortable = function(selector) {
-    if (selector == null) {
+    if (selector == null || selector.length == 0) {
       selector = null;
     }
     if (selector) {
