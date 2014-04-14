@@ -1,9 +1,13 @@
+require 'uphex-flatty'
+
 module UpHex
   class Pulse < Padrino::Application
     use ActiveRecord::ConnectionAdapters::ConnectionManagement
     register Padrino::Rendering
     register Padrino::Mailer
     register Padrino::Helpers
+
+    register Uphex::Flatty
 
     enable :sessions
     register UpHex::Initializers::Warden

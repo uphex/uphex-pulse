@@ -14,7 +14,6 @@ gem 'rake'
 
 # Component requirements
 gem 'thin'
-gem 'haml'
 gem 'activerecord', :require => 'active_record'
 
 # Extensions
@@ -28,6 +27,15 @@ gem 'warden'
 
 # Encryption
 gem 'bcrypt-ruby'
+
+gem 'sinatra'
+gem 'haml'
+gem 'compass'
+gem 'sinatra-support'
+gem 'coffee-script'
+gem 'sinatra-assetpack'
+
+gem 'uphex-flatty', git: 'git@github.com:uphex/uphex-flatty.git', branch: 'serve-flatty-assets'
 
 # Test requirements
 group :test do
