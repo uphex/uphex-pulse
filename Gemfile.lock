@@ -79,6 +79,7 @@ GEM
     byebug (2.7.0)
       columnize (~> 0.3)
       debugger-linecache (~> 1.2)
+    cancan (1.6.10)
     columnize (0.3.6)
     daemons (1.1.9)
     debugger-linecache (1.2.0)
@@ -154,6 +155,7 @@ DEPENDENCIES
   activesupport
   bcrypt-ruby
   byebug
+  cancan
   haml
   padrino!
   pg
