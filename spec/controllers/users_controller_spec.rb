@@ -10,6 +10,20 @@ describe 'UsersController' do
     }
   end
 
+  describe 'GET /me' do
+    let(:user) { User.new }
+    before(:each) do
+      app_class.any_instance.stub(:current_user).and_return user
+    end
+
+    it { expect(:get => '/users/me').to be_routable }
+
+    it {
+      get '/users/me'
+      expect(last_response.status).to eq 200
+    }
+  end
+
   describe 'POST /' do
     before do
       set_csrf_token 'token'
