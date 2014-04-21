@@ -24,6 +24,27 @@ describe 'UsersController' do
     }
   end
 
+  describe 'GET /:id' do
+    let(:user) { User.new }
+    before(:each) do
+      app_class.any_instance.stub(:current_user).and_return user
+    end
+
+    it { expect(:get => '/users/arbitrary-id').to be_routable }
+
+    it {
+      User.stub(:find).with('1').and_return user
+      get '/users/1'
+      expect(last_response.status).to eq 200
+    }
+
+    it {
+      User.stub(:find).with('2').and_return User.new
+      get '/users/2'
+      expect(last_response.status).to eq 403
+    }
+  end
+
   describe 'POST /' do
     before do
       set_csrf_token 'token'
