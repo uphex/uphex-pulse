@@ -1,4 +1,8 @@
 UpHex::Pulse.controllers :users do
+  before do
+    Ability::UserPolicy.new(current_ability).apply!
+  end
+
   get '/new' do
     @user = User.new
     render 'users/new'
@@ -11,6 +15,7 @@ UpHex::Pulse.controllers :users do
 
   get '/:id' do
     @user = User.find params[:id]
+    error(403) unless current_ability.can? :read, @user
     render 'users/show'
   end
 

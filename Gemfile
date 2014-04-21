@@ -26,6 +26,9 @@ gem 'pg'
 # Authentication
 gem 'warden'
 
+# Authorization
+gem 'cancan'
+
 # Encryption
 gem 'bcrypt-ruby'
 
