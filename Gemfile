@@ -52,3 +52,6 @@ end
 gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
 
 gem 'uphex-flatty'
+
+gem 'sinatra-assetpack', :require => 'sinatra/assetpack'
+gem 'sass'
