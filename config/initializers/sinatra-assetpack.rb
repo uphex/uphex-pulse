@@ -1,3 +1,5 @@
+require 'sinatra/assetpack'
+
 module UpHex
   module Initializers
     module SinatraAssetpack
@@ -9,7 +11,6 @@ module UpHex
           end
         end
 
-        require 'sinatra/assetpack'
         app.register Sinatra::AssetPack
 
         app.assets {
