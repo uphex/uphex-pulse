@@ -53,6 +53,7 @@ GIT
 
 GEM
   remote: https://rubygems.org/
+  remote: https://wjqwn44TvBB7by1BXtb1@gem.fury.io/app24628033_heroku_com/
   specs:
     activemodel (4.0.4)
       activesupport (= 4.0.4)
@@ -142,6 +143,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.39)
+    uphex-flatty (0.0.1)
     url_mount (0.2.1)
       rack
     warden (1.2.3)
@@ -165,4 +167,5 @@ DEPENDENCIES
   rubocop
   shoulda-matchers!
   thin
+  uphex-flatty
   warden

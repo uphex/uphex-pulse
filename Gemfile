@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+source 'https://wjqwn44TvBB7by1BXtb1@gem.fury.io/app24628033_heroku_com/'
+
+
 # Distribute your app as a gem
 # gemspec
 
@@ -47,3 +50,5 @@ end
 
 # Padrino
 gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
+
+gem 'uphex-flatty'
