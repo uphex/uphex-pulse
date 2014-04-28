@@ -1,17 +1,13 @@
 !!! 5
+
 %html{:lang => 'en'}
   %head
     %meta{:charset => 'utf-8'}
     %title
       = yield_content :title
-    = stylesheet_link_tag('/assets/stylesheets/bootstrap/bootstrap.css')
-    = stylesheet_link_tag('/assets/stylesheets/light-theme.css')
-    = stylesheet_link_tag('/assets/stylesheets/theme-colors.css')
 
-    = javascript_include_tag '/assets/javascripts/jquery/jquery.min.js'
-    = javascript_include_tag '/assets/javascripts/jquery/jquery-migrate.min.js'
-    = javascript_include_tag '/assets/javascripts/bootstrap/bootstrap.min.js'
-    = javascript_include_tag '/assets/javascripts/theme.js'
+    != css :application, :media => 'screen'
+    != js :app
 
   %body{:class=>'contrast-muted'}
     %header
