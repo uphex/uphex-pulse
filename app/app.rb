@@ -39,6 +39,8 @@ module UpHex
     # layout  :my_layout            # Layout can be in views/layouts/foo.ext or views/foo.ext (default :application)
     #
 
+    set :public_folder, Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/'
+
     ##
     # You can configure for a specified environment like:
     #

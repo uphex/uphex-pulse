@@ -1,16 +1,25 @@
-%h3 Sign In
+- content_for :title do
+  Sign In
 
-= form_for @user, '/sessions' do |f|
+- content_for :navigation do
+  %li{:class=>'active'}= link_to 'sign in', '/sessions/new'
+  %li= link_to 'sign up', '/users/new'
+
+
+= form_for(@user, '/sessions', :class=>'form form-horizontal') do |f|
   %p
     = f.error_messages
 
-  %p
-    = f.label :email
-    = f.text_field :email
+  .form-group
+    = f.label :email, :class=>'col-md-2 control-label'
+    .col-md-5
+      = f.text_field :email, :class=>'form-control'
+  .form-group
+    = f.label :password, :class=>'col-md-2 control-label'
+    .col-md-5
+      = f.password_field :password, :class=>'form-control'
 
-  %p
-    = f.label :password
-    = f.password_field :password
-
-  %p
-    = f.submit 'sign in'
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        = f.submit 'sign in',:class=>'btn btn-primary'

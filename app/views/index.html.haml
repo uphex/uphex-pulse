@@ -1,4 +1,9 @@
-%h1 UpHex
-%ul
+%div
+  This is the main page. Please select from the left
+
+- content_for :title do
+  Uphex
+
+- content_for :navigation do
   %li= link_to 'sign in', '/sessions/new'
   %li= link_to 'sign up', '/users/new'

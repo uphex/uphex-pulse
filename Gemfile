@@ -47,3 +47,6 @@ end
 
 # Padrino
 gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
+
+gem 'uphex-flatty',
+  :git => "git@github.com:uphex/uphex-flatty.git"

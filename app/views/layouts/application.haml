@@ -2,7 +2,46 @@
 %html{:lang => 'en'}
   %head
     %meta{:charset => 'utf-8'}
-    %title UpHex
+    %title
+      = yield_content :title
+    = stylesheet_link_tag('/assets/stylesheets/bootstrap/bootstrap.css')
+    = stylesheet_link_tag('/assets/stylesheets/light-theme.css')
+    = stylesheet_link_tag('/assets/stylesheets/theme-colors.css')
 
-  %body
-    = yield
+    = javascript_include_tag '/assets/javascripts/jquery/jquery.min.js'
+    = javascript_include_tag '/assets/javascripts/jquery/jquery-migrate.min.js'
+    = javascript_include_tag '/assets/javascripts/bootstrap/bootstrap.min.js'
+    = javascript_include_tag '/assets/javascripts/theme.js'
+
+  %body{:class=>'contrast-muted'}
+    %header
+      %div{:class=>"navbar navbar-default"}
+        %a{:href=>'/',:class=>'navbar-brand'}
+          Uphex
+        %ul{:class=>'nav'}
+          %li.dropdown.dark.user-menu
+            %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+              %span.user-name Test user
+              %b.caret
+            %ul.dropdown-menu
+              %li= link_to 'your account', '#'
+              %li.divider
+              %li= link_to 'logout', '#'
+    %div{:id=>'wrapper'}
+      %nav{:id=>'main-nav'}
+        %div{:class=>'navigation'}
+          %ul{:class=>'nav nav-stacked'}
+            = yield_content :navigation
+      %section{:id=>'content'}
+        .container
+          #content-wrapper.row
+            .col-xs-12
+              / page header container
+              .row
+                .col-sm-12
+                  .page-header
+                    / page title
+                    %h1.pull-left
+                      %span
+                        = yield_content :title
+            = yield
