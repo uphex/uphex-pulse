@@ -13,3 +13,4 @@ db/*.db
 .idea/
 *.iml
 .anvil/
+vendor/
