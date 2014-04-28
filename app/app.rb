@@ -8,6 +8,12 @@ module UpHex
     enable :sessions
     register UpHex::Initializers::Warden
 
+    after do
+      if request.url.end_with?('css')
+        headers "Content-Type" => "text/css;charset=utf-8"
+      end
+    end
+
     ##
     # Caching support.
     #

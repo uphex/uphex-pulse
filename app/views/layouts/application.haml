@@ -6,10 +6,12 @@
     %title
       = yield_content :title
 
-    = stylesheet_link_tag('/css/bootstrap/bootstrap.css')
-    = stylesheet_link_tag('/css/light-theme.css')
-    = stylesheet_link_tag('/css/theme-colors.css')
-    = stylesheet_link_tag('/public/css/test.css')
+    != css :application, :media => 'screen'
+    -#
+      = stylesheet_link_tag('/css/bootstrap/bootstrap.css')
+      = stylesheet_link_tag('/css/light-theme.css')
+      = stylesheet_link_tag('/css/theme-colors.css')
+      = stylesheet_link_tag('/public/css/test.css')
     != js :app
 
   %body{:class=>'contrast-muted'}
