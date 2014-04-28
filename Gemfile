@@ -16,6 +16,11 @@ gem 'rake'
 gem 'thin'
 gem 'haml'
 gem 'activerecord', :require => 'active_record'
+gem 'sass'
+
+# Custom styles
+gem 'uphex-flatty',
+  :git => "git@github.com:uphex/uphex-flatty.git"
 
 # Extensions
 gem 'activesupport', :require => false
@@ -48,5 +53,5 @@ end
 # Padrino
 gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
 
-gem 'uphex-flatty',
-  :git => "git@github.com:uphex/uphex-flatty.git"
+# Asset management
+gem 'sinatra-assetpack'
