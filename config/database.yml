@@ -6,6 +6,7 @@ development:
 
 production:
   adapter: postgresql
+  username: postgres
   encoding: unicode
   database: postgres_production
   pool: 5
