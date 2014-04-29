@@ -20,4 +20,5 @@ Rubocop::RakeTask.new(:rubocop) do |task|
   task.patterns = %w[app db config lib].map { |prefix| "#{prefix}/**/*.rb" }
 end
 
+
 task :test => [:spec, :rubocop]

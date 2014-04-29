@@ -1,6 +1,5 @@
 .bundle
 .gem/**/*
-/config/database.yml
 .DS_Store
 log/**/*
 tmp/**/*
@@ -10,3 +9,7 @@ vendor/gems/*
 .sass-cache/*
 db/*.db
 .*.sw*
+.idea/
+*.iml
+.anvil/
+vendor/

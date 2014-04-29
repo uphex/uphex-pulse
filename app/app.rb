@@ -7,6 +7,7 @@ module UpHex
 
     enable :sessions
     register UpHex::Initializers::Warden
+    register UpHex::Initializers::SinatraAssetpack
 
     ##
     # Caching support.
@@ -38,6 +39,8 @@ module UpHex
     # disable :flash                # Disables sinatra-flash (enabled by default if Sinatra::Flash is defined)
     # layout  :my_layout            # Layout can be in views/layouts/foo.ext or views/foo.ext (default :application)
     #
+
+
 
     ##
     # You can configure for a specified environment like:

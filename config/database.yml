@@ -1,0 +1,14 @@
+development:
+  adapter: postgresql
+  username: postgres
+  database: uphex-pulse
+  host: localhost
+
+production:
+  adapter: postgresql
+  username: postgres
+  encoding: unicode
+  database: test_production
+  pool: 5
+  host: localhost
+  port: 5432
