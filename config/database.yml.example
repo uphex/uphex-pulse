@@ -1,11 +1,10 @@
 ---
 production:
   adapter: postgresql
-  username: <%= ENV['POSTGRESQL_USERNAME'] %>
-  password: <%= ENV['POSTGRESQL_PASSWORD'] %>
-  database: <%= ENV['POSTGRESQL_DATABASE'] %>
-  host:     <%= ENV['POSTGRESQL_ADDRESS'] %>
-
+  username: <%= ENV['DATABASE_USERNAME'] || ENV['POSTGRESQL_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] || ENV['POSTGRESQL_PASSWORD'] %>
+  database: <%= ENV['DATABASE_DATABASE'] || ENV['POSTGRESQL_DATABASE'] %>
+  host:     <%= ENV['DATABASE_ADDRESS'] || ENV['POSTGRESQL_ADDRESS'] %>
 
 development:
   adapter: postgresql
