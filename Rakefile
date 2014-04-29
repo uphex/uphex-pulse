@@ -21,3 +21,14 @@ Rubocop::RakeTask.new(:rubocop) do |task|
 end
 
 task :test => [:spec, :rubocop]
+
+namespace :uphex do
+  desc "Write database.yml"
+  task :make_database_config do
+    src  = 'config/database.yml.example'
+    dest = 'config/database.yml'
+    FileUtils.cp src, dest, :verbose => true
+  end
+
+  task :deploy => ['uphex:make_database_config', 'ar:create', 'ar:migrate']
+end
