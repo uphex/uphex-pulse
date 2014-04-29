@@ -39,5 +39,6 @@ namespace :uphex do
     FileUtils.cp src, dest, :verbose => true
   end
 
+  desc "Perform setup suitable for cloud environments"
   task :deploy => ['uphex:make_database_config', 'ar:create', 'ar:migrate']
 end
