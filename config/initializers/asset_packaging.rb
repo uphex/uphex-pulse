@@ -2,7 +2,7 @@ require 'sinatra/assetpack'
 
 module UpHex
   module Initializers
-    module SinatraAssetpack
+    module AssetPackaging
       def self.registered(app)
 
         app.after do

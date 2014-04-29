@@ -7,7 +7,7 @@ module UpHex
 
     enable :sessions
     register UpHex::Initializers::Warden
-    register UpHex::Initializers::SinatraAssetpack
+    register UpHex::Initializers::AssetPackaging
 
     ##
     # Caching support.
