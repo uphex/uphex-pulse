@@ -15,9 +15,7 @@ require 'erb'
 #   }
 #
 
-#YAML.load(ERB.new(File.read('config/database.yml')).result)
-
-YAML.load(ERB.new(File.read Padrino.root('config', 'database.yml')).result).each { |name, hash|
+YAML.load(File.read Padrino.root('config', 'database.yml')).each { |name, hash|
   symbolized_hash = hash.each_with_object({}) do |(k, v), h|
     h[k.to_sym] = v
   end
