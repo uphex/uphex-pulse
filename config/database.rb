@@ -1,4 +1,3 @@
-require 'erb'
 ##
 # You can use other adapters like:
 #
