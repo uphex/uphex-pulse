@@ -20,7 +20,8 @@ UpHex::Pulse.controllers :sessions do
   end
 
   get '/auth/logout' do
-    logout
+    auth = AuthenticationService.new request
+    auth.logout
     flash[:notice] = I18n.t 'authn.signed_out'
     redirect '/'
   end

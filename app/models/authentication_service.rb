@@ -32,4 +32,8 @@ class AuthenticationService
   def user_is?(u)
     self.user == u
   end
+
+  def logout()
+    service.logout
+  end
 end

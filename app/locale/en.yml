@@ -1,0 +1,13 @@
+en:
+  authn:
+    failure: Authentication failure
+    email:
+      taken: Email already taken
+    name:
+      empty: Name is empty
+    password:
+      empty: Password is empty
+    repassword:
+      dontmatch: Passwords don't match
+    signed_out: Signed out
+    signed_in: Signed in

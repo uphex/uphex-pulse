@@ -20,6 +20,10 @@ class UserPasswordStrategy < ::Warden::Strategies::Base
 
   private
   def user_params
-    params['user']
+    if params['user']
+      params['user']
+    else
+      params
+    end
   end
 end
