@@ -1,14 +1,50 @@
-%p
-  %span= "name: "
-  %span= @user.name
+- content_for :title do
+  Profile
 
-  %span= "id: "
-  %span= @user.id
+- content_for :navigation do
+  %li= link_to 'Dashboard', '/users/me/dashboard'
+  %li{:class=>'active'}= link_to 'Profile', '/users/me'
 
-%p
-  %span= "email: "
-  %span= @user.email
-
-%p
-  %span= "created at: "
-  %span= @user.created_at
+%form{:action => "/users/me", :method => "post",:class=>'form form-horizontal'}
+  = csrf_token_field
+  %input{:type=>'hidden',:name=>'_method',:value=>'PUT'}
+  .form-group
+    %label{:for=>'name',:class=>['col-md-2 control-label'] }
+      Name:
+    .col-md-5
+      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
+    = flash_tag :name
+  .form-group
+    %label{:for=>'email',:class=>'col-md-2 control-label'}
+      Email:
+    .col-md-5
+      %input{:type=>'email',:name=>'email',:value=>"#{params[:email]}",:class=>'form-control'}
+    = flash_tag :email
+  .form-group
+    %label{:for=>'password',:class=>'col-md-2 control-label'}
+      Password:
+    .col-md-5
+      %input{:type=>'password',:name=>'password',:class=>'form-control'}
+    = flash_tag :password
+  .form-group
+    %label{:for=>'repassword',:class=>'col-md-2 control-label'}
+      Retype password:
+    .col-md-5
+      %input{:type=>'password',:name=>'repassword',:class=>'form-control'}
+    = flash_tag :repassword
+  .form-group
+    %label{:class=>'col-md-2 control-label'}
+      User created at:
+    .col-md-5
+      %p
+        = @user.created_at
+  .form-group
+    %label{:class=>'col-md-2 control-label'}
+      User last updated at:
+    .col-md-5
+      %p
+        = @user.updated_at
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        %input{:type => "submit", :value => "Send", :class => "btn btn-primary"}

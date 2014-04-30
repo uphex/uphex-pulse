@@ -17,6 +17,7 @@ module UpHex
           serve '/js',       from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts'
           serve '/css',      from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets'
           serve '/fonts',    from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts'
+          serve '/public/css',    from: File.dirname(__FILE__)+'/../../public/scss'
 
           js :app, '/js/app.js', [
               '/js/jquery/jquery.min.js',
@@ -29,6 +30,7 @@ module UpHex
               '/css/bootstrap/bootstrap.css',
               '/css/light-theme.css',
               '/css/theme-colors.css',
+              '/public/css/main.css'
           ]
 
           js_compression  :jsmin    # :jsmin | :yui | :closure | :uglify

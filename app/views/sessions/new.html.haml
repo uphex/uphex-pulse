@@ -3,6 +3,8 @@
 
 - content_for :navigation do
   - if env['warden'].authenticated?
+    %li= link_to 'Dashboard', '/users/me/dashboard'
+    %li= link_to 'Profile', '/users/me'
   - else
     %li{:class=>'active'}= link_to 'Sign in', '/sessions/new'
     %li= link_to 'Sign up', '/users/new'

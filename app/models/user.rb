@@ -13,9 +13,6 @@ class User < ActiveRecord::Base
   validates :password_hash,
     :presence => true
 
-  validates :password,
-    :presence => true
-
   def password=(unencrypted_password)
     unless unencrypted_password.blank?
       @password = unencrypted_password

@@ -22,9 +22,14 @@
                   = env['warden'].user.name
                 %b.caret
               %ul.dropdown-menu
-                %li= link_to 'your account', '#'
+                %li= link_to 'My account', '/users/me'
                 %li.divider
-                %li= link_to 'logout', 'sessions/auth/logout'
+                %li
+                  %a{:onclick=>"logout_form.submit();",:href=>'#'}
+                    Log out
+                  %form{:action=>'/users/me/session',:method=>'POST',:id=>'logout_form'}
+                    = csrf_token_field
+                    %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
     %div{:id=>'wrapper'}
       %nav{:id=>'main-nav'}
         %div{:class=>'navigation'}
@@ -43,4 +48,5 @@
                       %span
                         = yield_content :title
             = flash_tag :notice, :class=>'alert alert-info'
+            = flash_tag :error, :class=>'alert alert-danger'
             = yield

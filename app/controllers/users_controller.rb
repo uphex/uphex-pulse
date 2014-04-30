@@ -9,8 +9,39 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/me' do
+    params[:name]=current_user.name
+    params[:email]=current_user.email
     @user = current_user
     render 'users/show'
+  end
+
+  put '/me' do
+    if User.exists?(:email=>params[:email]) and User.where(:email=>params[:email]).first.id!=current_user.id
+      flash.now[:email]=t 'authn.email.taken'
+      error=true
+    end
+    if params[:name].empty?
+      flash.now[:name] = t 'authn.name.empty'
+      error=true
+    end
+    if !params[:password].empty? and params[:password]!=params[:repassword]
+      flash.now[:repassword] = t 'authn.repassword.dontmatch'
+      error=true
+    end
+    if error
+      @user = current_user
+      render 'users/show'
+    else
+      current_user.name=params[:name]
+      current_user.email=params[:email]
+      if !params[:password].empty?
+        current_user.password=params[:password]
+      end
+      current_user.updated_at=Time.new
+      current_user.save!
+      redirect '/users/me'
+    end
+
   end
 
   get '/:id' do
@@ -53,7 +84,22 @@ UpHex::Pulse.controllers :users do
       end
       auth = AuthenticationService.new request
       auth.authenticate
-      redirect '/'
+      redirect '/users/me/dashboard'
     end
+  end
+
+  delete '/me/session' do
+    auth = AuthenticationService.new request
+    auth.logout
+    flash[:notice] = I18n.t 'authn.signed_out'
+    redirect '/'
+  end
+
+  get '/me/dashboard' do
+    render 'dashboard/show'
+  end
+
+  after do
+    ActiveRecord::Base.connection.close
   end
 end
