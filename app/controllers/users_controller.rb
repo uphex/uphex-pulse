@@ -98,8 +98,4 @@ UpHex::Pulse.controllers :users do
   get '/me/dashboard' do
     render 'dashboard/show'
   end
-
-  after do
-    ActiveRecord::Base.connection.close
-  end
 end
