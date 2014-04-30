@@ -1,0 +1,49 @@
+- content_for :title do
+  Portfolios
+
+%label
+  Create new portfolio:
+%form{:action => "/portfolios", :method => "post",:class=>'form form-horizontal'}
+  = csrf_token_field
+  .form-group
+    %label{:for=>'organization',:class=>['col-md-2 control-label'] }
+      Organization:
+    .col-md-5
+      %select{:name=>'organization',:value=>"#{params[:organization]}",:class=>'form-control'}
+        - @organizations.each do |organization|
+          %option{:value=>organization.id,:selected=>params[:organization]==organization.id.to_s}
+            = organization.name
+    = flash_tag :organization
+  .form-group
+    %label{:for=>'name',:class=>['col-md-2 control-label'] }
+      Name:
+    .col-md-5
+      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
+    = flash_tag :name
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        %input{:type => "submit", :value => "Send", :class => "btn btn-primary"}
+
+%label
+  Existing portfolios:
+%table{:class=>'table table-bordered table-striped'}
+  %thead
+    %tr
+      %th
+        Organization
+      %th
+        Name
+      %th
+
+  %tbody
+    - @portfolios_for_account.each do |portfolios_for_account|
+      - portfolios_for_account.each do |account,portfolios|
+        - portfolios.each do |portfolio|
+          %tr
+            %td
+              = account.name
+            %td
+              = portfolio.name
+            %td
+              = link_to 'Edit', "/portfolios/#{portfolio.id}"
