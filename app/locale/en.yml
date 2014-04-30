@@ -11,3 +11,8 @@ en:
       dontmatch: Passwords don't match
     signed_out: Signed out
     signed_in: Signed in
+    user:
+      created: User created
+      modified: Profile modified
+    account:
+      modified: Account modified

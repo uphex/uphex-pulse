@@ -1,0 +1,28 @@
+- content_for :title do
+  Account
+
+%form{:action => "/accounts/me", :method => "post",:class=>'form form-horizontal'}
+  = csrf_token_field
+  %input{:type=>'hidden',:name=>'_method',:value=>'PUT'}
+  .form-group
+    %label{:for=>'name',:class=>['col-md-2 control-label'] }
+      Name:
+    .col-md-5
+      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
+    = flash_tag :name
+  .form-group
+    %label{:class=>'col-md-2 control-label'}
+      Account created at:
+    .col-md-5
+      %p
+        = @account.created_at
+  .form-group
+    %label{:class=>'col-md-2 control-label'}
+      Account last updated at:
+    .col-md-5
+      %p
+        = @account.updated_at
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        %input{:type => "submit", :value => "Send", :class => "btn btn-primary"}

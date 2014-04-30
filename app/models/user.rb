@@ -23,4 +23,7 @@ class User < ActiveRecord::Base
   def clear_password
     @password = ''
   end
+
+  has_many :accounts, :class_name => "Account", :foreign_key => 'users_id'
+  has_many :organizations, through: :accounts, source: :organization
 end

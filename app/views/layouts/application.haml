@@ -22,7 +22,8 @@
                   = env['warden'].user.name
                 %b.caret
               %ul.dropdown-menu
-                %li= link_to 'My account', '/users/me'
+                %li= link_to 'My profile', '/users/me'
+                %li= link_to 'My account', '/accounts/me'
                 %li.divider
                 %li
                   %a{:onclick=>"logout_form.submit();",:href=>'#'}
@@ -37,6 +38,7 @@
             - if env['warden'].authenticated?
               %li{:class=>('active' if request.path_info=='/users/me/dashboard')}= link_to 'Dashboard', '/users/me/dashboard'
               %li{:class=>('active' if request.path_info=='/users/me')}= link_to 'Profile', '/users/me'
+              %li{:class=>('active' if request.path_info=='/accounts/me')}= link_to 'Account', '/accounts/me'
             - else
               %li{:class=>('active' if request.path_info=='/sessions/new')}= link_to 'Sign in', '/sessions/new'
               %li{:class=>('active' if request.path_info=='/users/new')}= link_to 'Sign up', '/users/new'

@@ -39,6 +39,7 @@ UpHex::Pulse.controllers :users do
       end
       current_user.updated_at=Time.new
       current_user.save!
+      flash[:notice] = t 'authn.user.modified'
       redirect '/users/me'
     end
 
@@ -73,8 +74,13 @@ UpHex::Pulse.controllers :users do
       render '/users/new'
     else
       @user=User.create(:name=>params[:name],:email=>params[:email],:password=>params[:password])
+      @user.organizations << (Organization.create(:name => (params[:name]+' Inc.')))
       if @user.save
-        flash[:notice] = t 'user.created'
+        #@organization=Organization.create(:name=>params[:name]+' Inc.')
+        #@organization.save!
+        #Account.create(:users=>@user,:@organizations=>@organization).save!
+
+        flash[:notice] = t 'authn.user.created'
         status 201
         render 'users/show'
       else
