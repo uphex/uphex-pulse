@@ -14,15 +14,17 @@
       %div{:class=>"navbar navbar-default"}
         %a{:href=>'/',:class=>'navbar-brand'}
           Uphex
-        %ul{:class=>'nav'}
-          %li.dropdown.dark.user-menu
-            %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
-              %span.user-name Test user
-              %b.caret
-            %ul.dropdown-menu
-              %li= link_to 'your account', '#'
-              %li.divider
-              %li= link_to 'logout', '#'
+        - if env['warden'].authenticated?
+          %ul{:class=>'nav'}
+            %li.dropdown.dark.user-menu
+              %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+                %span.user-name
+                  = env['warden'].user.name
+                %b.caret
+              %ul.dropdown-menu
+                %li= link_to 'your account', '#'
+                %li.divider
+                %li= link_to 'logout', 'sessions/auth/logout'
     %div{:id=>'wrapper'}
       %nav{:id=>'main-nav'}
         %div{:class=>'navigation'}
@@ -40,4 +42,5 @@
                     %h1.pull-left
                       %span
                         = yield_content :title
+            = flash_tag :notice, :class=>'alert alert-info'
             = yield

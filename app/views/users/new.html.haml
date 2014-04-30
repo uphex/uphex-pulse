@@ -2,22 +2,38 @@
   Sign up
 
 - content_for :navigation do
-  %li= link_to 'sign in', '/sessions/new'
-  %li{:class=>'active'}= link_to 'sign up', '/users/new'
-= form_for @user, '/users' do |f|
-  = f.error_messages
+  - if env['warden'].authenticated?
+  - else
+    %li= link_to 'Sign in', '/sessions/new'
+    %li{:class=>'active'}= link_to 'Sign up', '/users/new'
 
-  %p
-    = f.label :name
-    = f.text_field :name
-
-  %p
-    = f.label :email
-    = f.text_field :email
-
-  %p
-    = f.label :password
-    = f.password_field :password
-
-  %p
-    = f.submit 'sign up'
+%form{:action => "/users", :method => "post",:class=>'form form-horizontal'}
+  = csrf_token_field
+  .form-group{:class=>[('has-error' if flash[:name])]}
+    %label{:for=>'name',:class=>['col-md-2 control-label'] }
+      Name:
+    .col-md-5
+      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
+    = flash_tag :name
+  .form-group{:class=>[('has-error' if flash[:email])]}
+    %label{:for=>'email',:class=>'col-md-2 control-label'}
+      Email:
+    .col-md-5
+      %input{:type=>'email',:name=>'email',:value=>"#{params[:email]}",:class=>'form-control'}
+    = flash_tag :email
+  .form-group{:class=>[('has-error' if flash[:password])]}
+    %label{:for=>'password',:class=>'col-md-2 control-label'}
+      Password:
+    .col-md-5
+      %input{:type=>'password',:name=>'password',:value=>"#{params[:password]}",:class=>'form-control'}
+    = flash_tag :password
+  .form-group{:class=>[('has-error' if flash[:repassword])]}
+    %label{:for=>'repassword',:class=>'col-md-2 control-label'}
+      Retype password:
+    .col-md-5
+      %input{:type=>'password',:name=>'repassword',:value=>"#{params[:repassword]}",:class=>'form-control'}
+    = flash_tag :repassword
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        %input{:type => "submit", :value => "Send", :class => "button"}

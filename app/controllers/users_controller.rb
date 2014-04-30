@@ -19,17 +19,41 @@ UpHex::Pulse.controllers :users do
     render 'users/show'
   end
 
-  post '/' do
-    @user = User.new params[:user]
 
-    if @user.save
-      flash[:notice] = t 'user.created'
-      status 201
-      render 'users/show'
+  post '/' do
+    if User.exists?(:email=>params[:email])
+      flash.now[:email]=t 'authn.email.taken'
+      error=true
+    end
+    if params[:password].empty?
+      flash.now[:password] = t 'authn.password.empty'
+      error=true
+    end
+    if params[:name].empty?
+      flash.now[:name] = t 'authn.name.empty'
+      error=true
+    end
+    if params[:password]!=params[:repassword]
+      flash.now[:repassword] = t 'authn.repassword.dontmatch'
+      error=true
+    end
+
+    if error
+      render '/users/new'
     else
-      @user.clear_password
-      status 422
-      render 'users/new'
+      @user=User.create(:name=>params[:name],:email=>params[:email],:password=>params[:password])
+      if @user.save
+        flash[:notice] = t 'user.created'
+        status 201
+        render 'users/show'
+      else
+        @user.clear_password
+        status 422
+        render 'users/new'
+      end
+      auth = AuthenticationService.new request
+      auth.authenticate
+      redirect '/'
     end
   end
 end

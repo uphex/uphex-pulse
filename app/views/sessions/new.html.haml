@@ -2,8 +2,10 @@
   Sign In
 
 - content_for :navigation do
-  %li{:class=>'active'}= link_to 'sign in', '/sessions/new'
-  %li= link_to 'sign up', '/users/new'
+  - if env['warden'].authenticated?
+  - else
+    %li{:class=>'active'}= link_to 'Sign in', '/sessions/new'
+    %li= link_to 'Sign up', '/users/new'
 
 
 = form_for(@user, '/sessions', :class=>'form form-horizontal') do |f|
