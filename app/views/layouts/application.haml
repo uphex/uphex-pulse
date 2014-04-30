@@ -34,7 +34,12 @@
       %nav{:id=>'main-nav'}
         %div{:class=>'navigation'}
           %ul{:class=>'nav nav-stacked'}
-            = yield_content :navigation
+            - if env['warden'].authenticated?
+              %li{:class=>('active' if request.path_info=='/users/me/dashboard')}= link_to 'Dashboard', '/users/me/dashboard'
+              %li{:class=>('active' if request.path_info=='/users/me')}= link_to 'Profile', '/users/me'
+            - else
+              %li{:class=>('active' if request.path_info=='/sessions/new')}= link_to 'Sign in', '/sessions/new'
+              %li{:class=>('active' if request.path_info=='/users/new')}= link_to 'Sign up', '/users/new'
       %section{:id=>'content'}
         .container
           #content-wrapper.row

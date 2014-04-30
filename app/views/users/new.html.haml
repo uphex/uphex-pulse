@@ -1,14 +1,6 @@
 - content_for :title do
   Sign up
 
-- content_for :navigation do
-  - if env['warden'].authenticated?
-    %li= link_to 'Dashboard', '/users/me/dashboard'
-    %li= link_to 'Profile', '/users/me'
-  - else
-    %li= link_to 'Sign in', '/sessions/new'
-    %li{:class=>'active'}= link_to 'Sign up', '/users/new'
-
 %form{:action => "/users", :method => "post",:class=>'form form-horizontal'}
   = csrf_token_field
   .form-group
