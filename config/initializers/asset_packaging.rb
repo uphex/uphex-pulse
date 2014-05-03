@@ -22,7 +22,7 @@ module UpHex
           serve '/stylesheets', from: 'assets/stylesheets'
           serve '/images',      from: 'assets/images'
 
-          js :app, '/scripts/app.js', [
+          js :application, '/scripts/app.js', [
               '/theme/js/jquery/jquery.min.js',
               '/theme/js/jquery/jquery-migrate.min.js',
               '/theme/js/bootstrap/bootstrap.min.js',
