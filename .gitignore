@@ -10,3 +10,4 @@ vendor/gems/*
 .sass-cache/*
 db/*.db
 .*.sw*
+public/*
