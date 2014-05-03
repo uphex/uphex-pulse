@@ -14,21 +14,25 @@ module UpHex
         app.register Sinatra::AssetPack
 
         app.assets {
-          serve '/js',       from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts'
-          serve '/css',      from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets'
-          serve '/fonts',    from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts'
+          serve '/theme/js',    from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts'
+          serve '/theme/css',   from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets'
+          serve '/theme/fonts', from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts'
 
-          js :app, '/js/app.js', [
-              '/js/jquery/jquery.min.js',
-              '/js/jquery/jquery-migrate.min.js',
-              '/js/bootstrap/bootstrap.min.js',
-              '/js/theme.js',
+          serve '/scripts',     from: 'assets/javascripts'
+          serve '/stylesheets', from: 'assets/stylesheets'
+          serve '/images',      from: 'assets/images'
+
+          js :app, '/scripts/app.js', [
+              '/theme/js/jquery/jquery.min.js',
+              '/theme/js/jquery/jquery-migrate.min.js',
+              '/theme/js/bootstrap/bootstrap.min.js',
+              '/theme/js/theme.js',
           ]
 
-          css :application, '/css/application.css', [
-              '/css/bootstrap/bootstrap.css',
-              '/css/light-theme.css',
-              '/css/theme-colors.css',
+          css :application, '/stylesheets/application.css', [
+              '/theme/css/bootstrap/bootstrap.css',
+              '/theme/css/light-theme.css',
+              '/theme/css/theme-colors.css',
           ]
 
           js_compression  :jsmin    # :jsmin | :yui | :closure | :uglify
