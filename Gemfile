@@ -16,6 +16,7 @@ gem 'rake'
 gem 'thin'
 gem 'haml'
 gem 'activerecord', :require => 'active_record'
+gem 'compass'
 gem 'sass'
 
 # Custom styles
