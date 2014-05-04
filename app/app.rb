@@ -8,6 +8,7 @@ module UpHex
     enable :sessions
     register UpHex::Initializers::Warden
     register UpHex::Initializers::AssetPackaging
+    register UpHex::Initializers::CompassAssets
 
     ##
     # Caching support.
