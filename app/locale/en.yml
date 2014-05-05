@@ -1,8 +1,6 @@
 en:
   authn:
     failure: Authentication failure
-    repassword:
-      don't match: Passwords don't match
     signed_out: Signed out
     signed_in: Signed in
     user:

@@ -19,13 +19,7 @@
       Password:
     .col-md-5
       = f.password_field :password, :class=>'form-control'
-    = f.error_messages_for :password
-  .form-group
-    %label{:for=>'repassword',:class=>'col-md-2 control-label'}
-      Retype password:
-    .col-md-5
-      = f.password_field :repassword, :class=>'form-control'
-    = f.error_messages_for :repassword
+    = f.error_messages_for :password_hash
   .form-actions
     .row
       .col-md-10{:class=>'col-md-offset-2'}
