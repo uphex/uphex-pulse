@@ -1,15 +1,13 @@
 - content_for :title do
   Account
 
-%form{:action => "/accounts/me", :method => "post",:class=>'form form-horizontal'}
-  = csrf_token_field
-  %input{:type=>'hidden',:name=>'_method',:value=>'PUT'}
+= form_for @organization, '/accounts/me', :method=>:put, :builder=>'UtilityFormBuilder', :class=>'form form-horizontal' do |f|
   .form-group
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
     .col-md-5
-      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
-    = flash_tag :name
+      = f.text_field :name, :class=>'form-control'
+    = f.error_messages_for :name
   .form-group
     %label{:class=>'col-md-2 control-label'}
       Account created at:
@@ -25,4 +23,4 @@
   .form-actions
     .row
       .col-md-10{:class=>'col-md-offset-2'}
-        %input{:type => "submit", :value => "Send", :class => "btn btn-primary"}
+        = f.submit 'Send',:class => "btn btn-primary"
