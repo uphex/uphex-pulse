@@ -1,14 +1,6 @@
 en:
   authn:
     failure: Authentication failure
-    email:
-      has already been taken: Email already taken
-      can't be blank: Can not be empty
-    name:
-      can't be blank: Name is empty
-      has already been taken: Name is already taken
-    password:
-      can't be blank: Password is empty
     repassword:
       don't match: Passwords don't match
     signed_out: Signed out
