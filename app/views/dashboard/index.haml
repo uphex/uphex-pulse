@@ -1,0 +1,45 @@
+- content_for :title, "Dashboard"
+.mod-announcements
+  %h3.heading-with-icon
+    %span.icon-notification
+    Announcements
+  - @announcements.each do |announcement|
+    %a.announcement-item{:href =>  announcement.url}
+      %span.icon-bullhorn
+      %span.title
+        #{announcement.title}:
+      %span.description
+        #{announcement.description}
+  - if @announcements.blank?
+    .no-elements
+      No announcements
+
+
+= partial 'layouts/timeline' , :locals=>{:timelineevents=>@dashboardevents, :eventurl=>"events/", :eventurlback=>""}
+- if !@dashboardevents.blank?
+  %a{:href => "events", :class => "more-events button-standard"} See all
+
+.mod-clients
+  %a{:href => "/portfolios", :class => "add-new button-standard"}
+    Add new
+    %span.icon-plus
+  %h3.heading-with-icon
+    %span.icon-users
+    Clients
+  %table
+    - @clients.each do |client|
+      %tr{"data-link" => "/clients/#{client.id}/"}
+        %td
+          - if !client.alert.nil?
+            %span.icon-warning
+        %td
+          #{client.name}
+        %td
+          #{client.alert}
+        %td
+          %a{:href => "http://google.com", :class => "edit-client button-standard"}
+            Edit
+            %span.icon-pencil
+    - if @clients.blank?
+      .no-elements
+        No clients

@@ -1,0 +1,30 @@
+.mod-announcements {
+  .announcement-item {
+    display: block;
+    overflow: hidden;
+    line-height: 60px;
+    margin-bottom: 15px;
+    padding: 0 15px;
+    background: $dark-block;
+    text-decoration: none;
+    color: $main-font;
+    -webkit-transition: background-color 0.5s;
+    -moz-transition: background-color 0.5s;
+    -o-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+    &:hover {
+      background-color: $light-block;
+      -webkit-transition: background-color 500ms linear;
+      -moz-transition: background-color 500ms linear;
+    }
+    &:visited {
+      color: $main-font;
+    }
+    .icon-bullhorn {
+      margin-right: 15px;
+      padding: 5px;
+      border-radius: 50%;
+      background: $base-background;
+    }
+  }
+}

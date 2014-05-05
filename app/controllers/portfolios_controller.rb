@@ -11,7 +11,7 @@ UpHex::Pulse.controllers :portfolios do
     params[:portfolio][:organization]=Organization.find(params[:portfolio][:organization])
     @portfolio=Portfolio.create(params[:portfolio])
     if @portfolio.save
-      redirect '/portfolios'
+      redirect '/users/me/dashboard'
     else
       @portfolios_for_account=current_user.accounts.map{|account| {account.organization=>account.organization.portfolios}}
       @organizations=current_user.organizations
@@ -19,6 +19,6 @@ UpHex::Pulse.controllers :portfolios do
     end
 
 
-    end
+  end
 
 end

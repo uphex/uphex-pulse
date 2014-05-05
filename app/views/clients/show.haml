@@ -1,0 +1,41 @@
+- content_for :title do
+  %a{:href=>"../.."}
+    %span.icon-arrow-left2
+  #{@client.name}
+= render :partial => 'layouts/timeline' , :locals=>{:timelineevents=>@clientevents, :eventurl=>"../../events/", :eventurlback=>"/"}
+- if !@clientevents.empty?
+  %a{:href => "/clients/#{@client.id}/events", :class => "more-events button-standard"} See all
+
+.mod-streams
+  %h3.heading-with-icon
+    %span.icon-globe
+    Streams
+  - if @clientstreams.length == 0
+    .no-elements
+      No streams
+  - else
+    - @clientstreams.each do |category,streams|
+      .stream-block
+        %a{:href => "/events", :class => "edit-client button-standard"}
+          Edit
+          %span.icon-pencil
+        .stream-title
+          %img{:src => category[1]}
+          %span
+            #{category[0]}
+        - streams.each do |stream|
+          .stream-line
+            .metric-name
+              #{stream.metricname}
+            .average
+              %strong
+                #{stream.average}
+              %span 7d average
+            .range
+              %strong
+                #{stream.rangestart} - #{stream.rangeend}
+              %span range
+            .sparkline-container
+              %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream.sparkline, "preserveAspectRatio"=>"none"}
+                %g
+                  %path

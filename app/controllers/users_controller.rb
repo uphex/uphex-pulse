@@ -59,6 +59,9 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/me/dashboard' do
-    render 'dashboard/show'
+    @announcements=[]
+    @dashboardevents=[]
+    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten
+    render 'dashboard/index'
   end
 end

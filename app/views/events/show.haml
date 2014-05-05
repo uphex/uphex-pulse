@@ -1,0 +1,47 @@
+- content_for :title do
+  %a{:href=>params[:back]}
+    %span.icon-arrow-left2
+  Event Details
+.mod-event-details
+  %h3.client-name
+    %span.icon-user
+    %a{:href => "/clients/#{@event.stream.client.id}"}
+      #{@event.stream.client.name}
+  .half
+    %div.event-data<
+      %span.icon-clock
+      = @event.time.strftime('%B %d, %Y %H:%M')
+    %div.event-data
+      - case @event.type
+        - when 'positive_anomaly'
+          %span.icon-thumbs-up>
+          Positive anomaly
+        - when 'negative_anomaly'
+          %span.icon-thumbs-up2>
+          Negative anomaly
+        - else
+          %span.icon-flag>
+          Neutral event
+    %div.event-data
+      %img{:src => @event.stream.categoryicon} #{@event.stream.categorytype}
+  .half
+    .sparkline-container
+      %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>@event.sparkline, "data-center"=>@event.eventpositioninsparkline, "data-predictedstart"=>@event.eventpredictedstart,"data-predictedend"=>@event.eventpredictedend,"preserveAspectRatio"=>"none"}
+        %pattern{"id"=>"diagonalHatch","patternUnits"=>"userSpaceOnUse","width"=>"4","height"=>"4","patternTransform"=>"rotate(-45 2 2)"}
+          %path{"d"=>"M -1,2 l 6,0", "stroke"=>"#000000","stroke-width"=>"1"}
+        %g
+          %path
+    .result-comment
+      #{@event.eventactual > @event.eventpredictedend ? '<span class="icon-arrow-up-right3"></span>'.html_safe : '<span class="icon-arrow-down-right3"></span>'.html_safe}
+      %strong
+        #{@event.stream.metricname}
+      #{(@event.eventactual>@event.eventpredictedend ? ' up to '+((@event.eventactual.to_d/@event.eventpredictedend.to_d-1)*100).round.to_s+'%':'down to '+((@event.eventactual.to_d/@event.eventpredictedstart.to_d)*100).round.to_s+'%')+' then expected'}
+    %div.compare
+      %div.col1 Predicted
+      %strong
+        #{@event.eventpredictedstart} - #{@event.eventpredictedend}
+      %div.metric #{@event.stream.metricname}
+      %div.col1 Actual
+      %strong
+        #{@event.eventactual}
+      %div.metric #{@event.stream.metricname}

@@ -1,0 +1,7 @@
+- content_for :title do
+  %a{:href=>"."}
+    %span.icon-arrow-left2
+  #{(defined? @client) ? @client.name : "All events"}
+.all-events
+  = render :partial => 'layouts/timeline' , :locals=>{:timelineevents=>@allevents, :eventurl=>"events/", :eventurlback=>"", :hidden=>"true"}
+  %a{:class => "more-events button-standard", :id => 'see-all'} See more

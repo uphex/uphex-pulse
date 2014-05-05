@@ -1,0 +1,49 @@
+header {
+  border-bottom: $light-border;
+  .container {
+    height: 78px; // 2 * 15px of padding + logo height
+    padding: 15px 10px;
+  }
+  a.agency-name {
+    text-decoration: none;
+    margin-left: 15px;
+    color: $main-font;
+    font-size: 23px;
+    line-height: 48px;
+    vertical-align: top;
+  }
+  .user-nav {
+    text-transform: uppercase;
+    float: right;
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      li {
+        display: inline;
+        line-height: 48px;
+        padding: 0 5px;
+        &:last-child {
+          padding-right: 0;
+        }
+        a {
+          text-decoration: none;
+          color: $main-font;
+          &:visited {
+            color: $main-font;
+          }
+          &:hover {
+            color: $link-hover;
+          }
+        }
+        &.username {
+          font-weight: 700;
+        }
+        &:not(:first-child):before {
+          content: '\b7\a0';
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}

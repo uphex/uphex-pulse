@@ -9,12 +9,6 @@
       Organization:
     .col-md-5
       = f.select(:organization, :collection => @organizations, :fields => [:name, :id],:class=>'form-control')
-      -#
-        %select{:name=>'organization',:value=>"#{params[:organization]}",:class=>'form-control'}
-        - @organizations.each do |organization|
-
-          %option{:value=>organization.id,:selected=>params[:organization]==organization.id.to_s}
-            = organization.name
   .form-group
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
@@ -25,26 +19,3 @@
     .row
       .col-md-10{:class=>'col-md-offset-2'}
         = f.submit 'Send',:class => "btn btn-primary"
-
-%label
-  Existing portfolios:
-%table{:class=>'table table-bordered table-striped'}
-  %thead
-    %tr
-      %th
-        Organization
-      %th
-        Name
-      %th
-
-  %tbody
-    - @portfolios_for_account.each do |portfolios_for_account|
-      - portfolios_for_account.each do |account,portfolios|
-        - portfolios.each do |portfolio|
-          %tr
-            %td
-              = account.name
-            %td
-              = portfolio.name
-            %td
-              = link_to 'Edit', "/portfolios/#{portfolio.id}"
