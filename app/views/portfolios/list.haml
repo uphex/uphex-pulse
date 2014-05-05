@@ -3,27 +3,28 @@
 
 %label
   Create new portfolio:
-%form{:action => "/portfolios", :method => "post",:class=>'form form-horizontal'}
-  = csrf_token_field
+= form_for @portfolio, '/portfolios', :builder=>'UtilityFormBuilder', :class=>'form form-horizontal' do |f|
   .form-group
     %label{:for=>'organization',:class=>['col-md-2 control-label'] }
       Organization:
     .col-md-5
-      %select{:name=>'organization',:value=>"#{params[:organization]}",:class=>'form-control'}
+      = f.select(:organization, :collection => @organizations, :fields => [:name, :id],:class=>'form-control')
+      -#
+        %select{:name=>'organization',:value=>"#{params[:organization]}",:class=>'form-control'}
         - @organizations.each do |organization|
+
           %option{:value=>organization.id,:selected=>params[:organization]==organization.id.to_s}
             = organization.name
-    = flash_tag :organization
   .form-group
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
     .col-md-5
-      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
-    = flash_tag :name
+      = f.text_field :name, :class=>'form-control'
+    = f.error_messages_for :name
   .form-actions
     .row
       .col-md-10{:class=>'col-md-offset-2'}
-        %input{:type => "submit", :value => "Send", :class => "btn btn-primary"}
+        = f.submit 'Send',:class => "btn btn-primary"
 
 %label
   Existing portfolios:

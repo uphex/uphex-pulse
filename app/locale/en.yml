@@ -5,6 +5,7 @@ en:
       has already been taken: Email already taken
     name:
       can't be blank: Name is empty
+      has already been taken: Name is already taken
     password:
       can't be blank: Password is empty
     repassword:
