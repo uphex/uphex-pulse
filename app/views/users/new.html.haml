@@ -1,7 +1,7 @@
 - content_for :title do
   Sign up
 
-= form_for @user, '/users', :builder=>'UtilityFormBuilder', :class=>'form form-horizontal' do |f|
+= form_for @user, '/users', :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
   .form-group
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:

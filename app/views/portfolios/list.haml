@@ -3,7 +3,7 @@
 
 %label
   Create new portfolio:
-= form_for @portfolio, '/portfolios', :builder=>'UtilityFormBuilder', :class=>'form form-horizontal' do |f|
+= form_for @portfolio, '/portfolios', :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
   .form-group
     %label{:for=>'organization',:class=>['col-md-2 control-label'] }
       Organization:
