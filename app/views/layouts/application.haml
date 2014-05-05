@@ -42,6 +42,8 @@
         = yield_content :title
 
   #main{:role => "main", :class => "container"}
+    = flash_tag :notice, :class=>'alert alert-info'
+    = flash_tag :error, :class=>'alert alert-danger'
     = yield
 
   %footer

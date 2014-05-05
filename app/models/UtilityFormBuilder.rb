@@ -1,5 +1,10 @@
 class UtilityFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
+
   def error_messages_for(field)
-    object.errors[field].join(' ')
+    @template.content_tag(:span,
+      object.errors[field].join(' '),
+      :class=>'help-block'
+    )
+
   end
 end

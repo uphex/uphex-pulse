@@ -9,7 +9,7 @@
       Organization:
     .col-md-5
       = f.select(:organization, :collection => @organizations, :fields => [:name, :id],:class=>'form-control')
-  .form-group
+  .form-group{:class=>('has-error' unless @portfolio.errors[:name].empty?)}
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
     .col-md-5

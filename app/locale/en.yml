@@ -8,3 +8,5 @@ en:
       modified: Profile modified
     account:
       modified: Account modified
+    portfolio:
+      created: Portfolio created

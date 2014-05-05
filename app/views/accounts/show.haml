@@ -2,7 +2,7 @@
   Account
 
 = form_for @organization, '/accounts/me', :method=>:put, :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
-  .form-group
+  .form-group{:class=>('has-error' unless @organization.errors[:name].empty?)}
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
     .col-md-5

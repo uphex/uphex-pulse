@@ -2,19 +2,19 @@
   Profile
 
 = form_for @user, '/users/me', :method=>:put, :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
-  .form-group
+  .form-group{:class=>('has-error' unless @user.errors[:name].empty?)}
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
     .col-md-5
       = f.text_field :name, :class=>'form-control'
     = f.error_messages_for :name
-  .form-group
+  .form-group{:class=>('has-error' unless @user.errors[:email].empty?)}
     %label{:for=>'email',:class=>'col-md-2 control-label'}
       Email:
     .col-md-5
       = f.email_field :email, :class=>'form-control'
     = f.error_messages_for :email
-  .form-group
+  .form-group{:class=>('has-error' unless @user.errors[:password].empty?)}
     %label{:for=>'password',:class=>'col-md-2 control-label'}
       Password:
     .col-md-5
