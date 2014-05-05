@@ -2,13 +2,13 @@ en:
   authn:
     failure: Authentication failure
     email:
-      taken: Email already taken
+      has already been taken: Email already taken
     name:
-      empty: Name is empty
+      can't be blank: Name is empty
     password:
-      empty: Password is empty
+      can't be blank: Password is empty
     repassword:
-      dontmatch: Passwords don't match
+      don't match: Passwords don't match
     signed_out: Signed out
     signed_in: Signed in
     user:

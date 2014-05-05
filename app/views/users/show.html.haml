@@ -1,33 +1,31 @@
 - content_for :title do
   Profile
 
-%form{:action => "/users/me", :method => "post",:class=>'form form-horizontal'}
-  = csrf_token_field
-  %input{:type=>'hidden',:name=>'_method',:value=>'PUT'}
+= form_for @user, '/users/me', :method=>:put, :builder=>'UtilityFormBuilder', :class=>'form form-horizontal' do |f|
   .form-group
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
       Name:
     .col-md-5
-      %input{:type=>'text',:name=>'name',:value=>"#{params[:name]}",:class=>'form-control'}
-    = flash_tag :name
+      = f.text_field :name, :class=>'form-control'
+    = f.error_messages_for :name
   .form-group
     %label{:for=>'email',:class=>'col-md-2 control-label'}
       Email:
     .col-md-5
-      %input{:type=>'email',:name=>'email',:value=>"#{params[:email]}",:class=>'form-control'}
-    = flash_tag :email
+      = f.email_field :email, :class=>'form-control'
+    = f.error_messages_for :email
   .form-group
     %label{:for=>'password',:class=>'col-md-2 control-label'}
       Password:
     .col-md-5
-      %input{:type=>'password',:name=>'password',:class=>'form-control'}
-    = flash_tag :password
+      = f.password_field :password, :class=>'form-control'
+    = f.error_messages_for :password
   .form-group
     %label{:for=>'repassword',:class=>'col-md-2 control-label'}
       Retype password:
     .col-md-5
-      %input{:type=>'password',:name=>'repassword',:class=>'form-control'}
-    = flash_tag :repassword
+      = f.password_field :repassword, :class=>'form-control'
+    = f.error_messages_for :repassword
   .form-group
     %label{:class=>'col-md-2 control-label'}
       User created at:
@@ -43,4 +41,4 @@
   .form-actions
     .row
       .col-md-10{:class=>'col-md-offset-2'}
-        %input{:type => "submit", :value => "Send", :class => "btn btn-primary"}
+        = f.submit 'Send',:class => "btn btn-primary"

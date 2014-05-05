@@ -9,40 +9,22 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/me' do
-    params[:name]=current_user.name
-    params[:email]=current_user.email
     @user = current_user
     render 'users/show'
   end
 
   put '/me' do
-    if User.exists?(:email=>params[:email]) and User.where(:email=>params[:email]).first.id!=current_user.id
-      flash.now[:email]=t 'authn.email.taken'
-      error=true
-    end
-    if params[:name].empty?
-      flash.now[:name] = t 'authn.name.empty'
-      error=true
-    end
-    if !params[:password].empty? and params[:password]!=params[:repassword]
-      flash.now[:repassword] = t 'authn.repassword.dontmatch'
-      error=true
-    end
-    if error
-      @user = current_user
-      render 'users/show'
-    else
-      current_user.name=params[:name]
-      current_user.email=params[:email]
-      if !params[:password].empty?
-        current_user.password=params[:password]
-      end
-      current_user.updated_at=Time.new
-      current_user.save!
+    current_user.update_attributes(params[:user])
+    @user=current_user
+    if @user.save
+      @user.updated_at=Time.new
+      @user.save!
       flash[:notice] = t 'authn.user.modified'
       redirect '/users/me'
+    else
+      @user.clear_password
+      render 'users/show'
     end
-
   end
 
   get '/:id' do
@@ -53,40 +35,19 @@ UpHex::Pulse.controllers :users do
 
 
   post '/' do
-    if User.exists?(:email=>params[:email])
-      flash.now[:email]=t 'authn.email.taken'
-      error=true
-    end
-    if params[:password].empty?
-      flash.now[:password] = t 'authn.password.empty'
-      error=true
-    end
-    if params[:name].empty?
-      flash.now[:name] = t 'authn.name.empty'
-      error=true
-    end
-    if params[:password]!=params[:repassword]
-      flash.now[:repassword] = t 'authn.repassword.dontmatch'
-      error=true
-    end
+    @user=User.create(params[:user])
+    if @user.save
+      @user.organizations << (Organization.create(:name => (@user.name+' Inc.')))
+      @user.save!
 
-    if error
-      render '/users/new'
-    else
-      @user=User.create(:name=>params[:name],:email=>params[:email],:password=>params[:password])
-      @user.organizations << (Organization.create(:name => (params[:name]+' Inc.')))
-      if @user.save
-        flash[:notice] = t 'authn.user.created'
-        status 201
-        render 'users/show'
-      else
-        @user.clear_password
-        status 422
-        render 'users/new'
-      end
+      flash[:notice] = t 'authn.user.created'
       auth = AuthenticationService.new request
       auth.authenticate
       redirect '/users/me/dashboard'
+    else
+      @user.clear_password
+      status 422
+      render 'users/new'
     end
   end
 
