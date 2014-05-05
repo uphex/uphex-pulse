@@ -10,7 +10,4 @@ vendor/gems/*
 .sass-cache/*
 db/*.db
 .*.sw*
-vendor/
-.idea/
-*.iml
 *anvil/
