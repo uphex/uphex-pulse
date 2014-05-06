@@ -3,6 +3,8 @@
     %span.icon-arrow-left2
   Edit portfolio
 
+%h3
+  Edit portfolio data
 = form_for @portfolio, "/portfolios/#{@portfolio.id}",:method=>:put, :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
   .form-group{:class=>('has-error' unless @portfolio.errors[:name].empty?)}
     %label{:for=>'name',:class=>['col-md-2 control-label'] }
@@ -14,3 +16,18 @@
     .row
       .col-md-10{:class=>'col-md-offset-2'}
         = f.submit 'Send',:class => "btn btn-primary"
+
+%h3
+  Add providers
+.row
+  .col-md-10
+    %a{:href=>"/auth/oauth-v2/google?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
+      Add Google
+    %a{:href=>"/auth/oauth-v2/facebook?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
+      Add Facebook
+    %a{:href=>"/auth/oauth-v1/twitter?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
+      Add Twitter
+
+%h3
+  Current providers
+TODO

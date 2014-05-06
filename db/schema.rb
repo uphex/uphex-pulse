@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 3) do
+ActiveRecord::Schema.define(version: 4) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,18 @@ ActiveRecord::Schema.define(version: 3) do
   end
 
   add_index "portfolios", ["name"], name: "index_portfolios_on_name", unique: true, using: :btree
+
+  create_table "providers", force: true do |t|
+    t.string  "name"
+    t.decimal "userid"
+    t.string  "access_token"
+    t.string  "access_token_secret"
+    t.date    "expiration_date"
+    t.string  "token_type"
+    t.string  "refresh_token"
+    t.string  "raw_response"
+    t.integer "portfolios_id"
+  end
 
   create_table "users", force: true do |t|
     t.text     "name",          null: false

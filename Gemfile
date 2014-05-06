@@ -55,3 +55,8 @@ gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
 
 # Asset management
 gem 'sinatra-assetpack'
+
+#OAuth
+gem 'rack-oauth2'
+gem 'oauth'
+gem 'uphex-prototype-cynosure','0.0.5', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
