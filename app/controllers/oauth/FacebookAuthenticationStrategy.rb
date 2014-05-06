@@ -16,13 +16,7 @@ class FacebookAuthenticationStrategy < OAuthV2AuthenticationStrategy
     return res
   end
 
-  def sample(tokens,options)
-    @rsp=[]
-    tokens.each{|token|
-      rsp=Rack::OAuth2.http_client.get('https://graph.facebook.com/'+token['pageid']+'/insights',[],:Authorization=>'Bearer '+token['access_token'])
-      @rsp.push rsp.body
-    }
-
-    return @rsp
+  def profile_names(provider,config)
+    [Uphex::Prototype::Cynosure::Shiatsu.client(:facebook,nil,nil).authenticate(provider.access_token).profile['name']]
   end
 end

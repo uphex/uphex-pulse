@@ -12,3 +12,7 @@ en:
       created: Portfolio created
   portfolio:
     modified: Portfolio modified
+  oauth:
+    added:
+      one: "Profile added: %{profiles}"
+      other: "Profiles added: %{profiles}"

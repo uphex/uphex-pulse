@@ -37,13 +37,15 @@ UpHex::Pulse.controllers :auth do
 
     portfolio=Portfolio.find(@authenticationStrategy.getPortfolioid(params,session))
 
+    profile_names=[]
+
     tokens.each{|token|
       @provider=Provider.create(:portfolio=>portfolio,:name=>params[:provider],:userid=>env['warden'].user.id,:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
+      profile_names.push(@authenticationStrategy.profile_names(@provider,@config))
     }
 
-    @rsp=@authenticationStrategy.sample(tokens,@config[params[:authstrategy]]['providers'][params[:provider]])
+    flash[:notice] = I18n.t 'oauth.added',profiles:profile_names.flatten.join(','),:count=>profile_names.flatten.size
 
-
-    haml :'auth/callback',:layout=>:'layouts/primary'
+    redirect "portfolios/#{portfolio.id}"
   end
 end

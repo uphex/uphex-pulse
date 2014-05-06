@@ -11,9 +11,9 @@ class TwitterAuthenticationStrategy < OAuthV1AuthenticationStrategy
 
   end
 
-  def sample(tokens,config)
-    @consumer = OAuth::Consumer.new(config['consumer_key'],config['consumer_secret'],config['options'])
-    @access_token=OAuth::AccessToken.new(@consumer,tokens[0]['access_token'],tokens[0]['access_token_secret'])
-    return @access_token.request(:get, "https://api.twitter.com/1.1/statuses/home_timeline.json").body
+  def profile_names(provider,config)
+    @consumer = OAuth::Consumer.new(config['oauth-v1']['providers']['twitter']['consumer_key'],config['oauth-v1']['providers']['twitter']['consumer_secret'],config['oauth-v1']['providers']['twitter']['options'])
+    @access_token=OAuth::AccessToken.new(@consumer,provider.access_token,provider.access_token_secret)
+    return JSON.parse(@access_token.request(:get, "https://api.twitter.com/1.1/account/settings.json").body)['screen_name']
   end
 end
