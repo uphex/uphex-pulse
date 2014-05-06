@@ -28,6 +28,29 @@
     %a{:href=>"/auth/oauth-v1/twitter?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
       Add Twitter
 
-%h3
-  Current providers
-TODO
+- unless @portfolio.providers.blank?
+  %h3
+    Current providers
+  %table{:class=>'table table-bordered table-striped'}
+    %thead
+      %tr
+        %th
+          Name
+        %th
+          Provider name
+        %th
+    %tbody
+      - @portfolio.providers.each do |provider|
+        %tr
+          %td
+            = provider.name
+          %td
+            = provider.provider_name
+          %td
+            %a{:href=>"/providers/#{provider.id}",:class=>'button-standard'}
+              Edit
+            %a{:onclick=>"delete_form_#{provider.id}.submit();",:href=>'#',:class=>'button-standard'}
+              Delete
+              %form{:action=>"/providers/#{provider.id}",:method=>'POST',:id=>"delete_form_#{provider.id}"}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}

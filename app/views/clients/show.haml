@@ -16,7 +16,7 @@
   - else
     - @clientstreams.each do |category,streams|
       .stream-block
-        %a{:href => "/events", :class => "edit-client button-standard"}
+        %a{:href => "/providers/#{category[2]}?from=clients", :class => "edit-client button-standard"}
           Edit
           %span.icon-pencil
         .stream-title
@@ -26,16 +26,16 @@
         - streams.each do |stream|
           .stream-line
             .metric-name
-              #{stream.metricname}
+              #{stream[:metricname]}
             .average
               %strong
-                #{stream.average}
+                #{stream[:average]}
               %span 7d average
             .range
               %strong
-                #{stream.rangestart} - #{stream.rangeend}
+                #{stream[:rangestart]} - #{stream[:rangeend]}
               %span range
             .sparkline-container
-              %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream.sparkline, "preserveAspectRatio"=>"none"}
+              %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream[:sparkline], "preserveAspectRatio"=>"none"}
                 %g
                   %path

@@ -1,0 +1,20 @@
+- content_for :title do
+  - if params[:from]=='clients'
+    %a{:href=>"/clients/#{@provider.portfolio.id}"}
+      %span.icon-arrow-left2
+  - else
+    %a{:href=>"/portfolios/#{@provider.portfolio.id}"}
+      %span.icon-arrow-left2
+  Edit provider
+
+= form_for @provider, "/providers/#{@provider.id}?from=#{params[:from]}", :method=>:put, :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
+  .form-group{:class=>('has-error' unless @provider.errors[:name].empty?)}
+    %label{:for=>'name',:class=>['col-md-2 control-label'] }
+      Name:
+    .col-md-5
+      = f.text_field :name, :class=>'form-control'
+    = f.error_messages_for :name
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        = f.submit 'Send',:class => "btn btn-primary"

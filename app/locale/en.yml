@@ -16,3 +16,6 @@ en:
     added:
       one: "Profile added: %{profiles}"
       other: "Profiles added: %{profiles}"
+  provider:
+    modified: Provider modified
+    deleted: Provider deleted
