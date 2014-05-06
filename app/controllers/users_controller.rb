@@ -61,7 +61,11 @@ UpHex::Pulse.controllers :users do
   get '/me/dashboard' do
     @announcements=[]
     @dashboardevents=[]
-    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten
+    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten.map{|portfolio|
+      a=portfolio.clone
+      a.alert='Client has no streams'
+      a
+    }
     render 'dashboard/index'
   end
 end
