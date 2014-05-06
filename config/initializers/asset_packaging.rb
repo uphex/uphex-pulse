@@ -17,9 +17,9 @@ module UpHex
           serve '/js',       from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts'
           serve '/css',      from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets'
           serve '/fonts',    from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts'
-          serve '/assets/stylesheets',    from: 'assets/stylesheets'
+          serve '/assets/stylesheets',    from: File.expand_path('../../../app/assets/stylesheets', __FILE__)
           serve '/images',    from: 'assets/images'
-          serve '/assets/javascripts',    from: 'assets/javascripts'
+          serve '/assets/javascripts',    from: File.expand_path('../../../app/assets/javascripts', __FILE__)
           serve '/assets',    from: 'assets/fonts'
 
 
