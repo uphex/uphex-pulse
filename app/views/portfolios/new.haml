@@ -1,8 +1,8 @@
 - content_for :title do
-  Portfolios
+  %a{:href=>"/users/me/dashboard"}
+    %span.icon-arrow-left2
+  Create portfolio
 
-%label
-  Create new portfolio:
 = form_for @portfolio, '/portfolios', :builder=>UtilityFormBuilder, :class=>'form form-horizontal' do |f|
   .form-group
     %label{:for=>'organization',:class=>['col-md-2 control-label'] }

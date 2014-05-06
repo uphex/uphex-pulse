@@ -28,7 +28,7 @@
     Clients
   %table
     - @clients.each do |client|
-      %tr{"data-link" => "/clients/#{client.id}/"}
+      %tr{"data-link" => "/portfolios/#{client.id}/"}
         %td
           - if !client.alert.nil?
             %span.icon-warning

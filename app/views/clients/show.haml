@@ -2,7 +2,7 @@
   %a{:href=>"../.."}
     %span.icon-arrow-left2
   #{@client.name}
-= render :partial => 'layouts/timeline' , :locals=>{:timelineevents=>@clientevents, :eventurl=>"../../events/", :eventurlback=>"/"}
+= partial 'layouts/timeline' , :locals=>{:timelineevents=>@clientevents, :eventurl=>"../../events/", :eventurlback=>"/"}
 - if !@clientevents.empty?
   %a{:href => "/clients/#{@client.id}/events", :class => "more-events button-standard"} See all
 
