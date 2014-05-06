@@ -45,7 +45,7 @@ h3.heading-with-icon {
   padding: 3px 6px;
   border: $light-border;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none!important;
   color: $main-font;
   background-color: $base-background;
   /* hover-off transitions */
