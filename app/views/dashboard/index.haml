@@ -28,7 +28,7 @@
     Clients
   %table
     - @clients.each do |client|
-      %tr{"data-link" => "/portfolios/#{client.id}/"}
+      %tr{"data-link" => "/clients/#{client.id}/"}
         %td
           - if !client.alert.nil?
             %span.icon-warning
@@ -37,7 +37,7 @@
         %td
           #{client.alert}
         %td
-          %a{:href => "http://google.com", :class => "edit-client button-standard"}
+          %a{:href => "/portfolios/#{client.id}", :class => "edit-client button-standard"}
             Edit
             %span.icon-pencil
     - if @clients.blank?

@@ -1,7 +1,6 @@
 UpHex::Pulse.controllers :portfolios do
 
   get '/' do
-    @portfolios_for_account=current_user.accounts.map{|account| {account.organization=>account.organization.portfolios}}
     @organizations=current_user.organizations
     @portfolio=Portfolio.new
     render 'portfolios/new'
@@ -21,10 +20,23 @@ UpHex::Pulse.controllers :portfolios do
   end
 
   get '/:id' do
-    @client=Portfolio.find(params[:id])
-    @clientevents=[]
-    @clientstreams=[]
-    render 'clients/show'
+    @portfolio=Portfolio.find(params[:id])
+    render 'portfolios/show'
   end
+
+  put '/:id' do
+    @portfolio=Portfolio.find(params[:id])
+    @portfolio.update_attributes(params[:portfolio])
+    if @portfolio.save
+      @portfolio.updated_at=Time.new
+      @portfolio.save!
+      flash[:notice] = t 'portfolio.modified'
+      redirect "/portfolios/#{params[:id]}"
+    else
+      render 'portfolios/show'
+    end
+  end
+
+
 
 end

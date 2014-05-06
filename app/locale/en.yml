@@ -10,3 +10,5 @@ en:
       modified: Account modified
     portfolio:
       created: Portfolio created
+  portfolio:
+    modified: Portfolio modified
