@@ -1,6 +1,7 @@
 require 'active_record'
 
 class Portfolio < ActiveRecord::Base
+  attr_accessor :alert
   validates :name,
             :presence => true, uniqueness: true
 
