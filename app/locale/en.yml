@@ -16,6 +16,7 @@ en:
     added:
       one: "Profile added: %{profiles}"
       other: "Profiles added: %{profiles}"
+    no_providers_added: No providers were added
   provider:
     modified: Provider modified
     deleted: Provider deleted

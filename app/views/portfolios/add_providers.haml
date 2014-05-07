@@ -1,0 +1,29 @@
+- content_for :title do
+  %a{:href=>"/users/me/dashboard"}
+    %span.icon-arrow-left2
+  Add providers
+
+%h3
+  Please select which profiles you want to add
+
+%form{:action=>'/auth/add_providers',:method=>'POST'}
+  = csrf_token_field
+  %input{:type=>'hidden',:name=>"portfolio_id",:value=>@portfolio_id}
+    %table{:class=>'table table-bordered table-striped'}
+      %thead
+        %tr
+          %th{:class=>'col-md-2'}
+          %th
+            Name
+      %tbody
+        - @providers.each_with_index do |provider,index|
+          %tr
+            %td
+              %input{:type=>'checkbox',:name=>"provider_selected[]",:value=>index,:checked=>'checked'}
+              %input{:type=>'hidden',:name=>"provider_#{index}",:value=>YAML::dump(provider.attributes)}
+            %td
+              = provider[:name]
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        %input{:type=>'submit',:value=>'Send',:class=>'btn btn-primary'}

@@ -37,15 +37,45 @@ UpHex::Pulse.controllers :auth do
 
     portfolio=Portfolio.find(@authenticationStrategy.getPortfolioid(params,session))
 
-    profile_names=[]
+    @providers=[]
 
     tokens.each{|token|
-      @provider=Provider.create(:portfolio=>portfolio,:name=>params[:provider],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
-      profile_names.push(@authenticationStrategy.profile_names(@provider,@config))
+      @authenticationStrategy.profiles(token,@config).each{|profile|
+        provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
+        @providers.push(provider)
+      }
     }
 
-    flash[:notice] = I18n.t 'oauth.added',profiles:profile_names.flatten.join(','),:count=>profile_names.flatten.size
+    if @providers.size==1
+      @providers.first.save!
+      flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
 
-    redirect "portfolios/#{portfolio.id}"
+      redirect "portfolios/#{portfolio.id}"
+    else
+      @portfolio_id=portfolio.id
+
+      render 'portfolios/add_providers'
+    end
+
+
+
+  end
+
+  post '/add_providers' do
+    puts params[:provider_selected]
+    if params[:provider_selected].blank?
+      flash[:notice] = I18n.t 'oauth.no_providers_added'
+      redirect "portfolios/#{params[:portfolio_id]}"
+    else
+      providers=[]
+      params[:provider_selected].each{|provider_index|
+        puts params['provider_'+provider_index]
+        provider=Provider.create(YAML::load(params['provider_'+provider_index]))
+        puts provider
+        providers.push(provider)
+      }
+      flash[:notice] = I18n.t 'oauth.added',profiles:providers.map{|provider| provider[:name]}.join(','),:count=>providers.size
+      redirect "portfolios/#{params[:portfolio_id]}"
+    end
   end
 end

@@ -11,9 +11,10 @@ class TwitterAuthenticationStrategy < OAuthV1AuthenticationStrategy
 
   end
 
-  def profile_names(provider,config)
+  def profiles(token,config)
     @consumer = OAuth::Consumer.new(config['oauth-v1']['providers']['twitter']['consumer_key'],config['oauth-v1']['providers']['twitter']['consumer_secret'],config['oauth-v1']['providers']['twitter']['options'])
-    @access_token=OAuth::AccessToken.new(@consumer,provider.access_token,provider.access_token_secret)
-    return JSON.parse(@access_token.request(:get, "https://api.twitter.com/1.1/account/settings.json").body)['screen_name']
+    @access_token=OAuth::AccessToken.new(@consumer,token['access_token'],token['access_token_secret'])
+    screen_name=JSON.parse(@access_token.request(:get, "https://api.twitter.com/1.1/account/settings.json").body)['screen_name']
+    [{:name=>'@'+screen_name,:id=>screen_name}]
   end
 end

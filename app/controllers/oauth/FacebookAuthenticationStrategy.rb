@@ -13,10 +13,11 @@ class FacebookAuthenticationStrategy < OAuthV2AuthenticationStrategy
       res.push(Hash['access_token'=>long_lived_token,'expiration_date'=>nil,'refresh_token'=>nil,'pageid'=>d['id']])
     }
 
-    return res
+    res
   end
 
-  def profile_names(provider,config)
-    [Uphex::Prototype::Cynosure::Shiatsu.client(:facebook,nil,nil).authenticate(provider.access_token).profile['name']]
+  def profiles(token,config)
+    profile=Uphex::Prototype::Cynosure::Shiatsu.client(:facebook,nil,nil).authenticate(token['access_token']).profile;
+    [{:name=>profile['name'],:id=>profile['id']}]
   end
 end
