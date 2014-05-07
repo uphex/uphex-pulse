@@ -1,0 +1,78 @@
+.mod-clients {
+  margin-top: 80px;
+  position: relative;
+  .add-new {
+    position: absolute;
+    top: 0;
+    right: 0;
+    span {
+      font-size: 14px;
+    }
+  }
+  table {
+    width: 100%;
+    tr {
+      border-bottom: $light-border;
+      background-color: $base-background;
+      /* hover-off transitions */
+      -webkit-transition: background-color 200ms linear;
+      -moz-transition: background-color 200ms linear;
+      -ms-transition: background-color 200ms linear;
+      -o-transition: background-color 200ms linear;
+      transition: background-color 200ms linear;
+      &:hover {
+        cursor: pointer;
+        background-color: $light-block;
+        -webkit-transition: background-color 200ms linear;
+        -moz-transition: background-color 200ms linear;
+        -ms-transition: background-color 200ms linear;
+        -o-transition: background-color 200ms linear;
+        transition: background-color 200ms linear;
+      }
+      &:hover span.icon-warning {
+        color: $icon-hover;
+        -webkit-transition: color 200ms linear;
+        -moz-transition: color 200ms linear;
+        -ms-transition: color 200ms linear;
+        -o-transition: color 200ms linear;
+        transition: color 200ms linear;
+      }
+      &:hover .edit-client {
+        color: $icon-hover;
+        background-color: $light-block;
+        /* hover-off transitions */
+        -webkit-transition: color 200ms linear, background-color 200ms linear;
+        -moz-transition: color 200ms linear, background-color 200ms linear;
+        -ms-transition: color 200ms linear, background-color 200ms linear;
+        -o-transition: color 200ms linear, background-color 200ms linear;
+        transition: color 200ms linear, background-color 200ms linear;
+      }
+      &:hover .edit-client:hover {
+        color: $main-font;
+        background-color: $dark-block;
+        -webkit-transition: color 200ms linear, background-color 200ms linear;
+        -moz-transition: color 200ms linear, background-color 200ms linear;
+        -ms-transition: color 200ms linear, background-color 200ms linear;
+        -o-transition: color 200ms linear, background-color 200ms linear;
+        transition: color 200ms linear, background-color 200ms linear;
+      }
+    }
+    td {
+      padding: 5px;
+      overflow: hidden;
+      &:first-child {
+        width: 50px;
+        padding-left: 20px;
+      }
+      span.icon-warning {
+        color: $faded-icon;
+        /* hover-off transitions */
+        -webkit-transition: color 200ms linear;
+        -moz-transition: color 200ms linear;
+        -ms-transition: color 200ms linear;
+        -o-transition: color 200ms linear;
+        transition: color 200ms linear;
+      }
+    }
+  }
+}

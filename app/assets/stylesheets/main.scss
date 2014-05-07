@@ -1,0 +1,39 @@
+.btn.btn-primary{
+  background-color: #acacac;
+  &:focus{
+    background-color: #acacac;
+  }
+  &:hover{
+    background-color: #878787;
+  }
+}
+
+$info-background-color: #ededed;
+$info-border-color: #e8e8e8;
+$info-color: #777777;
+
+.alert-info{
+  background-color: $info-background-color;
+  border-color: $info-border-color;
+  color: $info-color;
+}
+
+.alert-danger{
+  background-color: darken($info-background-color,10%);
+  border-color: darken($info-border-color,10%);
+  color: darken($info-color,10%);
+}
+
+h2{
+  font-weight: bold;
+}
+
+body{
+  background-color: white;
+  font-size: 100%;
+  color:#000000;
+}
+
+html{
+  font-size: 100%;
+}

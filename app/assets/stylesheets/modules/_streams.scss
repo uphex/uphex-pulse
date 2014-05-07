@@ -1,0 +1,58 @@
+.mod-streams {
+  margin-top: 30px;
+  overflow: hidden;
+  .stream-block {
+    margin-bottom:25px;
+    width: 95%;
+    float: right;
+    clear: both;
+    .stream-title {
+      font-weight: bold;
+      margin-bottom: 15px;
+      * {
+        vertical-align: middle;
+      }
+      img {
+        width: 40px;
+      }
+    }
+    .stream-line {
+      overflow: hidden;
+      margin-bottom: 10px;
+      border-bottom: $light-border;
+      > div {
+        float: left;
+        height: 50px;
+        line-height: 50px;
+      }
+      .sparkline-container {
+        float: left;
+        width: 30%;
+        .mod-sparkline {
+          max-height: 50px;          
+        }
+      }
+      .metric-name {
+        width: 26%;
+        padding-left: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .average,
+      .range {
+        width: 22%;
+        padding-right: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        span {
+          color: $light-font;
+        }
+      }
+      strong {
+        font-size: 18px;
+      }
+    }
+  }
+}

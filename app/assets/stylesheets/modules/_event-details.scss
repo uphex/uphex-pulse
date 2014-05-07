@@ -1,0 +1,75 @@
+.mod-event-details {
+  overflow: hidden;
+  h3.client-name {
+    font-family: $font-heading;
+    font-size: 25px;
+    font-weight: normal;
+    span[class^="icon-"] {
+      margin-right: 10px;
+    }
+    a {
+      color: $main-font;
+      text-decoration: none;
+    }
+  }
+  .half {
+    width: 50%;
+    float: left;
+    .event-data {
+      margin-bottom: 10px;
+      * {
+        vertical-align: middle;
+      }
+      span[class^="icon-"] {
+        display: inline-block;
+        width: 30px;
+        margin-right: 10px;
+        font-size: 19px;
+        color: $faded-icon;
+      }
+      img {
+        max-width: 30px;
+        max-height: 30px;
+        margin-right: 10px;
+      }
+    }
+    .sparkline-container {
+      padding-bottom: 10px;
+      border-bottom: $light-border;
+      height:120px;
+    }
+
+    .result-comment {
+      margin-top: 10px;
+      span {
+        position: relative;
+        top: 3px;
+        margin-right: 5px;
+        color: $icon-hover;
+        font-size: 20px;
+      }
+    }
+    .compare {
+      margin-top: 10px;
+      overflow: hidden;
+      > strong {
+        display: block;
+        width: 20%;
+        text-align:right;
+        float: left;
+        line-height:30px;
+      }
+      > div {
+        line-height:30px;
+        float: left;
+        &.col1,
+        &.metric {
+          width: 30%;
+        }
+        &.metric {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+}
