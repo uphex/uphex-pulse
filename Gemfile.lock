@@ -45,10 +45,10 @@ GIT
       rack (>= 1.0)
 
 GIT
-  remote: git@github.com:thoughtbot/shoulda-matchers.git
-  revision: 723b5d3552689481e8c6e4df3618aedcc32c0f38
+  remote: git@github.com:uphex/shoulda-matchers.git
+  revision: 20a9c16e6f3489940b1b91c56faa606723143628
   specs:
-    shoulda-matchers (2.5.0)
+    shoulda-matchers (2.6.1)
       activesupport (>= 3.0.0)
 
 GIT
@@ -77,7 +77,6 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.2)
     ast (1.1.0)
-    atomic (1.1.16)
     bcrypt (3.1.7)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
@@ -105,7 +104,7 @@ GEM
     mime-types (1.25.1)
     minitest (4.7.5)
     moneta (0.7.20)
-    multi_json (1.9.2)
+    multi_json (1.10.0)
     parser (2.1.7)
       ast (~> 1.1)
       slop (~> 3.4, >= 3.4.5)
@@ -148,8 +147,7 @@ GEM
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
     thor (0.18.1)
-    thread_safe (0.3.1)
-      atomic (>= 1.1.7, < 2)
+    thread_safe (0.3.3)
     tilt (1.4.1)
     treetop (1.4.15)
       polyglot
