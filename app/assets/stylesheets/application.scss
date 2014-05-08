@@ -1,14 +1,16 @@
-@import "app/assets/stylesheets/utilities/_variables.scss";
-@import "app/assets/stylesheets/base/_normalize.scss";
-@import "app/assets/stylesheets/base/_layout.scss";
-@import "app/assets/stylesheets/base/_typography.scss";
-@import "app/assets/stylesheets/base/_icons.scss";
-@import "app/assets/stylesheets/modules/_header.scss";
-@import "app/assets/stylesheets/modules/_announcements.scss";
-@import "app/assets/stylesheets/modules/_page-title-wrapper.scss";
-@import "app/assets/stylesheets/modules/_timeline.scss";
-@import "app/assets/stylesheets/modules/_streams.scss";
-@import "app/assets/stylesheets/modules/_sparkline.scss";
-@import "app/assets/stylesheets/modules/_event-details.scss";
-@import "app/assets/stylesheets/modules/_clients.scss";
-@import "app/assets/stylesheets/modules/_footer.scss";
+@import "utilities/_variables.scss";
+
+@import "base/_normalize.scss";
+@import "base/_layout.scss";
+@import "base/_typography.scss";
+@import "base/_icons.scss";
+
+@import "modules/_header.scss";
+@import "modules/_announcements.scss";
+@import "modules/_page-title-wrapper.scss";
+@import "modules/_timeline.scss";
+@import "modules/_streams.scss";
+@import "modules/_sparkline.scss";
+@import "modules/_event-details.scss";
+@import "modules/_clients.scss";
+@import "modules/_footer.scss";
