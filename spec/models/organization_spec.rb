@@ -8,4 +8,8 @@ describe Organization do
     validation_spec_for :presence, :slug
     validation_spec_for :uniqueness, :slug
   end
+
+  context "associations" do
+    association_spec_for :have_many, :portfolios
+  end
 end
