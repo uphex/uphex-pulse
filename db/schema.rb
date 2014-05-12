@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 5) do
+ActiveRecord::Schema.define(version: 6) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,27 @@ ActiveRecord::Schema.define(version: 5) do
 
   add_index "portfolios", ["name"], name: "index_portfolios_on_name", using: :btree
   add_index "portfolios", ["organization_id"], name: "index_portfolios_on_organization_id", using: :btree
+
+  create_table "streams", force: true do |t|
+    t.text     "name",                null: false
+    t.text     "provider_name",       null: false
+    t.integer  "organization_id",     null: false
+    t.text     "access_token",        null: false
+    t.text     "access_token_secret", null: false
+    t.text     "token_type",          null: false
+    t.text     "refresh_token",       null: false
+    t.json     "metadata"
+    t.datetime "expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "streams", ["expires_at"], name: "index_streams_on_expires_at", using: :btree
+  add_index "streams", ["name"], name: "index_streams_on_name", using: :btree
+  add_index "streams", ["organization_id", "name"], name: "index_streams_on_organization_id_and_name", using: :btree
+  add_index "streams", ["organization_id", "provider_name"], name: "index_streams_on_organization_id_and_provider_name", using: :btree
+  add_index "streams", ["organization_id"], name: "index_streams_on_organization_id", using: :btree
+  add_index "streams", ["provider_name"], name: "index_streams_on_provider_name", using: :btree
 
   create_table "users", force: true do |t|
     t.text     "name",          null: false
