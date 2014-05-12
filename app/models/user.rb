@@ -1,7 +1,12 @@
 require 'active_record'
 require 'bcrypt'
+require 'app/models/organization'
+require 'app/models/organization_membership'
 
 class User < ActiveRecord::Base
+  has_many :organization_memberships
+  has_many :organizations, :through => :organization_memberships
+
   attr_accessor :password
 
   validates :name,
