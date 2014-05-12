@@ -37,6 +37,8 @@ Padrino.before_load do
   Dir.glob(File.join Padrino.root, 'config', 'initializers', '**', '*').each do |file|
     require file
   end
+
+  $:.unshift Padrino.root unless $:.include? Padrino.root
 end
 
 ##
