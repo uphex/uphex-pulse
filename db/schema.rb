@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 6) do
+ActiveRecord::Schema.define(version: 7) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,17 @@ ActiveRecord::Schema.define(version: 6) do
 
   add_index "organizations", ["name"], name: "index_organizations_on_name", using: :btree
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
+
+  create_table "portfolio_streams", id: false, force: true do |t|
+    t.integer  "portfolio_id", null: false
+    t.integer  "stream_id",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "portfolio_streams", ["portfolio_id", "stream_id"], name: "index_portfolio_streams_on_portfolio_id_and_stream_id", unique: true, using: :btree
+  add_index "portfolio_streams", ["portfolio_id"], name: "index_portfolio_streams_on_portfolio_id", using: :btree
+  add_index "portfolio_streams", ["stream_id"], name: "index_portfolio_streams_on_stream_id", using: :btree
 
   create_table "portfolios", force: true do |t|
     t.text     "name"

@@ -2,6 +2,8 @@ require 'active_record'
 
 class Stream < ActiveRecord::Base
   belongs_to :organization
+  has_many :portfolio_streams
+  has_many :portfolios, :through => :portfolio_streams
 
   validates :name, :presence => true
   validates :provider_name, :presence => true
