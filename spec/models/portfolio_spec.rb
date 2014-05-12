@@ -9,6 +9,9 @@ describe Portfolio do
   end
 
   context "associations" do
-    association_spec_for :have_many, :streams
+    association_spec_for :have_many, :portfolio_streams
+    association_spec_for :have_many, :streams do |a|
+      a.through(:portfolio_streams)
+    end
   end
 end
