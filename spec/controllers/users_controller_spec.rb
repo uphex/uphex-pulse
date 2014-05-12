@@ -61,9 +61,10 @@ describe 'UsersController' do
 
     it "save success responds with created" do
       User.any_instance.stub(:save => true)
-      post '/users', :user => {}
+      post '/users', :user => {:name=>'name',:email=>'email',:password=>'password'}
 
-      expect(last_response.status).to eq 201
+      expect(last_response.status).to eq 302
+      expect(last_response.headers['Location']).to end_with '/users/me/dashboard'
     end
   end
 end

@@ -11,7 +11,8 @@ describe "users" do
           :email => 'y',
           :password => 'z'
         }
-      expect(last_response.status).to eq 201
+      expect(last_response.status).to eq 302
+      expect(last_response.headers['Location']).to end_with '/users/me/dashboard'
     end
   end
 end

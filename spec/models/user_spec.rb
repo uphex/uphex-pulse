@@ -6,7 +6,6 @@ describe User do
     it { expect(subject).to validate_presence_of(:name) }
     it { expect(subject).to validate_presence_of(:email) }
     it { expect(subject).to validate_presence_of(:password_hash) }
-    it { expect(subject).to validate_presence_of :password }
   end
 
   context "#password_hash=" do
