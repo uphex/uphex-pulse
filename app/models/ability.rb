@@ -62,4 +62,52 @@ class Ability
       end
     end
   end
+
+  class PortfolioPolicy
+    include Ability::AuthorizationPolicy
+
+    def applies?
+      true
+    end
+
+    def authorize
+      ability.instance_eval do
+        can [:read,:update], Portfolio do |p|
+          user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
+        end
+      end
+    end
+  end
+
+  class OrganizationPolicy
+    include Ability::AuthorizationPolicy
+
+    def applies?
+      true
+    end
+
+    def authorize
+      ability.instance_eval do
+        can :read, Organization do |o|
+          user.organizations.any?{|organization| organization.id==o.id}
+        end
+      end
+    end
+  end
+
+  class ProviderPolicy
+    include Ability::AuthorizationPolicy
+
+    def applies?
+      true
+    end
+
+    def authorize
+      ability.instance_eval do
+        can [:read,:update,:delete], Provider do |p|
+          user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.providers.any?{|provider|provider.id==p.id}}}
+        end
+      end
+    end
+  end
 end

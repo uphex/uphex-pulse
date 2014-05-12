@@ -1,4 +1,8 @@
 UpHex::Pulse.controllers :clients do
+  before do
+    Ability::PortfolioPolicy.new(current_ability).apply!
+  end
+
   get '/:id' do
 
     icons={
@@ -8,6 +12,7 @@ UpHex::Pulse.controllers :clients do
     }
 
     @client=Portfolio.find(params[:id])
+    error(403) unless current_ability.can? :read, @client
     @clientevents=[]
 
     @clientstreams=@client.providers.map{|provider|
