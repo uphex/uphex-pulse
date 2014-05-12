@@ -1,4 +1,5 @@
-require 'environment_spec_helper'
+require 'spec_helper'
+require 'spec/support/templates/active_record_model'
 require 'app/models/user'
 
 describe User do
