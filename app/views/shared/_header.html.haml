@@ -4,22 +4,7 @@
     %a{:href => '/', :class => 'agency-name'}
       = organization_name_tag
     %div.user-nav
-      - if env['warden'].authenticated?
-        %ul
-          %li.username
-            %a{:href => "/users/me"}
-              = env['warden'].user.name
-          %li
-            %a{:href => "/accounts/me"} Account
-          %li
-            %a{:onclick=>"logout_form.submit();",:href=>'#'}
-              Log out
-              %form{:action=>'/users/me/session',:method=>'POST',:id=>'logout_form'}
-                = csrf_token_field
-                %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
+      - if current_user
+        = partial 'shared/nav_authenticated'
       - else
-        %ul
-          %li
-            %a{:href => "/sessions/new"} sign in
-          %li
-            %a{:href => "/users/new"} sign up
+        = partial 'shared/nav_anonymous'
