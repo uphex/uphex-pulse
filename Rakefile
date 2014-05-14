@@ -42,3 +42,5 @@ namespace :uphex do
   desc "Perform setup suitable for cloud environments"
   task :deploy => ['uphex:make_database_config', 'ar:create', 'ar:migrate']
 end
+
+task 'db:schema:load' => ['ar:schema:load']
