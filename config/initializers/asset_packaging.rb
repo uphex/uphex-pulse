@@ -13,17 +13,25 @@ module UpHex
 
         app.register Sinatra::AssetPack
 
+
         app.assets {
-          serve '/js',       from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts'
-          serve '/css',      from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets'
-          serve '/fonts',    from: Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts'
-          serve '/assets/stylesheets',    from: File.expand_path('../../../app/assets/stylesheets', __FILE__)
+
+          require 'pathname'
+
+          def rel(path)
+            Pathname.new(path).relative_path_from(Pathname.new(app.root)).to_s
+          end
+
+          serve '/js',       from: rel(Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts')
+          serve '/css',      from: rel(Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets')
+          serve '/fonts',    from: rel(Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts')
+          serve '/assets/stylesheets',    from: rel(File.expand_path('../../../app/assets/stylesheets', __FILE__))
           serve '/images',    from: 'assets/images'
-          serve '/assets/javascripts',    from: File.expand_path('../../../app/assets/javascripts', __FILE__)
+          serve '/assets/javascripts',    from: rel(File.expand_path('../../../app/assets/javascripts', __FILE__))
           serve '/assets',    from: 'assets/fonts'
 
 
-          js :app, '/js/app.js', [
+          js :app, [
               '/js/jquery/jquery.min.js',
               '/js/jquery/jquery-migrate.min.js',
               '/js/bootstrap/bootstrap.min.js',
@@ -31,13 +39,12 @@ module UpHex
               '/assets/javascripts/application.js'
           ]
 
-          css :application, '/css/application.css', [
+          css :application, [
               '/css/bootstrap/bootstrap.css',
               '/css/light-theme.css',
               '/css/theme-colors.css',
               '/assets/stylesheets/main.css',
               '/assets/stylesheets/application.css'
-
           ]
 
           js_compression  :jsmin    # :jsmin | :yui | :closure | :uglify
