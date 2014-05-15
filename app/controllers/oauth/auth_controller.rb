@@ -32,30 +32,37 @@ UpHex::Pulse.controllers :auth do
 
     read_config
 
-    tokens=@authenticationStrategy.callback(@config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
-    puts tokens
-
     portfolio=Portfolio.find(@authenticationStrategy.getPortfolioid(params,session))
 
-    @providers=[]
+    begin
+      tokens=@authenticationStrategy.callback(@config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
+      puts tokens
 
-    tokens.each{|token|
-      @authenticationStrategy.profiles(token,@config).each{|profile|
-        provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
-        @providers.push(provider)
+      @providers=[]
+
+      tokens.each{|token|
+        @authenticationStrategy.profiles(token,@config).each{|profile|
+          provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
+          @providers.push(provider)
+        }
       }
-    }
 
-    if @providers.size==1
-      @providers.first.save!
-      flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
+      if @providers.size==1
+        @providers.first.save!
+        flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
 
+        redirect "portfolios/#{portfolio.id}"
+      else
+        @portfolio_id=portfolio.id
+
+        render 'portfolios/add_providers'
+      end
+
+    rescue
+      flash[:error]=I18n.t 'oauth.provider.error'
       redirect "portfolios/#{portfolio.id}"
-    else
-      @portfolio_id=portfolio.id
-
-      render 'portfolios/add_providers'
     end
+
 
 
 
