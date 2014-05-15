@@ -58,7 +58,8 @@ UpHex::Pulse.controllers :auth do
         render 'portfolios/add_providers'
       end
 
-    rescue
+    rescue => e
+      puts e.inspect, e.backtrace
       flash[:error]=I18n.t 'oauth.provider.error'
       redirect "portfolios/#{portfolio.id}"
     end
