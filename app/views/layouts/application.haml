@@ -2,8 +2,9 @@
 %html
   %head
     = partial 'shared/head'
-    = stylesheet_link_tag 'application'
-    = javascript_include_tag 'application'
+    != css :forms
+    != css :application
+    != js :forms
 
   %body
     = partial 'shared/header'
