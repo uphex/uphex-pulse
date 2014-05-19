@@ -1,41 +1,46 @@
 require 'padrino-helpers/form_builder/abstract_form_builder'
 
 class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
-  def messages_for(field, options = {}, &block)
+  def styled_label_for(field, options = {}, &block)
+    classes = add_classes_to_string options[:class], 'col-md-2 control-label'
+    label field, options.merge(:class => classes), &block
+  end
+
+  def styled_messages_for(field, options = {}, &block)
+    classes = add_classes_to_string options[:class], 'help-block'
+
     template.content_tag(:span,
       object.errors[field].join('; '),
-      options.merge(:class => 'help-block'),
+      options.merge(:class => classes),
       &block
     )
   end
 
-  def styled_input_classes
-    @styled_input_classes ||= styled_input_classes_hash
-  end
-
   self.field_types.each do |f|
-    define_method "styled_#{f}", ->(*args, &block) do
-      raise ArgumentError, "couldn't translate arguments for a #styled_#{f} to ##{f}" if args.size > 2
+    define_method "styled_#{f}_block", ->(field, options = {}, &block) do
+      block ||= Proc.new {
+        [
+          styled_label_for(field, options),
+          send("styled_#{f}", field, options),
+          styled_messages_for(field, options),
+        ].join.html_safe
+      }
 
-      field_name   = args[0]
-      options_hash = args[1] || {}
-      options_hash[:class] = [options_hash[:class], *styled_input_classes[f]].compact.join(' ')
+      classes = add_classes_to_string options[:class], 'form-group'
+      template.content_tag(:div, options.merge(:class => classes), &block)
+    end
 
-      new_args = [field_name, options_hash, args[2..-1]].
-        compact.
-        reject { |o| o.empty? }
+    define_method "styled_#{f}", ->(field, options = {}, &block) do
+      classes = add_classes_to_string options[:class], 'form-control'
 
-      send f, *new_args, &block
+      send f, field, options.merge(:class => classes), &block
     end
   end
 
-  private
+  def add_classes_to_string(string_of_classes, classes_to_add)
+    additional = classes_to_add.split(' ')
+    existing   = string_of_classes.to_s.split(' ')
 
-  def styled_input_classes_hash
-    self.class.field_types.reduce({}) do |hash, field_type|
-      hash.tap do |hash|
-        hash[field_type.to_sym] = %w{form-control}
-      end
-    end
+    existing.push(*additional).join(' ')
   end
 end

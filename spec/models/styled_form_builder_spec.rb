@@ -23,8 +23,10 @@ describe StyledFormBuilder do
   describe "#styled_* metamethods" do
     it "has a corresponding styled_* method for each field type" do
       c = described_class
-      expect(c.field_types).to_not be_empty
-      expect(c.field_types - c.instance_methods(true)).to be_empty
+      methods = c.field_types.map { |f| "styled_#{f}".to_sym }
+
+      expect(methods).to_not be_empty
+      expect(methods - c.instance_methods(true)).to be_empty
     end
 
     it "adds the 'form-control' class to inputs" do
@@ -47,19 +49,70 @@ describe StyledFormBuilder do
     end
   end
 
-  describe "#messages_for" do
-    it "joins errors together" do
+  context "with an arbitrary ActiveModel" do
+    before(:each) do
       model.class_eval do
         attr_accessor :arbitrary_field
       end
+    end
 
-      model.errors[:arbitrary_field] << 'error one'
-      model.errors[:arbitrary_field] << 'error two'
+    describe "#styled_*_block" do
+      it "works inside a form block" do
+        form_html = template.form_for(Model.new, '/arbitrary_url', :builder => StyledFormBuilder) do |f|
+          f.styled_text_field_block :arbitrary_field
+        end
 
-      expect(builder.messages_for :arbitrary_field).to \
-        have_tag('span',
-          :text => 'error one; error two',
-          :with => { :class => 'help-block' })
+        expect(form_html).to have_tag('form') do
+          with_tag('div', :with => { :class => 'form-group' }) do
+            with_tag 'label', :with => { :for => 'model_arbitrary_field' }
+            with_tag 'input', :with => { :id  => 'model_arbitrary_field' }
+            with_tag 'span',  :with => { :class => 'help-block' }
+          end
+        end
+      end
+
+      it "has a corresponding styled_*_block method for each field type" do
+        c = described_class
+        methods = c.field_types.map { |f| "styled_#{f}_block".to_sym }
+
+        expect(methods).to_not be_empty
+        expect(methods - c.instance_methods(true)).to be_empty
+      end
+
+      it "generates a div enclosing other form elements" do
+        expect(builder.styled_text_field_block :arbitrary_field).to \
+          have_tag('div', :with => { :class => 'form-group' }) do
+            with_tag 'label', :with => { :for => 'model_arbitrary_field' }
+            with_tag 'input', :with => { :id  => 'model_arbitrary_field' }
+            with_tag 'span',  :with => { :class => 'help-block' }
+          end
+      end
+    end
+
+    describe "#styled_label_for" do
+      it "adds a label for a field with the appropriate class" do
+        expect(builder.styled_label_for :arbitrary_field).to \
+          have_tag('label',
+            :text => /Arbitrary field:/,
+            :with => {
+              :for   => "model_arbitrary_field",
+              :class => "col-md-2 control-label"
+            }
+          )
+      end
+    end
+
+    describe "#styled_messages_for" do
+      it "joins errors together for a field with the appropriate class" do
+        model.errors[:arbitrary_field] << 'error one'
+        model.errors[:arbitrary_field] << 'error two'
+
+        expect(builder.styled_messages_for :arbitrary_field).to \
+          have_tag('span',
+            :text => 'error one; error two',
+            :with => { :class => 'help-block' }
+          )
+      end
     end
   end
 end
