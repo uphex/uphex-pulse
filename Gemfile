@@ -42,6 +42,8 @@ gem 'bcrypt-ruby'
 group :test do
   gem 'byebug'
   gem 'rspec'
+  gem 'rspec-html-matchers', :require => false
+
   gem 'rack-test',
     :git => 'git@github.com:brynary/rack-test.git'
   gem 'shoulda-matchers',
