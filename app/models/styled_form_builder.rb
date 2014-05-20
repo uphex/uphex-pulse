@@ -1,6 +1,10 @@
 require 'padrino-helpers/form_builder/abstract_form_builder'
 
 class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
+  def errors_for(field)
+    object.respond_to?(:errors) ? object.errors[field] : []
+  end
+
   def styled_label_for(field, options = {}, &block)
     classes = add_classes_to_string options[:class], 'col-md-2 control-label'
     label field, options.merge(:class => classes), &block
@@ -10,7 +14,7 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
     classes = add_classes_to_string options[:class], 'help-block'
 
     template.content_tag(:span,
-      object.errors[field].join('; '),
+      errors_for(field).join('; '),
       options.merge(:class => classes),
       &block
     )
@@ -23,17 +27,21 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
           styled_label_for(field, options),
           send("styled_#{f}", field, options),
           styled_messages_for(field, options),
-        ].join.html_safe
+        ].reject { |o| o.blank? }.join.html_safe
       }
 
-      classes = add_classes_to_string options[:class], 'form-group'
+      group_string = errors_for(field).any? ? 'form-group has-error' : 'form-group'
+
+      classes = add_classes_to_string options[:class], group_string
       template.content_tag(:div, options.merge(:class => classes), &block)
     end
 
     define_method "styled_#{f}", ->(field, options = {}, &block) do
       classes = add_classes_to_string options[:class], 'form-control'
 
-      send f, field, options.merge(:class => classes), &block
+      template.content_tag(:div, {:class => 'col-md-5'}) {
+        send f, field, options.merge(:class => classes), &block
+      }
     end
   end
 
