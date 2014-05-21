@@ -1,23 +1,9 @@
 - content_for :title do
   Sign up
 
-- content_for :navigation do
-  %li= link_to 'sign in', '/sessions/new'
-  %li{:class=>'active'}= link_to 'sign up', '/users/new'
-= form_for @user, '/users' do |f|
-  = f.error_messages
-
-  %p
-    = f.label :name
-    = f.text_field :name
-
-  %p
-    = f.label :email
-    = f.text_field :email
-
-  %p
-    = f.label :password
-    = f.password_field :password
-
-  %p
-    = f.submit 'sign up'
+= styled_form_for @user, '/users' do |f|
+  = f.styled_text_field_block :name
+  = f.styled_text_field_block :email
+  = f.styled_password_field_block :password
+  = f.styled_form_actions_block do
+    = f.styled_form_action 'sign up', :primary => true
