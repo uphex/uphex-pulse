@@ -1,43 +1,21 @@
 !!! 5
-
-%html{:lang => 'en'}
+%html
   %head
-    %meta{:charset => 'utf-8'}
-    %title
-      = yield_content :title
+    = partial 'shared/head'
+    != css :forms
+    != css :application
+    != js :forms
 
-    != css :application, :media => 'screen'
-    != js :app
+  %body
+    = partial 'shared/header'
+    .mod-page-title-wrapper
+      .container
+        %h2.page-title
+          = yield_content :title
 
-  %body{:class=>'contrast-muted'}
-    %header
-      %div{:class=>"navbar navbar-default"}
-        %a{:href=>'/',:class=>'navbar-brand'}
-          Uphex
-        %ul{:class=>'nav'}
-          %li.dropdown.dark.user-menu
-            %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
-              %span.user-name Test user
-              %b.caret
-            %ul.dropdown-menu
-              %li= link_to 'your account', '#'
-              %li.divider
-              %li= link_to 'logout', '#'
-    %div{:id=>'wrapper'}
-      %nav{:id=>'main-nav'}
-        %div{:class=>'navigation'}
-          %ul{:class=>'nav nav-stacked'}
-            = yield_content :navigation
-      %section{:id=>'content'}
-        .container
-          #content-wrapper.row
-            .col-xs-12
-              / page header container
-              .row
-                .col-sm-12
-                  .page-header
-                    / page title
-                    %h1.pull-left
-                      %span
-                        = yield_content :title
-            = yield
+    #main{:role => "main", :class => "container"}
+      = flash_tag :notice, :class => 'alert alert-info'
+      = flash_tag :error, :class => 'alert alert-danger'
+      = yield
+
+    = partial 'shared/footer'

@@ -1,0 +1,283 @@
+.mod-timeline {
+  .event-group {
+    .date-block {
+      text-transform: uppercase;
+      color: $light-font;
+      font-size: 12px;
+      .day {
+        display: inline-block;
+        width: 75px;
+        padding-right: 15px;
+        text-align: right;
+      }
+    }
+    .timeline-block {
+      .event {
+        display: block;
+        color: $main-font;
+        margin: 15px 0;
+        -webkit-transition: opacity 200ms linear;
+        -moz-transition: opacity 200ms linear;
+        -ms-transition: opacity 200ms linear;
+        -o-transition: opacity 200ms linear;
+        transition: opacity 200ms linear;
+        > div {
+          float: left;
+          height:50px;
+          line-height:50px;
+        }
+        > div.fluid-block {
+          float: none;
+        }
+        .time {
+          font-size: 14px;
+          color: $light-font;
+          width: 44px;
+          text-align: right;
+          -webkit-transition: color 200ms linear;
+          -moz-transition: color 200ms linear;
+          -ms-transition: color 200ms linear;
+          -o-transition: color 200ms linear;
+          transition: color 200ms linear;
+        }
+        .timeline {
+          position: relative;
+          width: 42px;
+          .line {
+            position: absolute;
+            height: 65px;
+            width: 0;
+            left: 20px;
+            top: -5px;
+            border: 1px solid $timeline;
+          }
+          .circle {
+            width: 12px;
+            height: 12px;
+            margin: 0 auto;
+            position: relative;
+            top: 50%;
+            margin-top: -6px;
+            background-color: $base-background;
+            border-radius: 50%;
+            border: 2px solid $timeline;
+            /* hover-off transitions */
+            -webkit-transition: background-color 200ms linear;
+            -moz-transition: background-color 200ms linear;
+            -ms-transition: background-color 200ms linear;
+            -o-transition: background-color 200ms linear;
+            transition: background-color 200ms linear;
+          }
+        }
+        .fluid-block {
+          overflow: hidden;
+        }
+        .container-light,
+        .container-dark {
+          float: left;
+          > div {
+            float: left;
+            padding: 0 10px;
+          }
+        }
+        .expander{
+          position:relative;
+          width:10px;
+          .expander-inside {
+            position: absolute;
+            width: 0px;
+            right:0px;
+            height:100%;
+            background-color: $light-block;
+            /* hover-off transitions */
+            -webkit-transition: width 200ms linear, background-color 200ms linear, margin-left 200ms linear;
+            -moz-transition: width 200ms linear, background-color 200ms linear, margin-left 200ms linear;
+            -ms-transition: width 200ms linear, background-color 200ms linear, margin-left 200ms linear;
+            -o-transition: width 200ms linear, background-color 200ms linear, margin-left 200ms linear;
+            transition: width 200ms linear, background-color 200ms linear, margin-left 200ms linear;
+            &:before {
+              content: '';
+              position: absolute;
+              height: 0;
+              width: 0;
+              left: -8px;
+              top: 17px;
+              border-top: 8px solid transparent;
+              border-bottom: 8px solid transparent;
+              border-right: 8px solid $light-block;
+              /* hover-off transition*/
+              -webkit-transition: border-right-color 200ms linear;
+              -moz-transition: border-right-color 200ms linear;
+              -ms-transition: border-right-color 200ms linear;
+              -o-transition: border-right-color 200ms linear;
+              transition: border-right-color 200ms linear;
+            }
+          }
+        }
+        .container-light {
+          position: relative;
+          background-color: $light-block;
+          width: 60%;
+          /* hover-off transitions */
+          -webkit-transition: background-color 200ms linear;
+          -moz-transition: background-color 200ms linear;
+          -ms-transition: background-color 200ms linear;
+          -o-transition: background-color 200ms linear;
+          transition: background-color 200ms linear;
+          .type-icon {
+            overflow: hidden;
+            width: 10%;
+            /* hover-off transitions */
+            -webkit-transition: width 200ms linear;
+            -moz-transition: width 200ms linear;
+            -ms-transition: width 200ms linear;
+            -o-transition: width 200ms linear;
+            transition: width 200ms linear;
+            span {
+              padding: 6px;
+              border-radius: 50%;
+              background: $base-background;
+              &.icon-thumbs-up2 {
+                &:before {
+                  position: relative;
+                  top: 1px;
+                }
+              }
+              &.icon-thumbs-up {
+                &:before {
+                  position: relative;
+                  top: -1px;
+                }
+              }
+            }
+          }
+          .stream-client {
+            width: 40%;
+            text-transform: uppercase;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            -webkit-transition: width 0.5s;
+            -moz-transition: width 0.5s;
+            -o-transition: width 0.5s;
+            transition: width 0.5s;
+          }
+          /* arbitrary images will be used here, so this is styled just for the sake of presentation */
+          .stream-icon {
+            width: 10%;
+            text-align: center;
+            img {
+              position: relative;
+              top: -2px;
+              width: 30px;
+              vertical-align: middle;
+            }
+          }
+          .stream-category {
+            width: 40%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        .container-dark {
+          background-color: $dark-block;
+          width: 40%;
+          /* hover-off transitions */
+          -webkit-transition: background-color 200ms linear, margin-left 200ms linear;
+          -moz-transition: background-color 200ms linear, margin-left 200ms linear;
+          -ms-transition: background-color 200ms linear, margin-left 200ms linear;
+          -o-transition: background-color 200ms linear, margin-left 200ms linear;
+          transition: background-color 200ms linear, margin-left 200ms linear;
+          .trend-icon {
+            padding-left: 15px;
+            width: 15%;
+            font-size: 21px;
+            span {
+              position: relative;
+              top: 1px;
+            }
+          }
+          .text {
+            width: 85%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        &:hover {
+          cursor: pointer;
+        }
+        &:hover .time {
+          color: $main-font;
+          -webkit-transition: color 200ms linear;
+          -moz-transition: color 200ms linear;
+          -ms-transition: color 200ms linear;
+          -o-transition: color 200ms linear;
+          transition: color 200ms linear;
+        }
+        &:hover .expander-inside {
+          width: 10px;
+          background-color: darken($light-block, 7%);
+          -webkit-transition: background-color 200ms linear, width 200ms linear, margin-left 200ms linear;
+          -moz-transition: background-color 200ms linear, width 200ms linear, margin-left 200ms linear;
+          -ms-transition: background-color 200ms linear, width 200ms linear, margin-left 200ms linear;
+          -o-transition: background-color 200ms linear, width 200ms linear, margin-left 200ms linear;
+          transition: background-color 200ms linear, width 200ms linear, margin-left 200ms linear;
+        }
+        &:hover .expander-inside:before {
+          border-right-color: darken($light-block, 7%);
+          -webkit-transition: border-right-color 200ms linear;
+          -moz-transition: border-right-color 200ms linear;
+          -ms-transition: border-right-color 200ms linear;
+          -o-transition: border-right-color 200ms linear;
+          transition: border-right-color 200ms linear;
+        }
+        &:hover .container-light {
+          background-color: darken($light-block, 7%);
+          -webkit-transition: background-color 200ms linear;
+          -moz-transition: background-color 200ms linear;
+          -ms-transition: background-color 200ms linear;
+          -o-transition: background-color 200ms linear;
+          transition: background-color 200ms linear;
+        }
+        &:hover .container-dark {
+          background-color: darken($dark-block, 7%);
+          -webkit-transition: background-color 200ms linear, margin-left 200ms linear;
+          -moz-transition: background-color 200ms linear, margin-left 200ms linear;
+          -ms-transition: background-color 200ms linear, margin-left 200ms linear;
+          -o-transition: background-color 200ms linear, margin-left 200ms linear;
+          transition: background-color 200ms linear, margin-left 200ms linear;
+        }
+        &:hover .circle {
+          background-color: $timeline;
+          -webkit-transition: background-color 200ms linear;
+          -moz-transition: background-color 200ms linear;
+          -ms-transition: background-color 200ms linear;
+          -o-transition: background-color 200ms linear;
+          transition: background-color 200ms linear;
+        }
+      }
+    }
+    /* arrow tip */
+    .lastevent {
+      position: relative;
+      &:before {
+        position:absolute;
+        content: '';
+        left: 61px;
+        top: 51px;
+        width:8px;
+        height: 8px;
+        border-bottom: 2px solid rgba(0,0,0,0.15);
+        border-right: 2px solid rgba(0,0,0,0.15);
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    }
+  }
+}

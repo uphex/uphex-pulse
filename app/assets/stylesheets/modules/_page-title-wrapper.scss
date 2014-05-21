@@ -1,0 +1,30 @@
+.mod-page-title-wrapper {
+  border-bottom: $light-border;
+  margin-bottom: 25px;
+  h2 {
+    font-family: $font-heading;
+    margin: 25px 0;
+    a {
+      text-decoration: none;
+      color: $main-font;
+      span {
+        color: $dark-block;
+        /* hover-off transitions */
+        -webkit-transition: color 200ms linear;
+        -moz-transition: color 200ms linear;
+        -ms-transition: color 200ms linear;
+        -o-transition: color 200ms linear;
+        transition: color 200ms linear;
+
+      }
+      &:hover span {
+        color: darken($dark-block, 15%);
+        -webkit-transition: color 200ms linear;
+        -moz-transition: color 200ms linear;
+        -ms-transition: color 200ms linear;
+        -o-transition: color 200ms linear;
+        transition: color 200ms linear;
+      }
+    }
+  }
+}

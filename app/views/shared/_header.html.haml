@@ -1,5 +1,10 @@
 %header
-  %nav
-    %ul
-      %li= link_to 'your account', '#'
-      %li= link_to 'logout', '#'
+  .container
+    %img{:src => "/images/logo.png", :alt => "UpHex logo"}
+    %a{:href => '/', :class => 'agency-name'}
+      = organization_name_tag
+    %div.user-nav
+      - if current_user
+        = partial 'shared/nav_authenticated'
+      - else
+        = partial 'shared/nav_anonymous'

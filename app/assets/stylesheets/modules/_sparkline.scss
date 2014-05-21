@@ -1,0 +1,27 @@
+.mod-sparkline {
+  display: block;
+  width: 100%;
+  height:100%;
+  path {
+    stroke-width: 2;
+    stroke: black;
+    fill: none;
+    stroke-linecap: round;
+  }
+  circle {
+    stroke: black;
+    fill: white;
+  }
+  circle.event {
+    fill: black;
+  }
+  line {
+    stroke: lightGrey;
+    stroke-width: 1;
+  }
+  rect {
+    //fill:grey;
+    stroke-width: 1;
+    stroke: lightGrey;
+  }
+}

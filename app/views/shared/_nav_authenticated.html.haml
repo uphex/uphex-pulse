@@ -1,0 +1,12 @@
+%ul
+  %li.username
+    %a{:href => "/users/me"}
+      = current_user.name
+  %li
+    %a{:href => "/accounts/me"} Account
+  %li
+    %a{:onclick=>"logout_form.submit();",:href=>'#'}
+      Log out
+      %form{:action=>'/users/me/session',:method=>'DELETE',:id=>'logout_form'}
+        = csrf_token_field
+        %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}

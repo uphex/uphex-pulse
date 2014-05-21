@@ -7,6 +7,7 @@ module UpHex
 
     enable :sessions
     register UpHex::Initializers::Warden
+    register UpHex::Initializers::CompassAssets
     register UpHex::Initializers::AssetPackaging
 
     ##

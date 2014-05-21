@@ -41,6 +41,10 @@ namespace :uphex do
 
   desc "Perform setup suitable for cloud environments"
   task :deploy => ['uphex:make_database_config', 'ar:create', 'ar:migrate']
+
+  APP_FILE  = 'config/boot.rb'
+  APP_CLASS = 'UpHex::Pulse'
+  require 'sinatra/assetpack/rake'
 end
 
 task 'db:schema:load' => ['ar:schema:load']
