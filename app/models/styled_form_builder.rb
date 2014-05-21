@@ -1,4 +1,5 @@
 require 'padrino-helpers/form_builder/abstract_form_builder'
+require 'active_support/inflector'
 
 class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
   def errors_for(field)
@@ -16,6 +17,28 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
     template.content_tag(:span,
       errors_for(field).join('; '),
       options.merge(:class => classes),
+      &block
+    )
+  end
+
+  def styled_form_actions_block(&block)
+    template.content_tag(:div, :class => 'form-actions') do
+      template.content_tag(:div, :class => 'row') do
+        template.content_tag(:div, :class => 'col-md-10 col-md-offset-2', &block)
+      end
+    end
+  end
+
+  def styled_form_action(action, options = {}, &block)
+    action_style = (options.delete(:primary) ? 'btn btn-primary' : 'btn')
+
+    template.content_tag(:input,
+      nil,
+      options.merge(
+        :value => action,
+        :class => action_style,
+        :type  => 'submit'
+      ),
       &block
     )
   end
