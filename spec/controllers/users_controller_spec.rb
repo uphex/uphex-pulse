@@ -53,15 +53,15 @@ describe 'UsersController' do
     it { expect(:post => '/users').to be_routable }
 
     it "save failure responds with failure" do
-      User.any_instance.stub(:save => false)
-      post '/users', :user => {}
+      UserRegistration.any_instance.stub(:save => false)
+      post '/users', :user_registration => {}
 
       expect(last_response.status).to eq 422
     end
 
     it "save success responds with created" do
-      User.any_instance.stub(:save => true)
-      post '/users', :user => {}
+      UserRegistration.any_instance.stub(:save => true)
+      post '/users', :user_registration => {}
 
       expect(last_response.status).to eq 201
     end

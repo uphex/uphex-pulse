@@ -4,7 +4,7 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/new' do
-    @user = User.new
+    @user_registration = UserRegistration.new
     render 'users/new'
   end
 
@@ -20,14 +20,15 @@ UpHex::Pulse.controllers :users do
   end
 
   post '/' do
-    @user = User.new params[:user]
+    @user_registration = UserRegistration.new params[:user_registration]
 
-    if @user.save
+    if @user_registration.save
+      @user = @user_registration.user
       flash[:notice] = t 'user.created'
       status 201
       render 'users/show'
     else
-      @user.clear_password
+      @user_registration.user_password = nil
       status 422
       render 'users/new'
     end

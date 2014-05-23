@@ -6,10 +6,11 @@ describe "users" do
       set_csrf_token 'foo'
       post '/users',
         :authenticity_token => 'foo',
-        :user => {
-          :name => 'x',
-          :email => 'y',
-          :password => 'z'
+        :user_registration => {
+          :user_name => 'x',
+          :user_email => 'y',
+          :user_password => 'z',
+          :organization_name => 'w'
         }
       expect(last_response.status).to eq 201
     end
