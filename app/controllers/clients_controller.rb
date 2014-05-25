@@ -15,8 +15,15 @@ UpHex::Pulse.controllers :clients do
     error(403) unless current_ability.can? :read, @client
     @clientevents=[]
 
-    @clientstreams=@client.providers.map{|provider|
-      {:categorytype=>provider.name,:categoryicon=>icons[provider.provider_name.to_sym],:id=>provider.id,:metricname=>'metric_name',:average=>7,:rangestart=>4,:rangeend=>10,:sparkline=>[3,5,6,8,6,5,7]}
+    metrics=@client.providers.map{|provider|
+      provider.metrics
+    }.flatten
+
+    @clientstreams=metrics.map{|metric|
+      sparkline=metric.observations.all(:order => 'index DESC',:limit=>30).sort_by(&:index).map{|collection|
+              collection.value.to_i
+    } if !metric.observations.empty?
+      {:categorytype=>metric.provider.name,:categoryicon=>icons[metric.provider.provider_name.to_sym],:id=>metric.provider.id,:metricname=>metric.name,:average=>7,:rangestart=>4,:rangeend=>10,:sparkline=>sparkline}
     }.group_by{|s| [s[:categorytype],s[:categoryicon],s[:id]]}
     render 'clients/show'
   end

@@ -36,6 +36,9 @@
                 #{stream[:rangestart]} - #{stream[:rangeend]}
               %span range
             .sparkline-container
-              %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream[:sparkline], "preserveAspectRatio"=>"none"}
-                %g
-                  %path
+              - if !stream[:sparkline].nil?
+                %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream[:sparkline], "preserveAspectRatio"=>"none"}
+                  %g
+                    %path
+              - else
+                No sparkline yet
