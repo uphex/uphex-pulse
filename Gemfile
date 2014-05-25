@@ -60,3 +60,7 @@ gem 'sinatra-assetpack'
 gem 'rack-oauth2'
 gem 'oauth'
 gem 'uphex-prototype-cynosure','0.0.5', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
+
+#Scheduling
+gem 'resque'
+gem 'resque-scheduler'

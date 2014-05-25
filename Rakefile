@@ -42,3 +42,14 @@ namespace :uphex do
   desc "Perform setup suitable for cloud environments"
   task :deploy => ['uphex:make_database_config', 'ar:create', 'ar:migrate']
 end
+
+require 'resque/tasks'
+require 'resque_scheduler/tasks'
+namespace :resque do
+  task :setup do
+    require 'resque'
+    require 'resque_scheduler'
+    Dir[File.dirname(__FILE__) + '/app/jobs/*.rb'].each {|file| require file }
+    Resque.schedule = YAML.load_file('schedule.yml')
+  end
+end
