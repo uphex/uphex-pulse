@@ -50,7 +50,7 @@ UpHex::Pulse.controllers :auth do
       if @providers.size==1
         @providers.first.save!
         require File.expand_path("../../../jobs/StreamCreate.rb", __FILE__)
-        Resque.enqueue(StreamCreate,@providers.first)
+        Resque.enqueue(StreamCreate,@providers.first[:id])
         flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
 
         redirect "portfolios/#{portfolio.id}"
@@ -84,7 +84,7 @@ UpHex::Pulse.controllers :auth do
         provider=Provider.create(YAML::load(params['provider_'+provider_index]))
         puts provider
         providers.push(provider)
-        Resque.enqueue(StreamCreate,provider)
+        Resque.enqueue(StreamCreate,provider[:id])
       }
       flash[:notice] = I18n.t 'oauth.added',profiles:providers.map{|provider| provider[:name]}.join(','),:count=>providers.size
       redirect "portfolios/#{params[:portfolio_id]}"
