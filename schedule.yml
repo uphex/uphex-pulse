@@ -1,2 +1,2 @@
 OldestMetricUpdate:
-  every: 30s
+  every: 5m
