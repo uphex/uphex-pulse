@@ -62,5 +62,6 @@ gem 'oauth'
 gem 'uphex-prototype-cynosure','0.0.5', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
 
 #Scheduling
+gem 'redis'
 gem 'resque'
 gem 'resque-scheduler'
