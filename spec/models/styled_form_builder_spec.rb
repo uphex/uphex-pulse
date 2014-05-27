@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'spec/support/html_matchers'
+require 'padrino'
 require 'app/models/styled_form_builder'
 require 'active_model'
-require 'padrino'
 
 describe StyledFormBuilder do
   let(:template) do
