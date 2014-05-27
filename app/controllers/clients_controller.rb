@@ -21,8 +21,8 @@ UpHex::Pulse.controllers :clients do
 
     @clientstreams=metrics.map{|metric|
       unless metric.observations.empty?
-        sparkline=metric.observations.all(:order => 'index DESC',:limit=>30).sort_by(&:index).map{|collection|
-                collection.value.to_i
+        sparkline=SparklineNormalizer.new.normalize(metric.observations.all(:order => 'index DESC',:limit=>30).sort_by(&:index)).map{|collection|
+                collection[:value].round
         }
         if sparkline.size<2
           sparkline=nil
