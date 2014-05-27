@@ -9,7 +9,7 @@ class MetricUpdate
 
       config = JSON.parse(File.read(File.expand_path("../../../config/auth_config.json", __FILE__)))
 
-      since= metric['updated_at'] < DateTime.parse("2014-04-01") ? DateTime.parse("2014-04-01") : metric['updated_at']
+      since= metric['updated_at'] < DateTime.now.to_date - 180 ? DateTime.now.to_date - 180 : metric['updated_at']
 
       case metric.provider['provider_name']
         when 'google'
