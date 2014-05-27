@@ -1,11 +1,16 @@
 en:
   attributes:
     user_registration:
-      user_name: full name
+      user_name: your full name
       user_email: email
       user_password: password
       organization_name: organization name
   messages:
     user_registration:
+      user_name:
+        placeholder: Alice Smith
+      user_email:
+        placeholder: alice@smith.com
       organization_name:
         help: your organization's full name
+        placeholder: MyCorp, Inc.
