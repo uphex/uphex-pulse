@@ -64,3 +64,7 @@ gem 'uphex-prototype-cynosure','0.0.5', :git => 'git@github.com:uphex/uphex-prot
 #Scheduling
 gem 'resque'
 gem 'resque-scheduler'
+
+#Estimation
+gem 'uphex-estimation',
+    :git => "git@github.com:uphex/uphex-prototype-estimation.git"

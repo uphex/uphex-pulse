@@ -67,6 +67,12 @@ GIT
       oauth2
       twitter
 
+GIT
+  remote: git@github.com:uphex/uphex-prototype-estimation.git
+  revision: 0b52d691f2dfb9fa4f8075248cfcab5c952ba50d
+  specs:
+    uphex-estimation (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -261,6 +267,7 @@ DEPENDENCIES
   shoulda-matchers!
   sinatra-assetpack
   thin
+  uphex-estimation!
   uphex-flatty!
   uphex-prototype-cynosure (= 0.0.5)!
   warden

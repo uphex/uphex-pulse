@@ -54,6 +54,20 @@ class MetricUpdate
           metric['updated_at']=DateTime.now
           metric.save!
       end
+
+      require 'uphex-estimation'
+
+      full_data=metric.observations.map{|observation|
+        {:date=>observation['index'].to_date,:value=>observation['value']}
+      }.sort_by{|val| val[:date]}
+
+      ts = UpHex::Prediction::TimeSeries.new(full_data, :days => 1)
+
+      range = 0..(full_data.select{|val| val[:date]<metric['analyzed_at']}.size-1)
+      puts range
+      results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)
+        puts results
+
     rescue => e
       puts e.inspect, e.backtrace
     end
