@@ -20,10 +20,16 @@ UpHex::Pulse.controllers :clients do
     }.flatten
 
     @clientstreams=metrics.map{|metric|
-      sparkline=metric.observations.all(:order => 'index DESC',:limit=>30).sort_by(&:index).map{|collection|
-              collection.value.to_i
-    } if !metric.observations.empty?
-      {:categorytype=>metric.provider.name,:categoryicon=>icons[metric.provider.provider_name.to_sym],:id=>metric.provider.id,:metricname=>metric.name,:average=>7,:rangestart=>4,:rangeend=>10,:sparkline=>sparkline}
+      unless metric.observations.empty?
+        sparkline=metric.observations.all(:order => 'index DESC',:limit=>30).sort_by(&:index).map{|collection|
+                collection.value.to_i
+        }
+        rangestart=sparkline.min
+        rangeend=sparkline.max
+        average=(sparkline.last(7).reduce(:+).to_f / sparkline.last(7).size).round(0)
+      end
+
+      {:categorytype=>metric.provider.name,:categoryicon=>icons[metric.provider.provider_name.to_sym],:id=>metric.provider.id,:metricname=>metric.name,:average=>average,:rangestart=>rangestart,:rangeend=>rangeend,:sparkline=>sparkline}
     }.group_by{|s| [s[:categorytype],s[:categoryicon],s[:id]]}
     render 'clients/show'
   end
