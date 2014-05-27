@@ -19,7 +19,8 @@ class User < ActiveRecord::Base
     :presence => true
 
   validates :password,
-    :presence => true
+    :presence => true,
+    :length => { :minimum => 6 }
 
   def password=(unencrypted_password)
     unless unencrypted_password.blank?

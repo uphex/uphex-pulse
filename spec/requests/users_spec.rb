@@ -9,7 +9,7 @@ describe "users" do
         :user_registration => {
           :user_name => 'x',
           :user_email => 'y',
-          :user_password => 'z',
+          :user_password => '123456',
           :organization_name => 'w'
         }
       expect(last_response.status).to eq 201
