@@ -45,18 +45,23 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
 
   self.field_types.each do |f|
     define_method "styled_#{f}_block", ->(field, options = {}, &block) do
+      shared_options  = options.dup
+      label_options   = shared_options.delete(:label_options)   || {}
+      field_options   = shared_options.delete(:field_options)   || {}
+      message_options = shared_options.delete(:message_options) || {}
+
       block ||= Proc.new {
         [
-          styled_label_for(field, options),
-          send("styled_#{f}", field, options),
-          styled_messages_for(field, options),
+          styled_label_for(field,    shared_options.merge(label_options)),
+          send("styled_#{f}", field, shared_options.merge(field_options)),
+          styled_messages_for(field, shared_options.merge(message_options)),
         ].reject { |o| o.blank? }.join.html_safe
       }
 
       group_string = errors_for(field).any? ? 'form-group has-error' : 'form-group'
 
-      classes = add_classes_to_string options[:class], group_string
-      template.content_tag(:div, options.merge(:class => classes), &block)
+      classes = add_classes_to_string shared_options[:class], group_string
+      template.content_tag(:div, shared_options.merge(:class => classes), &block)
     end
 
     define_method "styled_#{f}", ->(field, options = {}, &block) do

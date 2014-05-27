@@ -87,6 +87,43 @@ describe StyledFormBuilder do
             with_tag 'span',  :with => { :class => 'help-block' }
           end
       end
+
+      context "with component-specific options" do
+        let(:expected_options) do
+          { :class => 'arbitrary-class' }
+        end
+
+        it "passes label options to just the label" do
+          opts = { :label_options => expected_options }
+
+          expect(builder.styled_text_field_block :arbitrary_field, opts).to \
+            have_tag('div') do
+              with_tag 'label',                       :with    => expected_options
+              with_tag 'input#model_arbitrary_field', :without => expected_options
+              with_tag 'span.help-block',             :without => expected_options
+          end
+        end
+        it "passes field options to just the input field" do
+          opts = { :field_options => expected_options }
+
+          expect(builder.styled_text_field_block :arbitrary_field, opts).to \
+            have_tag('div') do
+              with_tag 'label',                       :without => expected_options
+              with_tag 'input#model_arbitrary_field', :with    => expected_options
+              with_tag 'span.help-block',             :without => expected_options
+          end
+        end
+        it "passes message options to just the message block" do
+          opts = { :message_options => expected_options }
+
+          expect(builder.styled_text_field_block :arbitrary_field, opts).to \
+            have_tag('div') do
+              with_tag 'label',                       :without => expected_options
+              with_tag 'input#model_arbitrary_field', :without => expected_options
+              with_tag 'span.help-block',             :with    => expected_options
+          end
+        end
+      end
     end
 
     describe "#styled_label_for" do
