@@ -96,7 +96,7 @@ describe StyledFormBuilder do
             :text => /Arbitrary field:/,
             :with => {
               :for   => "model_arbitrary_field",
-              :class => "col-md-2 control-label"
+              :class => "col-md-3 control-label"
             }
           )
       end

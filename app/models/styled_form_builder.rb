@@ -7,7 +7,7 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
   end
 
   def styled_label_for(field, options = {}, &block)
-    classes = add_classes_to_string options[:class], 'col-md-2 control-label'
+    classes = add_classes_to_string options[:class], 'col-md-3 control-label'
     label field, options.merge(:class => classes), &block
   end
 
@@ -24,7 +24,7 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
   def styled_form_actions_block(&block)
     template.content_tag(:div, :class => 'form-actions') do
       template.content_tag(:div, :class => 'row') do
-        template.content_tag(:div, :class => 'col-md-10 col-md-offset-2', &block)
+        template.content_tag(:div, :class => 'col-md-10 col-md-offset-3', &block)
       end
     end
   end
