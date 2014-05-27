@@ -56,6 +56,21 @@ describe StyledFormBuilder do
       end
     end
 
+    describe "#styled_translated_*_block" do
+      it "does a key lookup for associated names" do
+        field_name      = 'arbitrary_field'
+        caption_key     = "attributes.model.#{field_name}"
+        help_key        = "messages.model.#{field_name}.help"
+        placeholder_key = "messages.model.#{field_name}.placeholder"
+
+        expect(I18n).to receive(:t).with(caption_key, anything())
+        expect(I18n).to receive(:t).with(help_key, anything())
+        expect(I18n).to receive(:t).with(placeholder_key, anything())
+
+        builder.styled_translated_text_field_block(:arbitrary_field)
+      end
+    end
+
     describe "#styled_*_block" do
       it "works inside a form block" do
         form_html = template.form_for(Model.new, '/arbitrary_url', :builder => StyledFormBuilder) do |f|
@@ -66,7 +81,7 @@ describe StyledFormBuilder do
           with_tag('div', :with => { :class => 'form-group' }) do
             with_tag 'label', :with => { :for => 'model_arbitrary_field' }
             with_tag 'input', :with => { :id  => 'model_arbitrary_field' }
-            with_tag 'span',  :with => { :class => 'help-block' }
+            with_tag 'div',  :with => { :class => 'help-block' }
           end
         end
       end
@@ -84,7 +99,7 @@ describe StyledFormBuilder do
           have_tag('div', :with => { :class => 'form-group' }) do
             with_tag 'label', :with => { :for => 'model_arbitrary_field' }
             with_tag 'input', :with => { :id  => 'model_arbitrary_field' }
-            with_tag 'span',  :with => { :class => 'help-block' }
+            with_tag 'div',  :with => { :class => 'help-block' }
           end
       end
 
@@ -100,7 +115,7 @@ describe StyledFormBuilder do
             have_tag('div') do
               with_tag 'label',                       :with    => expected_options
               with_tag 'input#model_arbitrary_field', :without => expected_options
-              with_tag 'span.help-block',             :without => expected_options
+              with_tag 'div.help-block',             :without => expected_options
           end
         end
         it "passes field options to just the input field" do
@@ -110,7 +125,7 @@ describe StyledFormBuilder do
             have_tag('div') do
               with_tag 'label',                       :without => expected_options
               with_tag 'input#model_arbitrary_field', :with    => expected_options
-              with_tag 'span.help-block',             :without => expected_options
+              with_tag 'div.help-block',             :without => expected_options
           end
         end
         it "passes message options to just the message block" do
@@ -120,7 +135,7 @@ describe StyledFormBuilder do
             have_tag('div') do
               with_tag 'label',                       :without => expected_options
               with_tag 'input#model_arbitrary_field', :without => expected_options
-              with_tag 'span.help-block',             :with    => expected_options
+              with_tag 'div.help-block',             :with    => expected_options
           end
         end
       end
@@ -140,13 +155,13 @@ describe StyledFormBuilder do
     end
 
     describe "#styled_messages_for" do
-      it "joins errors together for a field with the appropriate class" do
+      it "joins errors together and formats for a field with the appropriate class" do
         model.errors[:arbitrary_field] << 'error one'
         model.errors[:arbitrary_field] << 'error two'
 
-        expect(builder.styled_messages_for :arbitrary_field).to \
-          have_tag('span',
-            :text => 'error one; error two',
+        expect(builder.styled_error_messages_for :arbitrary_field).to \
+          have_tag('div',
+            :text => 'Error one; error two.',
             :with => { :class => 'help-block' }
           )
       end

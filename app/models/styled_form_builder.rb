@@ -2,22 +2,87 @@ require 'padrino-helpers/form_builder/abstract_form_builder'
 require 'active_support/inflector'
 
 class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
+  class Options < Hash
+    def with_help_message(help_message)
+      if help_message
+        self[:message_options] ||= self.class.new
+        self[:message_options][:help_message] = help_message
+      end
+      self
+    end
+
+    def with_label_caption(caption)
+      if caption
+        self[:label_options] ||= self.class.new
+        self[:label_options][:caption] = caption
+      end
+      self
+    end
+
+    def with_field_placeholder(placeholder)
+      if placeholder
+        self[:field_options] ||= self.class.new
+        self[:field_options][:placeholder] = placeholder
+      end
+      self
+    end
+
+    def with_options_for(key)
+      caption_key     = "attributes.#{key}"
+      help_key        = "messages.#{key}.help"
+      placeholder_key = "messages.#{key}.placeholder"
+
+      caption = I18n.t(caption_key, :raise => true) rescue nil
+      caption = "#{caption.to_s.humanize}:"
+
+      help    = I18n.t(help_key, :raise => true) rescue nil
+
+      placeholder = I18n.t(placeholder_key, :raise => true) rescue nil
+
+      self.
+        with_label_caption(caption).
+        with_help_message(help).
+        with_field_placeholder(placeholder)
+    end
+  end
+
+  def new_hash
+    Options.new
+  end
+
   def errors_for(field)
     object.respond_to?(:errors) ? object.errors[field] : []
   end
 
   def styled_label_for(field, options = {}, &block)
     classes = add_classes_to_string options[:class], 'col-md-3 control-label'
+
     label field, options.merge(:class => classes), &block
   end
 
-  def styled_messages_for(field, options = {}, &block)
+  def styled_error_messages_for(field, options = {}, &block)
     classes = add_classes_to_string options[:class], 'help-block'
 
-    template.content_tag(:span,
-      errors_for(field).join('; '),
+    content = errors_for(field).join('; ').humanize
+    content.concat('.') if !content.empty?
+
+    template.content_tag(:div,
+      content,
       options.merge(:class => classes),
       &block
+    )
+  end
+
+  def styled_help_messages_for(field, options = {}, &block)
+    classes = add_classes_to_string options[:class], 'help-block'
+    shared_options = options.dup
+    content        = shared_options.delete(:help_message)
+
+    inner_content = template.content_tag(:small, content, &block)
+
+    template.content_tag(:div,
+      inner_content,
+      options.merge(:class => classes)
     )
   end
 
@@ -44,6 +109,16 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
   end
 
   self.field_types.each do |f|
+    define_method "styled_translated_#{f}_block", ->(field, options = {}, &block) do
+      name = object.class.name.demodulize.underscore
+      key  = "#{name}.#{field}"
+
+      augmented_options = Options.new.merge(options.dup)
+      augmented_options.with_options_for(key)
+
+      send("styled_#{f}_block", field, augmented_options, &block)
+    end
+
     define_method "styled_#{f}_block", ->(field, options = {}, &block) do
       shared_options  = options.dup
       label_options   = shared_options.delete(:label_options)   || {}
@@ -53,8 +128,8 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
       block ||= Proc.new {
         [
           styled_label_for(field,    shared_options.merge(label_options)),
-          send("styled_#{f}", field, shared_options.merge(field_options)),
-          styled_messages_for(field, shared_options.merge(message_options)),
+          send("styled_#{f}", field, shared_options.merge(field_options).merge(message_options)),
+          styled_help_messages_for(field, shared_options.merge(message_options)),
         ].reject { |o| o.blank? }.join.html_safe
       }
 
@@ -68,7 +143,10 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
       classes = add_classes_to_string options[:class], 'form-control'
 
       template.content_tag(:div, {:class => 'col-md-5'}) {
-        send f, field, options.merge(:class => classes), &block
+        [
+          send(f, field, options.merge(:class => classes), &block),
+          styled_error_messages_for(field, options)
+        ].reject { |o| o.blank? }.join.html_safe
       }
     end
   end
