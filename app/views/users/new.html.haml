@@ -2,9 +2,11 @@
   Sign up
 
 = styled_form_for @user_registration, '/users' do |f|
-  = f.styled_text_field_block :user_name
-  = f.styled_text_field_block :organization_name
-  = f.styled_text_field_block :user_email
-  = f.styled_password_field_block :user_password
+  %p Tell us a little about yourself.
+  %hr.hr-normal
+  = f.styled_translated_text_field_block :user_name
+  = f.styled_translated_text_field_block :organization_name
+  = f.styled_translated_text_field_block :user_email
+  = f.styled_translated_password_field_block :user_password
   = f.styled_form_actions_block do
     = f.styled_form_action 'sign up', :primary => true
