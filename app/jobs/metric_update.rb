@@ -79,11 +79,13 @@ class MetricUpdate
           found=full_data.find{|val| val[:date]==result[:date]}
           unless found.nil?
             if found[:value]<result[:low] or found[:value]>result[:high]
-              puts result
-              puts found
+              event=Event.create(:metric=>metric,:date=>found[:date],:prediction_low=>result[:low],:prediction_high=>result[:high])
+              puts event
             end
           end
         }
+        metric['analyzed_at']=DateTime.now
+        metric.save!
       end
     rescue => e
       puts e.inspect, e.backtrace

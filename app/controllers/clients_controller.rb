@@ -13,11 +13,20 @@ UpHex::Pulse.controllers :clients do
 
     @client=Portfolio.find(params[:id])
     error(403) unless current_ability.can? :read, @client
-    @clientevents=[]
 
     metrics=@client.providers.map{|provider|
       provider.metrics
     }.flatten
+
+    @clientevents=metrics.map{|metric|
+      metric.events.map{|event|
+        observation=metric.observations.all.find{|observation|
+          observation[:index].to_date==event[:date]}
+        puts observation
+        type = observation[:value]>event[:prediction_high] ? 'positive_anomaly' : 'negative_anomaly'
+        {:id=>event[:id],:time=>event[:date],:type=>type,:stream=>metric,:eventpredictedstart=>event[:prediction_low],:eventpredictedend=>event[:prediction_high],:eventactual=>observation[:value],:sparkline=>[1,2,3],:eventpositioninsparkline=>1,:categoryicon=>icons[metric.provider.provider_name.to_sym]}
+      }
+    }.flatten.sort_by{|event| event[:time]}.reverse.take(5).group_by{|e| e[:time].beginning_of_day}
 
     @clientstreams=metrics.map{|metric|
       unless metric.observations.empty?
