@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'spec/support/templates/active_record_model'
+require 'app/models/organization'
+require 'app/models/organization_membership'
 require 'app/models/user'
 
 describe User do
