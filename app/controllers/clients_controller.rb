@@ -24,6 +24,11 @@ UpHex::Pulse.controllers :clients do
         sparkline=metric.observations.all(:order => 'index DESC',:limit=>30).sort_by(&:index).map{|collection|
                 collection.value.to_i
         }
+        if sparkline.size<2
+          sparkline=nil
+        end
+      end
+      unless sparkline.nil?
         rangestart=sparkline.min
         rangeend=sparkline.max
         average=(sparkline.last(7).reduce(:+).to_f / sparkline.last(7).size).round(0)

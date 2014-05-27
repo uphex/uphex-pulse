@@ -29,7 +29,10 @@
               #{stream[:metricname]}
             .average
               %strong
-                #{stream[:average]}
+                - if stream[:average].nil?
+                  \-
+                - else
+                  #{stream[:average]}
               %span 7d average
             .range
               %strong
@@ -41,4 +44,5 @@
                   %g
                     %path
               - else
-                No sparkline yet
+                .no-elements
+                  No sparkline yet
