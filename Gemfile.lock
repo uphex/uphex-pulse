@@ -253,7 +253,6 @@ DEPENDENCIES
   rack-oauth2
   rack-test!
   rake
-  redis
   resque
   resque-scheduler
   rspec
