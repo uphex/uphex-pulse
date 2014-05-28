@@ -8,7 +8,7 @@ describe "users" do
         :authenticity_token => 'foo',
         :user_registration => {
           :user_name => 'x',
-          :user_email => 'y',
+          :user_email => 'x@y.com',
           :user_password => '123456',
           :organization_name => 'w'
         }

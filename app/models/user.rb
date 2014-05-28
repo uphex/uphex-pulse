@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
     :presence => true
 
   validates :email,
-    :presence => true
+    :presence => true,
+    :format => { :with => /@/ }
 
   validates :password_hash,
     :presence => true

@@ -10,6 +10,9 @@ describe User do
     validation_spec_for :presence, :email
     validation_spec_for :presence, :password_hash
     validation_spec_for :presence, :password
+
+    it { expect(subject).to allow_value('foo@bar.com').for(:email) }
+    it { expect(subject).to_not allow_value('foobar.com').for(:email) }
   end
 
   context "associations" do
