@@ -59,8 +59,6 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/me/dashboard' do
-    @announcements=[]
-    @dashboardevents=[]
     @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten.map{|portfolio|
       a=portfolio.clone
       a.alert=nil
@@ -69,6 +67,13 @@ UpHex::Pulse.controllers :users do
       end
       a
     }
+    @announcements=[]
+    @dashboardevents=@clients.map{|portfolio| portfolio.providers}.flatten.map{|provider| provider.metrics}.flatten.map{|metric|
+      metric.events.map{|event|
+        transform_event(event,false)
+      }
+    }.flatten.sort_by{|event| event[:time]}.reverse.take(5).group_by{|e| e[:time].beginning_of_day}
+
     render 'dashboard/index'
   end
 end

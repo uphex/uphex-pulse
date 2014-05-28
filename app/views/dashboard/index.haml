@@ -17,7 +17,7 @@
 
 = partial 'layouts/timeline' , :locals=>{:timelineevents=>@dashboardevents, :eventurl=>"events/", :eventurlback=>""}
 - if !@dashboardevents.blank?
-  %a{:href => "events", :class => "more-events button-standard"} See all
+  %a{:href => "/events", :class => "more-events button-standard"} See all
 
 .mod-clients
   %a{:href => "/portfolios", :class => "add-new button-standard"}

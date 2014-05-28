@@ -4,7 +4,7 @@
   #{@client.name}
 = partial 'layouts/timeline' , :locals=>{:timelineevents=>@clientevents, :eventurl=>"../../events/", :eventurlback=>"/"}
 - if !@clientevents.empty?
-  %a{:href => "/clients/#{@client.id}/events", :class => "more-events button-standard"} See all
+  %a{:href => "/events?portfolioid=#{@client.id}", :class => "more-events button-standard"} See all
 
 .mod-streams
   %h3.heading-with-icon
