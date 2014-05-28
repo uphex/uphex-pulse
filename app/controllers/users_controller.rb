@@ -28,7 +28,6 @@ UpHex::Pulse.controllers :users do
       status 201
       render 'users/show'
     else
-      @user_registration.user_password = nil
       status 422
       render 'users/new'
     end
