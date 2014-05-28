@@ -15,7 +15,7 @@
       No announcements
 
 
-= partial 'layouts/timeline' , :locals=>{:timelineevents=>@dashboardevents, :eventurl=>"events/", :eventurlback=>""}
+= partial 'layouts/timeline' , :locals=>{:timelineevents=>@dashboardevents, :eventurl=>"/events/", :eventurlback=>""}
 - if !@dashboardevents.blank?
   %a{:href => "/events", :class => "more-events button-standard"} See all
 

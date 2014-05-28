@@ -14,7 +14,7 @@
           #{day.strftime('%B %e')}
         .timeline-block
           - eventforday.each_with_index do |event,idx2|
-            %a.event.clearfix{:href => eventurl+event[:id].to_s+"?back="+request.fullpath+eventurlback,:class=>("lastevent" if idx2==eventforday.length-1 && idx==timelineevents.length-1)}
+            %a.event.clearfix{:href => eventurl+event[:id].to_s+"?back="+request.fullpath,:class=>("lastevent" if idx2==eventforday.length-1 && idx==timelineevents.length-1)}
               .time
                 #{event[:time].strftime('%R')}
               .timeline

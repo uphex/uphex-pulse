@@ -19,4 +19,11 @@ UpHex::Pulse.controllers :events do
     render 'events/index'
   end
 
+  get '/:id' do
+
+    @event=transform_event(Event.find(params[:id]),true)
+
+    render 'events/show'
+  end
+
 end

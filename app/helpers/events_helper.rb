@@ -20,8 +20,13 @@ module EventsHelper
     points=SparklineNormalizer.new.normalize(observations)
     point=points.find{|point|
       point[:index].to_date==event[:date]}
+    sparkline_points_before_event=points.select{|point| point[:index]<event[:date]}.sort_by{|point| point[:index]}.last(15)
+    sparkline_points_after_event=points.select{|point| point[:index]>event[:date]}.sort_by{|point| point[:index]}.take(15)
+    sparkline=([].concat(sparkline_points_before_event)<<points.find{|point| point[:index]==event[:date]}).concat(sparkline_points_after_event).map{|collection|
+      collection[:value].round
+    }
     type = point[:value]>event[:prediction_high] ? 'positive_anomaly' : 'negative_anomaly'
-    {:id=>event[:id],:time=>event[:date],:type=>type,:stream=>event.metric,:eventpredictedstart=>event[:prediction_low],:eventpredictedend=>event[:prediction_high],:eventactual=>point[:value],:sparkline=>[1,2,3],:eventpositioninsparkline=>1,:categoryicon=>icons[event.metric.provider.provider_name.to_sym]}
+    {:id=>event[:id],:time=>event[:date],:type=>type,:stream=>event.metric,:eventpredictedstart=>event[:prediction_low],:eventpredictedend=>event[:prediction_high],:eventactual=>point[:value],:sparkline=>sparkline,:eventpositioninsparkline=>sparkline_points_before_event.size,:categoryicon=>icons[event.metric.provider.provider_name.to_sym]}
 
   end
 end
