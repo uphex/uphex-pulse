@@ -154,14 +154,14 @@ describe StyledFormBuilder do
       end
     end
 
-    describe "#styled_messages_for" do
+    describe "#styled_field_messages_for" do
       it "joins errors together and formats for a field with the appropriate class" do
         model.errors[:arbitrary_field] << 'error one'
         model.errors[:arbitrary_field] << 'error two'
 
-        expect(builder.styled_error_messages_for :arbitrary_field).to \
+        expect(builder.styled_field_messages_for :arbitrary_field).to \
           have_tag('div',
-            :text => 'Error one; error two.',
+            :text => /error one(.*)error two/,
             :with => { :class => 'help-block' }
           )
       end

@@ -60,23 +60,27 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
     label field, options.merge(:class => classes), &block
   end
 
-  def styled_error_messages_for(field, options = {}, &block)
-    classes = add_classes_to_string options[:class], 'help-block'
+  def styled_error_list_for(field)
+    errors = errors_for(field)
 
-    content = errors_for(field).join('; ').humanize
-    content.concat('.') if !content.empty?
-
-    template.content_tag(:div,
-      content,
-      options.merge(:class => classes),
-      &block
-    )
+    if !errors.empty?
+      errors_for(field).map do |error|
+        %{&mdash; <span>#{error}</span>}.html_safe
+      end.join('<br>')
+    end
   end
 
-  def styled_help_messages_for(field, options = {}, &block)
-    classes = add_classes_to_string options[:class], 'help-block'
+  def styled_field_messages_for(field, options = {}, &block)
+    classes = add_classes_to_string options[:class], 'col-md-4 help-block box-no-padding'
     shared_options = options.dup
-    content        = shared_options.delete(:help_message)
+
+    help_message_content  = shared_options.delete(:help_message)
+    error_message_content = styled_error_list_for field
+
+    content = [
+      help_message_content,
+      error_message_content
+    ].reject(&:blank?).join('<br>').html_safe
 
     inner_content = template.content_tag(:small, content, &block)
 
@@ -129,8 +133,8 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
         [
           styled_label_for(field,    shared_options.merge(label_options)),
           send("styled_#{f}", field, shared_options.merge(field_options).merge(message_options)),
-          styled_help_messages_for(field, shared_options.merge(message_options)),
-        ].reject { |o| o.blank? }.join.html_safe
+          styled_field_messages_for(field, shared_options.merge(message_options)),
+        ].reject(&:blank?).join.html_safe
       }
 
       group_string = errors_for(field).any? ? 'form-group has-error' : 'form-group'
@@ -145,8 +149,7 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
       template.content_tag(:div, {:class => 'col-md-5'}) {
         [
           send(f, field, options.merge(:class => classes), &block),
-          styled_error_messages_for(field, options)
-        ].reject { |o| o.blank? }.join.html_safe
+        ].reject(&:blank?).join.html_safe
       }
     end
   end
