@@ -5,14 +5,16 @@ module UpHex
         require 'sass/plugin/rack'
 
         app.use Sass::Plugin::Rack
-        Sass::Plugin.on_updating_stylesheet do |t_in, t_out|
-          app.logger.debug "compiling:\nin: #{t_in}\nout: #{t_out}"
+        Sass::Plugin.on_updated_stylesheet do |t_in, t_out|
+          app.logger.debug "compiled:"
+          app.logger.debug "-- in:  #{t_in}"
+          app.logger.debug "-- out: #{t_out}"
         end
 
         Compass.configuration do |config|
           config.project_path         = Padrino.root
           config.project_type         = :stand_alone
-          config.output_style         = :compressed
+          config.output_style         = (config.environment == :development) ? :expanded : :compressed
           config.preferred_syntax     = :scss
 
           config.http_path            = "/"
@@ -24,9 +26,9 @@ module UpHex
 
           config.add_import_path 'app/assets/stylesheets'
 
-          config.on_stylesheet_error do |f, m|
-            puts "---- error in #{f}"
-            puts m
+          config.on_stylesheet_error do |file, message|
+            app.logger.error "problem while compiling Compass stylesheet: #{file}"
+            app.logger.error message
           end
         end
 

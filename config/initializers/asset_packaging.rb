@@ -45,7 +45,7 @@ module UpHex
           ]
 
           js_compression  :jsmin    # :jsmin | :yui | :closure | :uglify
-          css_compression :simple   # :simple | :sass | :yui | :sqwish
+          css_compression :sass     # :simple | :sass | :yui | :sqwish
         }
       end
     end
