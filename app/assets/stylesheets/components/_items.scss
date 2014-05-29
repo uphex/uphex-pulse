@@ -1,0 +1,23 @@
+.item-group {
+  margin-bottom: 15px;
+
+  &:before {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+}
+
+.item-label {
+  display: inline-block;
+  font-weight: bold;
+}
+
+.item-group .item-label {
+  text-align: right;
+}
