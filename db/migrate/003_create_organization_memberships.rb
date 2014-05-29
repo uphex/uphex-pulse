@@ -1,8 +1,9 @@
 
 class CreateOrganizationMemberships < ActiveRecord::Migration
   def change
-    create_join_table :organizations, :users,
-      :table_name => :organization_memberships do |t|
+    create_table :organization_memberships do |t|
+      t.references :organization
+      t.references :user
       t.timestamps
 
       t.index :organization_id

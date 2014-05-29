@@ -1,7 +1,8 @@
 class CreatePortfolioStreams < ActiveRecord::Migration
   def change
-    create_join_table :portfolios, :streams,
-      :table_name => :portfolio_streams do |t|
+    create_table :portfolio_streams do |t|
+      t.references :portfolio
+      t.references :stream
       t.timestamps
 
       t.index :portfolio_id
