@@ -9,24 +9,25 @@ module EventsHelper
   end
 
   def transform_event(event,whole_sparkline)
+    eventdate=event[:date].in_time_zone('UTC')
     if whole_sparkline
       observations=event.metric.observations.all
     else
-      start_time=event[:date].beginning_of_day-1.days
-      end_time=event[:date].beginning_of_day+2.days
-      observations=[].concat(event.metric.observations.where('index<=:start_time',{:start_time=>start_time}).take(1)).concat(event.metric.observations.where('index>:start_time and index<:end_time',{:start_time=>start_time,:end_time=>end_time}).order('index ASC')).concat(event.metric.observations.where('index>=:end_time',{:end_time=>end_time}).take(1))
+      start_time=eventdate.beginning_of_day
+      end_time=eventdate.beginning_of_day+1.days
+      observations=[].concat(event.metric.observations.where('index<=:start_time',{:start_time=>start_time}).order('index DESC').take(1)).concat(event.metric.observations.where('index>:start_time and index<:end_time',{:start_time=>start_time,:end_time=>end_time}).order('index ASC')).concat(event.metric.observations.where('index>=:end_time',{:end_time=>end_time}).take(1))
     end
 
     points=SparklineNormalizer.new.normalize(observations)
     point=points.find{|point|
-      point[:index].to_date==event[:date]}
-    sparkline_points_before_event=points.select{|point| point[:index]<event[:date]}.sort_by{|point| point[:index]}.last(15)
-    sparkline_points_after_event=points.select{|point| point[:index]>event[:date]}.sort_by{|point| point[:index]}.take(15)
-    sparkline=([].concat(sparkline_points_before_event)<<points.find{|point| point[:index]==event[:date]}).concat(sparkline_points_after_event).map{|collection|
+      point[:index].to_date.in_time_zone('UTC')==eventdate}
+    sparkline_points_before_event=points.select{|point| point[:index]<eventdate}.sort_by{|point| point[:index]}.last(15)
+    sparkline_points_after_event=points.select{|point| point[:index]>eventdate}.sort_by{|point| point[:index]}.take(15)
+    sparkline=([].concat(sparkline_points_before_event)<<points.find{|point| point[:index]==eventdate}).concat(sparkline_points_after_event).map{|collection|
       collection[:value].round
     }
     type = point[:value]>event[:prediction_high] ? 'positive_anomaly' : 'negative_anomaly'
-    {:id=>event[:id],:time=>event[:date],:type=>type,:stream=>event.metric,:eventpredictedstart=>event[:prediction_low],:eventpredictedend=>event[:prediction_high],:eventactual=>point[:value],:sparkline=>sparkline,:eventpositioninsparkline=>sparkline_points_before_event.size,:categoryicon=>icons[event.metric.provider.provider_name.to_sym]}
+    {:id=>event[:id],:time=>eventdate,:type=>type,:stream=>event.metric,:eventpredictedstart=>event[:prediction_low],:eventpredictedend=>event[:prediction_high],:eventactual=>point[:value],:sparkline=>sparkline,:eventpositioninsparkline=>sparkline_points_before_event.size,:categoryicon=>icons[event.metric.provider.provider_name.to_sym]}
 
   end
 end
