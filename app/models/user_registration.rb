@@ -64,8 +64,9 @@ class UserRegistration
 
   def persist!
     ActiveRecord::Base.transaction do
-      user.save!
       organization.save!
+      user.save!
+      user.organizations << organization
     end
   end
 end
