@@ -25,7 +25,7 @@ UpHex::Pulse.controllers :users do
 
     if @user_registration.save
       @user = @user_registration.user
-      flash[:notice] = t 'user.created'
+      flash.now[:notice] = t 'user.created'
       status 201
 
       auth = AuthenticationService.new request

@@ -17,6 +17,7 @@ describe "users" do
 
       post '/users', params_hash
       expect(last_response.status).to eq 201
+      expect(last_response.body).to include I18n.t 'user.created'
 
       get '/users/me'
       expect(last_request.env['warden'].user.name).to eq user_name
