@@ -14,3 +14,5 @@ en:
       organization_name:
         help: your organization's full name
         placeholder: MyCorp, Inc.
+      user_password:
+        placeholder: at least 6 characters
