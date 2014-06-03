@@ -76,10 +76,12 @@ class MetricUpdate
         range = 0..analyzed_num
         results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)
         results.each{|result|
+          low=[result[:low].round,0].max
+          high=result[:high].round
           found=full_data.find{|val| val[:date]==result[:date]}
           unless found.nil?
-            if found[:value]<result[:low] or found[:value]>result[:high]
-              event=Event.create(:metric=>metric,:date=>found[:date],:prediction_low=>result[:low],:prediction_high=>result[:high])
+            if found[:value]<low or found[:value]>high
+              event=Event.create(:metric=>metric,:date=>found[:date],:prediction_low=>low,:prediction_high=>high)
               puts event
             end
           end
