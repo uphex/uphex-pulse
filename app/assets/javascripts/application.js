@@ -248,7 +248,7 @@ uphex.MinMax;
                 }
             }
 
-            if (eventpredictedstart) {
+            if (typeof eventpredictedstart === "number") {
                 var ec = document.createElementNS("http://www.w3.org/2000/svg", "circle");
                 ec.setAttribute("cx", circles[center].x);
                 ec.setAttribute("cy", circles[center].y);
