@@ -61,7 +61,14 @@ describe 'UsersController' do
 
     it "save success responds with created" do
       UserRegistration.any_instance.stub(:save => true)
-      post '/users', :user_registration => {}
+      UserPasswordStrategy.any_instance.stub(:find_matching_user => User.new)
+
+      post '/users', :user_registration => {
+        :user_email        => 'x@x.com',
+        :user_password     => '123456',
+        :user_name         => 'Alice Smith',
+        :organization_name => 'z'
+      }
 
       expect(last_response.status).to eq 201
     end

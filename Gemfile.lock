@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/padrino/padrino-framework.git
-  revision: 0dd7492442b3254c01a7ddf5cdb219c5446f00ae
+  revision: 3d317cc8595535eb99d04e3a44144c5638bfd2e5
   specs:
     padrino (0.12.2)
       padrino-admin (= 0.12.2)
@@ -111,7 +111,7 @@ GEM
     mini_portile (0.6.0)
     minitest (4.7.5)
     moneta (0.7.20)
-    multi_json (1.10.0)
+    multi_json (1.10.1)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
     parser (2.1.7)

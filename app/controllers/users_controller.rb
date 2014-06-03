@@ -10,6 +10,7 @@ UpHex::Pulse.controllers :users do
 
   get '/me' do
     @user = current_user
+    error(403) unless current_ability.can? :read, @user
     render 'users/show'
   end
 
@@ -24,11 +25,14 @@ UpHex::Pulse.controllers :users do
 
     if @user_registration.save
       @user = @user_registration.user
-      flash[:notice] = t 'user.created'
+      flash.now[:notice] = t 'user.created'
       status 201
+
+      auth = AuthenticationService.new request
+      auth.authenticate
+
       render 'users/show'
     else
-      @user_registration.user_password = nil
       status 422
       render 'users/new'
     end

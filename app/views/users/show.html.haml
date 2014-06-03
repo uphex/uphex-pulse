@@ -1,14 +1,16 @@
-%p
-  %span= "name: "
-  %span= @user.name
+- content_for :title do
+  Your Profile
 
-  %span= "id: "
-  %span= @user.id
-
-%p
-  %span= "email: "
-  %span= @user.email
-
-%p
-  %span= "created at: "
-  %span= @user.created_at
+= with_theme_builder do |b|
+  = b.item_group do
+    = b.paired_item_group_label 'name:'
+    = b.paired_item_group_value do
+      = @user.name
+  = b.item_group do
+    = b.paired_item_group_label 'email address:'
+    = b.paired_item_group_value do
+      = @user.email
+  = b.item_group do
+    = b.paired_item_group_label 'here since:'
+    = b.paired_item_group_value do
+      = @user.created_at

@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'spec/support/templates/active_record_model'
+require 'app/models/portfolio_stream'
+require 'app/models/stream'
 require 'app/models/portfolio'
 
 describe Portfolio do

@@ -1,7 +1,5 @@
 require 'active_record'
 require 'bcrypt'
-require 'app/models/organization'
-require 'app/models/organization_membership'
 
 class User < ActiveRecord::Base
   has_many :organization_memberships
@@ -13,13 +11,15 @@ class User < ActiveRecord::Base
     :presence => true
 
   validates :email,
-    :presence => true
+    :presence => true,
+    :format => { :with => /@/ }
 
   validates :password_hash,
     :presence => true
 
   validates :password,
-    :presence => true
+    :presence => true,
+    :length => { :minimum => 6 }
 
   def password=(unencrypted_password)
     unless unencrypted_password.blank?
