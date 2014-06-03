@@ -1,6 +1,6 @@
 UpHex::Pulse.controllers :events do
   before do
-    Ability::ProviderPolicy.new(current_ability).apply!
+    Ability::EventsPolicy.new(current_ability).apply!
   end
 
   get '/' do
@@ -21,7 +21,11 @@ UpHex::Pulse.controllers :events do
 
   get '/:id' do
 
-    @event=transform_event(Event.find(params[:id]),true)
+    event=Event.find(params[:id])
+
+    error(403) unless current_ability.can? :read, event
+
+    @event=transform_event(event,true)
 
     render 'events/show'
   end

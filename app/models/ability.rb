@@ -110,4 +110,23 @@ class Ability
       end
     end
   end
+
+  class EventsPolicy
+    include Ability::AuthorizationPolicy
+
+    def applies?
+      true
+    end
+
+    def authorize
+      ability.instance_eval do
+        can :read, Event do |e|
+          puts user
+          puts e.metric.provider.portfolio.organization
+          puts user.organizations.include? e.metric.provider.portfolio.organization
+          user.organizations.include? e.metric.provider.portfolio.organization
+        end
+      end
+    end
+  end
 end
