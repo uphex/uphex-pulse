@@ -14,6 +14,14 @@ UpHex::Pulse.controllers :users do
     render 'users/show'
   end
 
+  delete '/me/session' do
+    auth = AuthenticationService.new request
+    auth.unauthenticate
+
+    flash[:notice] = I18n.t 'user.signed_out'
+    redirect '/'
+  end
+
   get '/:id' do
     @user = User.find params[:id]
     error(403) unless current_ability.can? :read, @user

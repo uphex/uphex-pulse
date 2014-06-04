@@ -17,6 +17,10 @@ class AuthenticationService
     service.authenticate!
   end
 
+  def unauthenticate
+    service.logout
+  end
+
   def authenticated?
     service.authenticated?(self.scope)
   end

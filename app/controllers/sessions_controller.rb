@@ -19,12 +19,6 @@ UpHex::Pulse.controllers :sessions do
     end
   end
 
-  get '/auth/logout' do
-    logout
-    flash[:notice] = I18n.t 'authn.signed_out'
-    redirect '/'
-  end
-
   post '/auth/unauthenticated' do
     flash[:notice] = I18n.t 'authn.failure'
     logger.debug "sessions#auth/unauthenticated: failure!"

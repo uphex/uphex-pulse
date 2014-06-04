@@ -3,10 +3,10 @@
     %a{:href => "/users/me"}
       = current_user.name
   %li
-    %a{:href => "/accounts/me"} Account
+    %a{:href => "/accounts/me"} account
   %li
     %a{:onclick=>"logout_form.submit();",:href=>'#'}
-      Log out
-      %form{:action=>'/users/me/session',:method=>'DELETE',:id=>'logout_form'}
+      log out
+      %form{:action=>'/users/me/session', :method => 'post', :id=>'logout_form'}
         = csrf_token_field
-        %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
+        %input{:type=>'hidden', :name=>'_method', :value=>'DELETE'}

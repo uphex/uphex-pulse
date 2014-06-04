@@ -22,5 +22,21 @@ describe "users" do
       get '/users/me'
       expect(last_request.env['warden'].user.name).to eq user_name
     end
+
+    it "signs out after signing in" do
+      user = User.create!(
+        :name  => 'Alice Smith',
+        :email => 'alice@example.com',
+        :password => '123456'
+      )
+
+      login_as user
+      set_csrf_token 'foo'
+      delete '/users/me/session', :authenticity_token => 'foo'
+      follow_redirect!
+
+      expect(last_response.status).to eq 200
+      expect(last_response.body).to include I18n.t 'user.signed_out'
+    end
   end
 end
