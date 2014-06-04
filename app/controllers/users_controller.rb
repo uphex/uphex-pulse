@@ -4,7 +4,7 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/new' do
-    @user_registration = UserRegistration.new
+    @user_registration = UserRegistration.new(params[:user_registration])
     render 'users/new'
   end
 
