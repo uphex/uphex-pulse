@@ -39,6 +39,8 @@
         %th
           Provider name
         %th
+          Info
+        %th
     %tbody
       - @portfolio.providers.each do |provider|
         %tr
@@ -47,6 +49,12 @@
           %td
             = provider.provider_name
           %td
+            - provider.metrics.select{|metric| !metric.last_error_type.nil?}.take(1).each do |error|
+              - if error.last_error_type == 'disconnected'
+                Needs reauthentication
+              - if error.last_error_type == 'other'
+                Other error
+          %td
             %a{:href=>"/providers/#{provider.id}",:class=>'button-standard'}
               Edit
             %a{:onclick=>"delete_form_#{provider.id}.submit();",:href=>'#',:class=>'button-standard'}
@@ -54,3 +62,5 @@
               %form{:action=>"/providers/#{provider.id}",:method=>'POST',:id=>"delete_form_#{provider.id}"}
                 = csrf_token_field
                 %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
+            %a{:href=>"/auth/"+(provider.provider_name == 'twitter' ? "oauth-v1" : "oauth-v2")+"/#{provider.provider_name}?portfolioid=#{@portfolio.id}&reauth_to=#{provider.id}",:class=>'button-standard'}
+              Reauthenticate
