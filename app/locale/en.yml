@@ -22,3 +22,7 @@ en:
   provider:
     modified: Provider modified
     deleted: Provider deleted
+  alert:
+    no_streams: Client has no streams
+    disconnected: "%{stream} stream disconnected"
+    other: "%{stream} failed to update"

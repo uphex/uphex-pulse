@@ -63,7 +63,12 @@ UpHex::Pulse.controllers :users do
       a=portfolio.clone
       a.alert=nil
       if portfolio.providers.blank?
-        a.alert='Client has no streams'
+        a.alert=I18n.t 'alert.no_streams'
+      end
+      errors=portfolio.providers.map{|provider| provider.metrics}.flatten.select{|metric| !metric.last_error_type.nil?}
+      unless errors.empty?
+        a.alert=I18n.t 'alert.disconnected',:stream=>errors.first.provider.provider_name.capitalize if errors.first.last_error_type==:disconnected.to_s
+        a.alert=I18n.t 'alert.other',:stream=>errors.first.provider.provider_name.capitalize if errors.first.last_error_type==:other.to_s
       end
       a
     }
