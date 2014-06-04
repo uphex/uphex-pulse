@@ -22,7 +22,7 @@ UpHex::Pulse.controllers :auth do
 
     read_config
 
-    redirect @authenticationStrategy.getRedirectUri(@config[params[:authstrategy]]['providers'][params[:provider]],request,session,params[:portfolioid])
+    redirect @authenticationStrategy.getRedirectUri(@config[params[:authstrategy]]['providers'][params[:provider]],request,session,params[:portfolioid],params[:reauth_to])
   end
 
   get '/:authstrategy/:provider/callback' do
@@ -33,30 +33,54 @@ UpHex::Pulse.controllers :auth do
     read_config
 
     portfolio=Portfolio.find(@authenticationStrategy.getPortfolioid(params,session))
+    reauth_to= @authenticationStrategy.getReauthTo(params,session)
 
     begin
       tokens=@authenticationStrategy.callback(@config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
       puts tokens
 
-      @providers=[]
+      if reauth_to.nil?
 
-      tokens.each{|token|
-        @authenticationStrategy.profiles(token,@config).each{|profile|
-          provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
-          @providers.push(provider)
+        @providers=[]
+
+        tokens.each{|token|
+          @authenticationStrategy.profiles(token,@config).each{|profile|
+            provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
+            @providers.push(provider)
+          }
         }
-      }
 
-      if @providers.size==1
-        @providers.first.save!
-        Resque.enqueue(StreamCreate,@providers.first[:id])
-        flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
+        if @providers.size==1
+          @providers.first.save!
+          Resque.enqueue(StreamCreate,@providers.first[:id])
+          flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
 
-        redirect "portfolios/#{portfolio.id}"
+          redirect "portfolios/#{portfolio.id}"
+        else
+          @portfolio_id=portfolio.id
+
+          render 'portfolios/add_providers'
+        end
       else
-        @portfolio_id=portfolio.id
+        provider=Provider.find(reauth_to)
+        token=tokens.find{|token| @authenticationStrategy.profiles(token,@config).any?{|profile| profile[:id]==provider[:profile_id]}}
+        if token.nil?
+          flash[:error]=I18n.t 'oauth.provider.reauth.error'
+          redirect "portfolios/#{portfolio.id}"
+        else
+          provider[:access_token]=token['access_token']
+          provider[:access_token_secret]=token['access_token_secret']
+          provider[:expiration_date]=token['expiration_date']
+          provider[:refresh_token]=token['refresh_token']
+          provider.save!
 
-        render 'portfolios/add_providers'
+          provider.metrics.each{|metric|
+            Resque.enqueue(MetricUpdate,metric[:id])
+          }
+
+          flash[:error]=I18n.t 'oauth.provider.reauth.success'
+          redirect "portfolios/#{portfolio.id}"
+        end
       end
 
     rescue => e

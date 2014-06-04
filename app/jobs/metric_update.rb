@@ -52,6 +52,7 @@ class MetricUpdate
 
         metric['updated_at']=DateTime.now
         metric['last_error_type']=nil
+        metric['last_error_time']=nil
         metric.save!
 
         require 'uphex-estimation'
@@ -90,23 +91,23 @@ class MetricUpdate
         end
       rescue OAuth2::Error => e
         if e.code['code']==401 or e.code=='invalid_grant'
-          metric['updated_at']=DateTime.now
+          metric['last_error_time']=DateTime.now
           metric['last_error_type']=:disconnected
           metric.save!
         else
           raise e
         end
       rescue Koala::Facebook::AuthenticationError => e
-        metric['updated_at']=DateTime.now
+        metric['last_error_time']=DateTime.now
         metric['last_error_type']=:disconnected
         metric.save!
       rescue Twitter::Error::Unauthorized => e
-        metric['updated_at']=DateTime.now
+        metric['last_error_time']=DateTime.now
         metric['last_error_type']=:disconnected
         metric.save!
       end
     rescue => e
-      metric['updated_at']=DateTime.now
+      metric['last_error_time']=DateTime.now
       metric['last_error_type']=:other
       metric.save!
       puts e.inspect, e.backtrace

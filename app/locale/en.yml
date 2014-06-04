@@ -19,6 +19,9 @@ en:
     no_providers_added: No providers were added
     provider:
       error: Error adding the provider
+      reauth:
+        error: Reauthentication failure
+        success: Reathentication successful. Please wait a few seconds for the stream to update
   provider:
     modified: Provider modified
     deleted: Provider deleted

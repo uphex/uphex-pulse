@@ -1,6 +1,7 @@
 require 'rack/oauth2'
+require 'json'
 class OAuthV2AuthenticationStrategy
-  def getRedirectUri(config,request,session,portfolioid)
+  def getRedirectUri(config,request,session,portfolioid,reauth_to)
     client = Rack::OAuth2::Client.new(
         :identifier => config['identifier'],
         :secret => config['secret'],
@@ -10,7 +11,7 @@ class OAuthV2AuthenticationStrategy
     )
 
     params=config['authorization_params'].clone
-    params[:state]=portfolioid
+    params[:state]={:portfolioid=>portfolioid,:reauth_to=>reauth_to}.to_json
 
     url=client.authorization_uri(params)
 
@@ -39,6 +40,10 @@ class OAuthV2AuthenticationStrategy
   end
 
   def getPortfolioid(params,session)
-    params[:state]
+    JSON.parse(params[:state])["portfolioid"]
+  end
+
+  def getReauthTo(params,session)
+    JSON.parse(params[:state])["reauth_to"]
   end
 end
