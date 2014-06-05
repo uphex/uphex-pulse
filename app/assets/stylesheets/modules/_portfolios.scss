@@ -1,4 +1,4 @@
-.mod-clients {
+.mod-portfolios {
   margin-top: 80px;
   position: relative;
   .add-new {
@@ -37,7 +37,7 @@
         -o-transition: color 200ms linear;
         transition: color 200ms linear;
       }
-      &:hover .edit-client {
+      &:hover .edit-portfolio {
         color: $icon-hover;
         background-color: $light-block;
         /* hover-off transitions */
@@ -47,7 +47,7 @@
         -o-transition: color 200ms linear, background-color 200ms linear;
         transition: color 200ms linear, background-color 200ms linear;
       }
-      &:hover .edit-client:hover {
+      &:hover .edit-portfolio:hover {
         color: $main-font;
         background-color: $dark-block;
         -webkit-transition: color 200ms linear, background-color 200ms linear;

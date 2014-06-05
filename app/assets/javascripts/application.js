@@ -294,12 +294,12 @@ uphex.MinMax;
 
 })();
 
-// linked table rows for .mod-clients
+// linked table rows for .mod-portfolios
 (function() {
 	function initTableLinks() {
-		var clientsTable = document.getElementsByClassName('mod-clients');
-		if (clientsTable.length) {
-			var rows = clientsTable[0].getElementsByTagName('tr');
+		var portfoliosTable = document.getElementsByClassName('mod-portfolios');
+		if (portfoliosTable.length) {
+			var rows = portfoliosTable[0].getElementsByTagName('tr');
 			for (var i = 0; i < rows.length; i++) {
 				var link = rows[i].getAttribute('data-link');
 				rows[i].onclick = (function(link) {
