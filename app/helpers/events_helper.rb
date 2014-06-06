@@ -15,7 +15,7 @@ module EventsHelper
     else
       start_time=eventdate.beginning_of_day
       end_time=eventdate.beginning_of_day+1.days
-      observations=[].concat(event.metric.observations.where('index<=:start_time',{:start_time=>start_time}).order('index DESC').take(1)).concat(event.metric.observations.where('index>:start_time and index<:end_time',{:start_time=>start_time,:end_time=>end_time}).order('index ASC')).concat(event.metric.observations.where('index>=:end_time',{:end_time=>end_time}).take(1))
+      observations=[].concat(event.metric.observations.where('index<=:start_time',{:start_time=>start_time}).order('index DESC').take(1)).concat(event.metric.observations.where('index>:start_time and index<:end_time',{:start_time=>start_time,:end_time=>end_time}).order('index ASC')).concat(event.metric.observations.where('index>=:end_time',{:end_time=>end_time}).order('index ASC').take(1))
     end
 
     puts "transform_event"
