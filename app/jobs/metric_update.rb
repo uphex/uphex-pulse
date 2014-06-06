@@ -57,37 +57,38 @@ class MetricUpdate
 
         require 'uphex-estimation'
 
-
         sparkline=SparklineNormalizer.new.normalize(metric.observations)
 
         full_data=sparkline.map{|sparkline|
           {:date=>sparkline[:index].to_date,:value=>sparkline[:value].round}
         }.sort_by{|val| val[:date]}
 
-        ts = UpHex::Prediction::TimeSeries.new(full_data, :days => 1)
+        unless full_data.length==0
+          ts = UpHex::Prediction::TimeSeries.new(full_data, :days => 1)
 
-        analyzed_num=(full_data.select{|val| val[:date]<metric['analyzed_at']}.size-1)
+          analyzed_num=(full_data.select{|val| val[:date]<metric['analyzed_at']}.size-1)
 
-        if analyzed_num<2
-          analyzed_num=[[full_data.size/2,30].max,full_data.size-1].min
-        end
+          if analyzed_num<2
+            analyzed_num=[[full_data.size/2,30].max,full_data.size-1].min
+          end
 
-        if analyzed_num>=2
-          range = 0..analyzed_num
-          results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)
-          results.each{|result|
-            low=[result[:low].round,0].max
-            high=result[:high].round
-            found=full_data.find{|val| val[:date]==result[:date]}
-            unless found.nil?
-              if found[:value]<low or found[:value]>high
-                event=Event.create(:metric=>metric,:date=>found[:date],:prediction_low=>low,:prediction_high=>high)
-                puts event
+          if analyzed_num>=2
+            range = 0..analyzed_num
+            results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)
+            results.each{|result|
+              low=[result[:low].round,0].max
+              high=result[:high].round
+              found=full_data.find{|val| val[:date]==result[:date]}
+              unless found.nil?
+                if found[:value]<low or found[:value]>high
+                  event=Event.create(:metric=>metric,:date=>found[:date],:prediction_low=>low,:prediction_high=>high)
+                  puts event
+                end
               end
-            end
-          }
-          metric['analyzed_at']=DateTime.now
-          metric.save!
+            }
+            metric['analyzed_at']=DateTime.now
+            metric.save!
+          end
         end
       rescue OAuth2::Error => e
         if e.code['code']==401 or e.code=='invalid_grant'
