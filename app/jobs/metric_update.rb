@@ -57,13 +57,20 @@ class MetricUpdate
 
         require 'uphex-estimation'
 
+        puts "OBSERVATIONS"
+        metric.observations.each{|fd| puts "Date: #{fd[:index]} => #{fd[:value]}"}
+
         sparkline=SparklineNormalizer.new.normalize(metric.observations)
+
+        puts "SPARKLINE"
+        sparkline.each{|fd| puts "Date: #{fd[:index]} => #{fd[:value]}"}
 
         full_data=sparkline.map{|sparkline|
           {:date=>sparkline[:index].to_date,:value=>sparkline[:value].round}
         }.sort_by{|val| val[:date]}
 
         unless full_data.length==0
+          full_data.each{|fd| puts "Date: #{fd[:date]} => #{fd[:value]}"}
           ts = UpHex::Prediction::TimeSeries.new(full_data, :days => 1)
 
           analyzed_num=(full_data.select{|val| val[:date]<metric['analyzed_at']}.size-1)
@@ -75,6 +82,7 @@ class MetricUpdate
           if analyzed_num>=2
             range = 0..analyzed_num
             results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)
+            results.each{|result| puts "Result date: #{result[:date]} => #{result[:low]}-#{result[:high]}"}
             results.each{|result|
               low=[result[:low].floor,0].max
               high=result[:high].ceil
