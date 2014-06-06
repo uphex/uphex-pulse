@@ -1,5 +1,6 @@
 class SparklineNormalizer
   def normalize(sparkline)
+    sparkline=sparkline.sort_by{|s| s[:index]}
     sparkline_ranges=[]
     for i in 0..sparkline.size-2
       sparkline_ranges << {:from=>sparkline[i][:index],:to=>sparkline[i+1][:index],:value=>(sparkline[i][:value]+sparkline[i+1][:value])/2}
