@@ -63,7 +63,7 @@ UpHex::Pulse.controllers :auth do
         end
       else
         provider=Provider.find(reauth_to)
-        token=tokens.find{|token| @authenticationStrategy.profiles(token,@config).any?{|profile| profile[:id]==provider[:profile_id]}}
+        token=tokens.find{|t| @authenticationStrategy.profiles(t,@config).any?{|profile| profile[:id]==provider[:profile_id]}}
         if token.nil?
           flash[:error]=I18n.t 'oauth.provider.reauth.error'
           redirect "portfolios/#{portfolio.id}"

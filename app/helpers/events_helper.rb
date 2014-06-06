@@ -19,11 +19,12 @@ module EventsHelper
     end
 
     points=SparklineNormalizer.new.normalize(observations)
-    point=points.find{|point|
-      point[:index].to_date.in_time_zone('UTC')==eventdate}
-    sparkline_points_before_event=points.select{|point| point[:index]<eventdate}.sort_by{|point| point[:index]}.last(15)
-    sparkline_points_after_event=points.select{|point| point[:index]>eventdate}.sort_by{|point| point[:index]}.take(15)
-    sparkline=([].concat(sparkline_points_before_event)<<points.find{|point| point[:index]==eventdate}).concat(sparkline_points_after_event).map{|collection|
+    point=points.find{|p|
+      p[:index].to_date.in_time_zone('UTC')==eventdate
+    }
+    sparkline_points_before_event=points.select{|p| p[:index]<eventdate}.sort_by{|p| p[:index]}.last(15)
+    sparkline_points_after_event=points.select{|p| p[:index]>eventdate}.sort_by{|p| p[:index]}.take(15)
+    sparkline=([].concat(sparkline_points_before_event)<<points.find{|p| p[:index]==eventdate}).concat(sparkline_points_after_event).map{|collection|
       collection[:value].round
     }
     type = point[:value]>event[:prediction_high] ? 'positive_anomaly' : 'negative_anomaly'

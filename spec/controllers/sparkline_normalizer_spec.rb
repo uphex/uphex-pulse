@@ -131,5 +131,33 @@ describe 'SparklineNormalizer' do
                                                           [{:index=>DateTime.new(2014,5,4,0,0).to_date,:value=>113.125}]
                                                       )
     end
+    it 'should work for non sorted data', :broken => true do
+      expect(SparklineNormalizer.new.normalize([
+
+                                                   {
+                                                       :index=>DateTime.new(2014,5,4,3,0),
+                                                       :value=>60
+                                                   },
+                                                   {
+                                                       :index=>DateTime.new(2014,5,4,0,0),
+                                                       :value=>50
+                                                   },
+                                                   {
+                                                       :index=>DateTime.new(2014,5,5,0,0),
+                                                       :value=>60
+                                                   },
+                                                   {
+                                                       :index=>DateTime.new(2014,5,4,12,0),
+                                                       :value=>200
+                                                   },
+                                                   {
+                                                       :index=>DateTime.new(2014,5,4,18,0),
+                                                       :value=>100
+                                                   }
+
+                                               ])).to match_array(
+                                                          [{:index=>DateTime.new(2014,5,4,0,0).to_date,:value=>113.125}]
+                                                      )
+    end
   end
 end

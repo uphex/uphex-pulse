@@ -65,8 +65,8 @@ class MetricUpdate
         puts "SPARKLINE"
         sparkline.each{|fd| puts "Date: #{fd[:index]} => #{fd[:value]}"}
 
-        full_data=sparkline.map{|sparkline|
-          {:date=>sparkline[:index].to_date,:value=>sparkline[:value].round}
+        full_data=sparkline.map{|sline|
+          {:date=>sline[:index].to_date,:value=>sline[:value].round}
         }.sort_by{|val| val[:date]}
 
         unless full_data.length==0
@@ -106,11 +106,11 @@ class MetricUpdate
         else
           raise e
         end
-      rescue Koala::Facebook::AuthenticationError => e
+      rescue Koala::Facebook::AuthenticationError
         metric['last_error_time']=DateTime.now
         metric['last_error_type']=:disconnected
         metric.save!
-      rescue Twitter::Error::Unauthorized => e
+      rescue Twitter::Error::Unauthorized
         metric['last_error_time']=DateTime.now
         metric['last_error_type']=:disconnected
         metric.save!

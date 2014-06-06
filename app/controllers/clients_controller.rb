@@ -15,7 +15,7 @@ UpHex::Pulse.controllers :clients do
     @clientevents=metrics.map{|metric|
       metric.events.map{|event|
         transform_event(event,false)
-     }
+      }
     }.flatten.sort_by{|event| event[:time]}.reverse.take(5).group_by{|e| e[:time].beginning_of_day}
 
     @clientstreams=metrics.map{|metric|
