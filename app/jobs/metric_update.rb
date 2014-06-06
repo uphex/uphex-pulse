@@ -76,8 +76,8 @@ class MetricUpdate
             range = 0..analyzed_num
             results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)
             results.each{|result|
-              low=[result[:low].round,0].max
-              high=result[:high].round
+              low=[result[:low].floor,0].max
+              high=result[:high].ceil
               found=full_data.find{|val| val[:date]==result[:date]}
               unless found.nil?
                 if found[:value]<low or found[:value]>high
