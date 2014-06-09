@@ -38,7 +38,9 @@ Padrino.before_load do
     require file
   end
 
-  $:.unshift Padrino.root unless $:.include? Padrino.root
+  [Padrino.root, Padrino.root('lib')].each do |additional_path|
+    $:.unshift additional_path unless $:.include? additional_path
+  end
 end
 
 ##
