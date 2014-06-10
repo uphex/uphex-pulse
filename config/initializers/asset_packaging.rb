@@ -18,6 +18,10 @@ module UpHex
             Pathname.new(path).relative_path_from(Pathname.new(app.root)).to_s
           end
 
+          def app_relative_path(path)
+            relative_path(File.expand_path("../../../#{path}", __FILE__))
+          end
+
           serve '/theme/scripts',     from: relative_path(Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/javascripts')
           serve '/theme/stylesheets', from: relative_path(Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/stylesheets')
           serve '/theme/fonts',       from: relative_path(Gem::Specification.find_by_name("uphex-flatty").gem_dir+'/assets/fonts')
