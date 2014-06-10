@@ -25,7 +25,15 @@ ignore_load_errors do
   Rubocop::RakeTask.new(:rubocop) do |task|
     task.options = ['--lint']
     task.formatters = ['fuubar']
-    task.patterns = %w[app db config lib].map { |prefix| "#{prefix}/**/*.rb" }
+
+    directories = %w[
+      app
+      db
+      config
+      lib
+      spec
+    ]
+    task.patterns = directories.map { |prefix| "#{prefix}/**/*.rb" }
   end
 
   task :test => [:spec, :rubocop]
