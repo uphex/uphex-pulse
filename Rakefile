@@ -23,7 +23,16 @@ ignore_load_errors do
 
   require 'rubocop/rake_task'
   RuboCop::RakeTask.new(:rubocop) do |task|
-    task.options = ['--lint']
+    style_cops = [
+      'Style/ConstantName',
+      'Style/Tab',
+      'Style/TrailingWhitespace'
+    ].join(',')
+
+    task.options = [
+      '--lint',
+      "--only", style_cops,
+    ]
     task.formatters = ['fuubar']
 
     directories = %w[
