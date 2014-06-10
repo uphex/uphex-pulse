@@ -22,7 +22,7 @@ ignore_load_errors do
   task :spec => 'ar:abort_if_pending_migrations'
 
   require 'rubocop/rake_task'
-  Rubocop::RakeTask.new(:rubocop) do |task|
+  RuboCop::RakeTask.new(:rubocop) do |task|
     task.options = ['--lint']
     task.formatters = ['fuubar']
 
