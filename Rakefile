@@ -22,10 +22,27 @@ ignore_load_errors do
   task :spec => 'ar:abort_if_pending_migrations'
 
   require 'rubocop/rake_task'
-  Rubocop::RakeTask.new(:rubocop) do |task|
-    task.options = ['--lint']
+  RuboCop::RakeTask.new(:rubocop) do |task|
+    style_cops = [
+      'Style/ConstantName',
+      'Style/Tab',
+      'Style/TrailingWhitespace'
+    ].join(',')
+
+    task.options = [
+      '--lint',
+      "--only", style_cops,
+    ]
     task.formatters = ['fuubar']
-    task.patterns = %w[app db config lib].map { |prefix| "#{prefix}/**/*.rb" }
+
+    directories = %w[
+      app
+      db
+      config
+      lib
+      spec
+    ]
+    task.patterns = directories.map { |prefix| "#{prefix}/**/*.rb" }
   end
 
   task :test => [:spec, :rubocop]

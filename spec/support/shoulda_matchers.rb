@@ -6,9 +6,9 @@ module UpHex
       #   # --> it { expect(subject).to validate_bar_of(:baz) }
       # end
       def validation_spec_for(kind, field)
-        method_name = "validate_#{kind.to_s}_of"
+        method_name = "validate_#{kind}_of"
         it {
-          expect(subject).to (
+          expect(subject).to(
             block_given? ?
             block.call(send(method_name, field)) :
             send(method_name, field)
@@ -22,7 +22,7 @@ module UpHex
       # end
       def association_spec_for(kind, field, &block)
         it {
-          expect(subject).to (
+          expect(subject).to(
             block_given? ?
             block.call(send(kind, field)) :
             send(kind, field)
