@@ -23,8 +23,8 @@ describe NavigationHelper do
 
   it "shows the first organization name if the current user belongs to at least one" do
     name = "org-name"
-    u = User.new.tap { |u| u.organizations.build :name => name }
-    model.stub :current_user => u
+    current_user = User.new.tap { |u| u.organizations.build :name => name }
+    model.stub :current_user => current_user
     expect(model.organization_name_tag).to include(name)
   end
 
