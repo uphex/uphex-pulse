@@ -28,6 +28,7 @@ module UpHex
 
           serve '/assets/scripts',     from: relative_path(File.expand_path('../../../app/assets/javascripts', __FILE__))
           serve '/assets/stylesheets', from: relative_path(File.expand_path('../../../app/assets/stylesheets', __FILE__))
+          serve '/assets/fonts',       from: app_relative_path('app/assets/fonts')
           serve '/images',             from: 'assets/images'
 
           css :application, [
