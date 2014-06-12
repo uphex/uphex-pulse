@@ -45,4 +45,17 @@ UpHex::Pulse.controllers :users do
       render 'users/new'
     end
   end
+
+  get '/me/dashboard' do
+    @portfolios = current_user.organizations.map{|organization| organization.portfolios}.flatten
+
+    @announcements = []
+    @dashboardevents = @portfolios.map{ |portfolio| portfolio.streams }.flatten.map{ |stream| stream.metrics }.flatten.map{ |metric|
+      metric.events.map do |event|
+        transform_event(event,false)
+      end
+    }.flatten.sort_by { |event| event[:time]}.reverse.take(5).group_by{|e| e[:time].beginning_of_day }
+
+    render 'dashboard/index'
+  end
 end

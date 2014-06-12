@@ -1,0 +1,48 @@
+- content_for :title do
+  Dashboard
+
+.mod-announcements
+  %h3.heading-with-icon
+    %span.icon-notification
+    Announcements
+  - @announcements.each do |announcement|
+    %a.announcement-item{:href =>  announcement.url}
+      %span.icon-bullhorn
+      %span.title
+        #{announcement.title}:
+      %span.description
+        #{announcement.description}
+  - if @announcements.blank?
+    .no-elements
+      No announcements
+
+
+= partial 'layouts/timeline' , :locals=>{:timelineevents=>@dashboardevents, :eventurl=>"/events/", :eventurlback=>""}
+- if !@dashboardevents.blank?
+  %a{:href => "/events", :class => "more-events button-standard"}
+    See all
+
+.mod-portfolios
+  %a{:href => "/portfolios/new", :class => "add-new button-standard"}
+    Add new
+    %span.icon-plus
+  %h3.heading-with-icon
+    %span.icon-users
+    Portfolios
+  %table
+    - @portfolios.each do |p|
+      %tr{"data-link" => "/portfolios/#{p.id}/"}
+        %td
+          - if dummy_alert = true
+            %span.icon-warning
+        %td
+          = p.name
+        %td
+          dummy alert
+        %td
+          %a{:href => "/portfolios/#{p.id}", :class => "edit-portfolio button-standard"}
+            Edit
+            %span.icon-pencil
+    - if @portfolios.blank?
+      .no-elements
+        No portfolios

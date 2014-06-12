@@ -1,0 +1,49 @@
+.mod-timeline
+  %h3.heading-with-icon
+    %span.icon-list2
+    Events
+  - if timelineevents.length == 0
+    .no-elements
+      No events
+  - else
+    - timelineevents.each_with_index do |(day,eventforday),idx|
+      .event-group{:style=>("display:none;" if defined? hidden)}
+        %h5.date-block
+          %span.day
+            #{day.strftime('%A')}
+          #{day.strftime('%B %e')}
+        .timeline-block
+          - eventforday.each_with_index do |event,idx2|
+            %a.event.clearfix{:href => eventurl+event[:id].to_s+"?back="+request.fullpath,:class=>("lastevent" if idx2==eventforday.length-1 && idx==timelineevents.length-1)}
+              .time
+                #{event[:time].strftime('%R')}
+              .timeline
+                .line
+                .circle
+              .expander
+                .expander-inside
+              .fluid-block
+                .container-light
+                  .type-icon
+                    - case event[:type]
+                      - when 'positive_anomaly'
+                        %span.icon-thumbs-up
+                      - when 'negative_anomaly'
+                        %span.icon-thumbs-up2
+                      - else
+                        %span.icon-flag
+                  .stream-client
+                    #{event[:stream].provider.portfolio.name}
+                  .stream-icon
+                    %img{:src => event[:categoryicon]}
+                  .stream-category
+                    #{event[:stream].provider.name}
+                .container-dark
+                  .trend-icon
+                    - if event[:eventactual]>event[:eventpredictedend]
+                      %span.icon-arrow-up-right3
+                    - else
+                      %span.icon-arrow-down-right3
+                  .text
+                    #{event[:stream].name+" "+(event[:eventactual]>event[:eventpredictedend] ? ' up to '+((event[:eventactual].to_d/event[:eventpredictedend].to_d-1)*100).round.to_s+'%':'down to '+((event[:eventactual].to_d/event[:eventpredictedstart].to_d)*100).round.to_s+'%')+' then expected'}
+
