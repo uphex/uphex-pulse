@@ -26,6 +26,7 @@ class MetricUpdate
                 value=client.bounces(since,DateTime.now,:day)
             end
             value.value.each{|metric_day|
+              Observation.destroy_all({:metric=>metric,:index => metric_day[:timestamp]})
               Observation.create(:metric=>metric,:index=>metric_day[:timestamp],:value=>metric_day[:payload])
             }
 
@@ -38,6 +39,7 @@ class MetricUpdate
                 value=client.page_likes(since)
             end
             value.value.each{|metric_day|
+              Observation.destroy_all({:metric=>metric,:index => metric_day[:timestamp]})
               Observation.create(:metric=>metric,:index=>metric_day[:timestamp],:value=>metric_day[:payload])
             }
 
