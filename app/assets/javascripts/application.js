@@ -296,26 +296,26 @@ uphex.MinMax;
 
 // linked table rows for .mod-portfolios
 (function() {
-	function initTableLinks() {
-		var portfoliosTable = document.getElementsByClassName('mod-portfolios');
-		if (portfoliosTable.length) {
-			var rows = portfoliosTable[0].getElementsByTagName('tr');
-			for (var i = 0; i < rows.length; i++) {
-				var link = rows[i].getAttribute('data-link');
-				rows[i].onclick = (function(link) {
-					return function() {
-						window.location = link;
-					}
-				})(link);
-			}
-		}
-	}
+  function initTableLinks() {
+    var portfoliosTable = document.getElementsByClassName('mod-portfolios');
+    if (portfoliosTable.length) {
+      var rows = portfoliosTable[0].getElementsByTagName('tr');
+      for (var i = 0; i < rows.length; i++) {
+        var link = rows[i].getAttribute('data-link');
+        rows[i].onclick = (function(link) {
+          return function() {
+            window.location = link;
+          }
+        })(link);
+      }
+    }
+  }
 
-	window.onload = (function(pre){
-		return function(){
-			pre && pre.apply(this,arguments);
-			initTableLinks();
-		};
-	})(window.onload);
+  window.onload = (function(pre){
+    return function(){
+      pre && pre.apply(this,arguments);
+      initTableLinks();
+    };
+  })(window.onload);
 
 })();
