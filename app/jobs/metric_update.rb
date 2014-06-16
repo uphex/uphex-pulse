@@ -10,7 +10,7 @@ class MetricUpdate
 
         config = JSON.parse(File.read(File.expand_path("../../../config/auth_config.json", __FILE__)))
 
-        since= metric['updated_at'] < DateTime.now.to_date - 180 ? DateTime.now.to_date - 180 : metric['updated_at']
+        since= metric['updated_at'] < DateTime.now.to_date - 180 ? DateTime.now.to_date - 180 : metric['updated_at'].to_date-1
 
         case metric.provider['provider_name']
           when 'google'
@@ -25,7 +25,7 @@ class MetricUpdate
               when 'bounces'
                 value=client.bounces(since,DateTime.now,:day)
             end
-            value.value.each{|metric_day|
+            value.value.select{|metric_day| metric_day[:timestamp]<DateTime.now.new_offset(0).beginning_of_day}.each{|metric_day|
               Observation.destroy_all({:metric=>metric,:index => metric_day[:timestamp]})
               Observation.create(:metric=>metric,:index=>metric_day[:timestamp],:value=>metric_day[:payload])
             }
@@ -38,7 +38,7 @@ class MetricUpdate
               when 'likes'
                 value=client.page_likes(since)
             end
-            value.value.each{|metric_day|
+            value.value.select{|metric_day| metric_day[:timestamp]<DateTime.now.new_offset(0).beginning_of_day}.each{|metric_day|
               Observation.destroy_all({:metric=>metric,:index => metric_day[:timestamp]})
               Observation.create(:metric=>metric,:index=>metric_day[:timestamp],:value=>metric_day[:payload])
             }
