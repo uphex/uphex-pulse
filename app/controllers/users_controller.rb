@@ -1,6 +1,6 @@
 UpHex::Pulse.controllers :users do
   before do
-    Ability::UserPolicy.new(current_ability).apply!
+    UserAuthorizationPolicy.new(current_ability).apply!
   end
 
   get '/new' do
