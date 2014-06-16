@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 9) do
+ActiveRecord::Schema.define(version: 10) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,20 @@ ActiveRecord::Schema.define(version: 9) do
   end
 
   add_index "credential_tokens", ["token"], name: "index_credential_tokens_on_token", using: :btree
+
+  create_table "events", force: true do |t|
+    t.text     "kind",            null: false
+    t.datetime "occurred_at",     null: false
+    t.integer  "targetable_id"
+    t.text     "targetable_type"
+    t.json     "metadata"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["kind"], name: "index_events_on_kind", using: :btree
+  add_index "events", ["occurred_at"], name: "index_events_on_occurred_at", using: :btree
+  add_index "events", ["targetable_type", "targetable_id"], name: "index_events_on_targetable_type_and_targetable_id", using: :btree
 
   create_table "organization_memberships", force: true do |t|
     t.integer  "organization_id", null: false
