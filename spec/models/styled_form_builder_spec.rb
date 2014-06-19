@@ -20,6 +20,21 @@ describe StyledFormBuilder do
 
   let(:builder) { described_class.new template, model }
 
+  describe StyledFormBuilder::Options do
+    let(:options_hash) { described_class::Options.new }
+
+    it "returns a default caption when translation fails" do
+      key  = "invalid.key_value"
+      output_hash = options_hash.with_options_for(key)
+
+      expected_message = "Key value:"
+
+      expect(output_hash.with_options_for(key)).to include(
+        { :label_options => { :caption => expected_message } }
+      )
+    end
+  end
+
   describe "#styled_* metamethods" do
     it "has a corresponding styled_* method for each field type" do
       c = described_class

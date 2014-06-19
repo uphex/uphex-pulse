@@ -32,7 +32,7 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
       help_key        = "messages.#{key}.help"
       placeholder_key = "messages.#{key}.placeholder"
 
-      caption = I18n.t(caption_key, :raise => true) rescue nil
+      caption = I18n.t(caption_key, :raise => true) rescue default_caption_key_for(caption_key)
       caption = "#{caption.to_s.humanize}:"
 
       help    = I18n.t(help_key, :raise => true) rescue nil
@@ -43,6 +43,10 @@ class StyledFormBuilder < Padrino::Helpers::FormBuilder::AbstractFormBuilder
         with_label_caption(caption).
         with_help_message(help).
         with_field_placeholder(placeholder)
+    end
+
+    def default_caption_key_for(key)
+      key.split('.').compact.last || ''
     end
   end
 
