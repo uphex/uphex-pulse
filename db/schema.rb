@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 10) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
   enable_extension "hstore"
 
   create_table "credential_tokens", force: true do |t|
@@ -70,9 +71,9 @@ ActiveRecord::Schema.define(version: 10) do
   add_index "portfolio_streams", ["portfolio_id"], name: "index_portfolio_streams_on_portfolio_id", using: :btree
   add_index "portfolio_streams", ["stream_id"], name: "index_portfolio_streams_on_stream_id", using: :btree
 
-  create_table "portfolios", force: true do |t|
-    t.text     "name"
-    t.integer  "organization_id"
+  create_table "portfolios", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
+    t.text     "name",            null: false
+    t.integer  "organization_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

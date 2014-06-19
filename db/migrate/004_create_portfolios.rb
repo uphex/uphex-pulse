@@ -1,8 +1,10 @@
 class CreatePortfolios < ActiveRecord::Migration
   def change
-    create_table :portfolios do |t|
-      t.text :name
-      t.belongs_to :organization
+    enable_extension 'uuid-ossp'
+
+    create_table :portfolios, :id => :uuid do |t|
+      t.text :name, :null => false
+      t.belongs_to :organization, :null => false
       t.timestamps
 
       t.index :name
