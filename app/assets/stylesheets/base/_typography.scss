@@ -16,6 +16,7 @@
 /***************************\
  * PT Sans font-face
  ***************************/
+
 @font-face {
   font-family: 'PT Sans';
   font-style: normal;
@@ -42,17 +43,6 @@
 }
 
 /***************************\
- * Arvo font-face
+ * Roboto Slab font-face
  ***************************/
-@font-face {
-  font-family: 'Arvo';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Arvo'), url(https://themes.googleusercontent.com/static/fonts/arvo/v6/WJ6D195CfbTRlIs49IbkFw.woff) format('woff');
-}
-@font-face {
-  font-family: 'Arvo';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Arvo Bold'), local('Arvo-Bold'), url(https://themes.googleusercontent.com/static/fonts/arvo/v6/0Aa8aBJcGN1n1zDNhqNrnQ.woff) format('woff');
-}
+@import url(//fonts.googleapis.com/css?family=Roboto+Slab:400,700);
