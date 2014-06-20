@@ -1,0 +1,13 @@
+- content_for :title do
+  New portfolio
+
+= styled_form_for @portfolio, '/portfolios' do |f|
+  %p.help-text
+    Portfolios organize related data streams that you want to track together.
+  %hr.hr-normal
+  = f.styled_translated_select_block :organization,
+      :collection => current_user.organizations,
+      :fields => [:name, :id]
+  = f.styled_translated_text_field_block :name
+  = f.styled_form_actions_block do
+    = f.styled_form_action 'create portfolio', :primary => true

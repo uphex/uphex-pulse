@@ -1,0 +1,12 @@
+- content_for :title do
+  New portfolio
+
+= with_theme_builder do |b|
+  = b.item_group do
+    = b.paired_item_group_label 'name:'
+    = b.paired_item_group_value do
+      = @portfolio.name
+  = b.item_group do
+    = b.paired_item_group_label 'organization:'
+    = b.paired_item_group_value do
+      = @portfolio.organization.inspect.to_s
