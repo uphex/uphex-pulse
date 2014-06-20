@@ -11,7 +11,7 @@ UpHex::Pulse.controllers :sessions do
 
     if auth.authenticated?
       logger.info "sessions#/: with #{auth.user}"
-      flash[:notice] = I18n.t 'authn.signed_in'
+      flash[:notice] = I18n.t 'events.user.signed_in'
       redirect '/'
     else
       logger.info "sessions#/: authentication failed"
@@ -20,7 +20,7 @@ UpHex::Pulse.controllers :sessions do
   end
 
   post '/auth/unauthenticated' do
-    flash[:notice] = I18n.t 'authn.failure'
+    flash[:notice] = I18n.t 'events.authentication.failure'
     logger.debug "sessions#auth/unauthenticated: failure!"
 
     @user = User.new(params['user'])
