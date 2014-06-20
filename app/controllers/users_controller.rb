@@ -18,7 +18,7 @@ UpHex::Pulse.controllers :users do
     auth = AuthenticationService.new request
     auth.unauthenticate
 
-    flash[:notice] = I18n.t 'user.signed_out'
+    flash[:notice] = I18n.t 'events.user.signed_out'
     redirect '/'
   end
 
@@ -33,7 +33,7 @@ UpHex::Pulse.controllers :users do
 
     if @user_registration.save
       @user = @user_registration.user
-      flash.now[:notice] = t 'user.created'
+      flash.now[:notice] = I18n.t 'events.user.created'
       status 201
 
       auth = AuthenticationService.new request

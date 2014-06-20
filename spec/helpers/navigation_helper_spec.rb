@@ -1,5 +1,6 @@
 require 'environment_spec_helper'
 require 'app/helpers/navigation_helper'
+require 'spec/support/translation_matchers'
 
 describe NavigationHelper do
   let(:model) do
@@ -30,11 +31,11 @@ describe NavigationHelper do
 
   it "shows the default navigation if the current user has no organizations" do
     model.stub :current_user => User.new
-    expect(model.organization_name_tag).to include(I18n.t "navigation.title.default")
+    expect(model.organization_name_tag).to have_message "navigation.title.default"
   end
 
   it "shows the default navigation if there is no current user" do
     model.stub :current_user => nil
-    expect(model.organization_name_tag).to include(I18n.t "navigation.title.default")
+    expect(model.organization_name_tag).to have_message "navigation.title.default"
   end
 end

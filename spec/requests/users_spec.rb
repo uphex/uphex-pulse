@@ -1,4 +1,5 @@
 require 'environment_spec_helper'
+require 'spec/support/translation_matchers'
 
 describe "users" do
   context "signing up" do
@@ -17,7 +18,7 @@ describe "users" do
 
       post '/users', params_hash
       expect(last_response.status).to eq 201
-      expect(last_response.body).to include I18n.t 'user.created'
+      expect(last_response.body).to have_message 'events.user.created'
 
       get '/users/me'
       expect(last_request.env['warden'].user.name).to eq user_name
@@ -36,7 +37,7 @@ describe "users" do
       follow_redirect!
 
       expect(last_response.status).to eq 200
-      expect(last_response.body).to include I18n.t 'user.signed_out'
+      expect(last_response.body).to have_message 'events.user.signed_out'
     end
   end
 end
