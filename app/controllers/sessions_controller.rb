@@ -10,8 +10,8 @@ UpHex::Pulse.controllers :sessions do
     auth.authenticate
 
     if auth.authenticated?
-      logger.info "sessions#/: with #{auth.user}"
-      flash[:notice] = I18n.t 'events.user.signed_in'
+      logger.info "sessions#/: with #{current_user}"
+      flash[:notice] = I18n.t 'events.user.signed_in', :name => current_user.name
       redirect '/'
     else
       logger.info "sessions#/: authentication failed"
