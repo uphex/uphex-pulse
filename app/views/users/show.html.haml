@@ -14,3 +14,7 @@
     = b.paired_item_group_label 'here since:'
     = b.paired_item_group_value do
       = @user.created_at
+  = b.item_group do
+    = b.paired_item_group_label 'belongs to:'
+    = b.paired_item_group_value do
+      = @user.organizations.map { |o| o.name }.join ','
