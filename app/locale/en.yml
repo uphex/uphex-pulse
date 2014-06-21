@@ -24,5 +24,6 @@ en:
       user_password:
         placeholder: at least 6 characters
   navigation:
+    backlink: back to %{location}
     title:
       default: "UpHex • Pulse"
