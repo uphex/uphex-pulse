@@ -59,7 +59,7 @@ describe 'UsersController' do
       expect(last_response.status).to eq 422
     end
 
-    it "save success responds with created" do
+    it "save success redirects to dashboard" do
       allow_any_instance_of(UserRegistration).to receive(:save).and_return true
       allow_any_instance_of(UserPasswordStrategy).to receive(:find_matching_user).and_return User.new
 
@@ -70,7 +70,7 @@ describe 'UsersController' do
         :organization_name => 'z'
       }
 
-      expect(last_response.status).to eq 201
+      expect(last_response.status).to eq 302
     end
   end
 end

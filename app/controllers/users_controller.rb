@@ -33,13 +33,13 @@ UpHex::Pulse.controllers :users do
 
     if @user_registration.save
       @user = @user_registration.user
-      flash.now[:notice] = I18n.t 'events.user.created'
+      flash[:notice] = I18n.t 'events.user.created'
       status 201
 
       auth = AuthenticationService.new request
       auth.authenticate
 
-      render 'users/show'
+      redirect '/users/me/dashboard'
     else
       status 422
       render 'users/new'

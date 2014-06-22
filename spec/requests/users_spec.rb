@@ -17,7 +17,9 @@ describe "users" do
       }
 
       post '/users', params_hash
-      expect(last_response.status).to eq 201
+      follow_redirect!
+
+      expect(last_response.status).to eq 200
       expect(last_response.body).to have_message 'events.user.created'
 
       get '/users/me'

@@ -12,7 +12,7 @@ UpHex::Pulse.controllers :sessions do
     if auth.authenticated?
       logger.info "sessions#/: with #{current_user}"
       flash[:notice] = I18n.t 'events.user.signed_in', :name => current_user.name
-      redirect '/'
+      redirect '/users/me/dashboard'
     else
       logger.info "sessions#/: authentication failed"
       redirect 'sessions/new'
