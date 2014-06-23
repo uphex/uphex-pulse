@@ -1,0 +1,8 @@
+---
+providers:
+  twitter:
+    strategy: oauth-v1
+    consumer_key:    <%= ENV.fetch('SERVICE_TWITTER_CONSUMER_KEY') %>
+    consumer_secret: <%= ENV.fetch('SERVICE_TWITTER_CONSUMER_SECRET') %>
+    options:
+      site: <%= ENV.fetch('SERVICE_TWITTER_SITE', "https://api.twitter.com") %>
