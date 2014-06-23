@@ -19,7 +19,6 @@ module EventsHelper
     end
 
     points=SparklineNormalizer.new.normalize(observations)
-    points=SparklineNormalizer.new.normalize(observations)
     point=points.find{|p|
       p[:index].to_date.in_time_zone('UTC')==eventdate
     }
