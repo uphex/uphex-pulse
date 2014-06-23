@@ -48,6 +48,8 @@ group :test do
 
   # Code enforcement.
   gem 'rubocop', :require => false
+
+  gem 'resque_spec'
 end
 
 # Padrino

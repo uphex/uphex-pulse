@@ -32,6 +32,7 @@ UpHex::Pulse.controllers :auth do
 
     read_config
 
+
     portfolio=Portfolio.find(@authenticationStrategy.getPortfolioid(params,session))
     reauth_to= @authenticationStrategy.getReauthTo(params,session)
 
