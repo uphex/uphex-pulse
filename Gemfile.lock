@@ -226,6 +226,7 @@ GEM
     thread_safe (0.3.1)
       atomic (>= 1.1.7, < 2)
     tilt (1.4.1)
+    timecop (0.7.1)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -273,6 +274,7 @@ DEPENDENCIES
   shoulda-matchers!
   sinatra-assetpack
   thin
+  timecop
   uphex-estimation!
   uphex-flatty!
   uphex-prototype-cynosure (= 0.0.5)!

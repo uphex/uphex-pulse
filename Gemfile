@@ -50,6 +50,7 @@ group :test do
   gem 'rubocop', :require => false
 
   gem 'resque_spec'
+  gem 'timecop'
 end
 
 # Padrino
