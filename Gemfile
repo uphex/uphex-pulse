@@ -38,6 +38,9 @@ gem 'cancan'
 # Encryption
 gem 'bcrypt-ruby'
 
+# Service providers
+gem 'oauth'
+
 # Test requirements
 group :test do
   gem 'byebug'
