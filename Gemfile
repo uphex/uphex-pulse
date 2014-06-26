@@ -40,6 +40,7 @@ gem 'bcrypt-ruby'
 
 # Service providers
 gem 'oauth'
+gem 'twitter'
 
 # Test requirements
 group :test do
