@@ -56,8 +56,20 @@ namespace :uphex do
     FileUtils.cp src, dest, :verbose => true
   end
 
+  desc "Write providers.yml"
+  task :make_providers_config do
+    src  = 'config/providers.yml.example'
+    dest = 'config/providers.yml'
+    FileUtils.cp src, dest, :verbose => true
+  end
+
   desc "Perform setup suitable for cloud environments"
-  task :deploy => ['uphex:make_database_config', 'ar:create', 'ar:migrate']
+  task :deploy => [
+    'uphex:make_database_config',
+    'uphex:make_providers_config',
+    'ar:create',
+    'ar:migrate'
+  ]
 
   APP_FILE  = 'config/boot.rb'
   APP_CLASS = 'UpHex::Pulse'
