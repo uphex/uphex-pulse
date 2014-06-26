@@ -36,6 +36,10 @@ module UpHex
             '/assets/stylesheets/application.css',
           ]
 
+          js :application, [
+            '/assets/scripts/application.js'
+          ]
+
           js :forms, [
               '/theme/scripts/jquery/jquery.min.js',
               '/theme/scripts/jquery/jquery-migrate.min.js',
