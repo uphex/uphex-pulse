@@ -12,7 +12,16 @@ end
 def ignore_load_errors(&block)
   begin
     yield
-  rescue LoadError
+  rescue LoadError => e
+    warn "! ignored #{e.class} ⇒ #{e}"
+  end
+end
+
+def ignore_enoent_errors(&block)
+  begin
+    yield
+  rescue Errno::ENOENT => e
+    warn "! ignored #{e.class} ⇒ #{e}"
   end
 end
 
@@ -53,14 +62,18 @@ namespace :uphex do
   task :make_database_config do
     src  = 'config/database.yml.example'
     dest = 'config/database.yml'
-    FileUtils.cp src, dest, :verbose => true
+    ignore_enoent_errors do
+      FileUtils.cp src, dest, :verbose => true
+    end
   end
 
   desc "Write providers.yml"
   task :make_providers_config do
     src  = 'config/providers.yml.example'
     dest = 'config/providers.yml'
-    FileUtils.cp src, dest, :verbose => true
+    ignore_enoent_errors do
+      FileUtils.cp src, dest, :verbose => true
+    end
   end
 
   desc "Perform setup suitable for cloud environments"
