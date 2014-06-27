@@ -13,8 +13,11 @@
   font-family: $font-main;
 }
 
-h3.heading-with-icon {
+h2, h3, h4, h5, h6 {
   font-family: $font-heading;
+}
+
+h3.heading-with-icon {
   font-size: 22px;
   font-weight: normal;
   span {
