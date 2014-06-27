@@ -9,6 +9,7 @@ module UpHex
     register UpHex::Initializers::Warden
     register UpHex::Initializers::CompassAssets
     register UpHex::Initializers::AssetPackaging
+    register UpHex::Initializers::HoneybadgerSupport
 
     ##
     # Caching support.

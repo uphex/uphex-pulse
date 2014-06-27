@@ -58,3 +58,6 @@ gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
 
 # Asset management
 gem 'sinatra-assetpack'
+
+# Exception handling
+gem 'honeybadger'

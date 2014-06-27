@@ -98,6 +98,8 @@ GEM
     fssm (0.2.10)
     haml (4.0.5)
       tilt
+    honeybadger (1.15.3)
+      json
     http_router (0.11.1)
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
@@ -181,6 +183,7 @@ DEPENDENCIES
   cancan
   compass
   haml
+  honeybadger
   padrino!
   pg
   rack-test!
