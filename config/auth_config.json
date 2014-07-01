@@ -3,8 +3,8 @@
         "providers":{
             "twitter":{
                 "instantiateClass":"TwitterAuthenticationStrategy",
-                "consumer_key":"xWSlyE7nsL5fs1QH9NuNg",
-                "consumer_secret":"ksUpwzpCNiEZxfuhQ2UteoThbdm64k5b6V5X2dlU8g",
+                "consumer_key":"Spovbc1RvIHgRmbpVB99w",
+                "consumer_secret":"WnI9Y3TAQmQjKJjaiopcR9tGfzSd6n9rNcBFdbQN0k",
                 "options":{
                     "site":"https://api.twitter.com/"
                 }
@@ -30,8 +30,8 @@
             },
             "facebook":{
                 "instantiateClass":"FacebookAuthenticationStrategy",
-                "identifier":"701079439943046",
-                "secret":"d2778ab9e6deedea51292cbed1bd05ad",
+                "identifier":"340310409438173",
+                "secret":"8f3d945eb34dc04e43bbd02860203a75",
                 "host":"www.facebook.com",
                 "authorization_endpoint":"/dialog/oauth",
                 "authorization_params":{
