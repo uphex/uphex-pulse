@@ -40,7 +40,9 @@ gem 'bcrypt-ruby'
 
 # Service providers
 gem 'oauth'
+gem 'oauth2'                    # for OAuth2 flows
 gem 'twitter'
+gem 'legato'                    # for Google Analytics
 
 # Test requirements
 group :test do
