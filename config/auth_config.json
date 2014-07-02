@@ -30,8 +30,8 @@
             },
             "facebook":{
                 "instantiateClass":"FacebookAuthenticationStrategy",
-                "identifier":"340310409438173",
-                "secret":"8f3d945eb34dc04e43bbd02860203a75",
+                "identifier":"701079439943046",
+                "secret":"d2778ab9e6deedea51292cbed1bd05ad",
                 "host":"www.facebook.com",
                 "authorization_endpoint":"/dialog/oauth",
                 "authorization_params":{
