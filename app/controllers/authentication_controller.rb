@@ -26,4 +26,22 @@ UpHex::Pulse.controllers :authn do
 
     "great success! we received these tokens: #{o.access_tokens.inspect} <br><br>we can now act as these users: #{o.access_tokens.map { |at| at.params[:screen_name] }}".html_safe
   end
+
+  get '/:authn_strategy/google_analytics' do
+    o = UpHex::Providers::GoogleAnalytics.new(request)
+
+    o.make_authorization_request
+
+    redirect o.authorization_url
+  end
+
+  get '/:authn_strategy/google_analytics/callback' do
+    o = UpHex::Providers::GoogleAnalytics.new(request)
+    o.make_access_request
+
+    "great success! Google Analytics callback!<br>
+    -- we received this request: #{request.params}<br>
+    -- we received this object: #{o}<br>
+    ".html_safe
+  end
 end
