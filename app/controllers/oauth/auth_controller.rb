@@ -46,7 +46,7 @@ UpHex::Pulse.controllers :auth do
 
         tokens.each{|token|
           @authenticationStrategy.profiles(token,@config).each{|profile|
-            provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
+            provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>@authenticationStrategy.raw_response)
             @providers.push(provider)
           }
         }

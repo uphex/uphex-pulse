@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 11) do
+ActiveRecord::Schema.define(version: 12) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 11) do
     t.date    "expiration_date"
     t.string  "token_type"
     t.string  "refresh_token"
-    t.string  "raw_response"
+    t.text    "raw_response"
     t.integer "portfolios_id"
     t.string  "provider_name"
     t.string  "profile_id"

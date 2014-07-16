@@ -1,7 +1,13 @@
+require 'stringio'
+require 'logger'
+
 class TwitterAuthenticationStrategy < OAuthV1AuthenticationStrategy
   def callback(config,params,request,session)
     @consumer = OAuth::Consumer.new(config['consumer_key'],config['consumer_secret'],config['options'])
-    @consumer.http.set_debug_output($stderr)
+
+    @strio = StringIO.new
+    @consumer.http.set_debug_output(@strio)
+
     @req_token = OAuth::RequestToken.new(@consumer,session[:request_token],session[:request_token_secret])
 
     # Request user access info from Twitter
@@ -16,5 +22,9 @@ class TwitterAuthenticationStrategy < OAuthV1AuthenticationStrategy
     @access_token=OAuth::AccessToken.new(@consumer,token['access_token'],token['access_token_secret'])
     screen_name=JSON.parse(@access_token.request(:get, "https://api.twitter.com/1.1/account/settings.json").body)['screen_name']
     [{:name=>'@'+screen_name,:id=>screen_name}]
+  end
+
+  def raw_response
+    @strio.string
   end
 end
