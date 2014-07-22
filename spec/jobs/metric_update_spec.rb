@@ -125,7 +125,48 @@ describe 'MetricUpdate' do
     MetricUpdate.perform(Metric.all.first.id)
 
     expect(Observation.all.size).to be >= 1
+  end
 
+  it 'should refresh the token if the expiration date is due' do
+    create_sample_user
+    create_sample_portfolio
+    create_sample_metric
+
+    Provider.all.each{|provider|
+      provider[:expiration_date]=Time.utc(2014,02,21)-1.days
+      provider.save!
+    }
+
+    Timecop.freeze(Time.utc(2014,02,21))
+
+    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
+        [OpenStruct.new(:date=>'20140220',:visits=>'1')
+        ]
+                            })
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+
+    OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
+
+    Legato::User.any_instance.stub(:accounts) do
+      if @refreshed==true
+        [OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})]
+      else
+        @called_without_refresh=true
+        raise OAuth2::Error.new({})
+      end
+
+    end
+
+    OAuth2::AccessToken.any_instance.should_receive(:refresh!) do
+      @refreshed=true
+      OpenStruct.new(:token=>'refreshed_access_token',:expires_in=>'10000')
+    end
+
+    MetricUpdate.perform(Metric.all.first.id)
+
+    expect(Observation.all.size).to be >= 1
+    expect(@called_without_refresh).to eql nil
   end
 
   it 'should generate an event for an extraneous data point' do

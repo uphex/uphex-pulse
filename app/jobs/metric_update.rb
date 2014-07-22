@@ -89,6 +89,23 @@ class MetricUpdate
     end
   end
 
+  def self.refresh_token(metric)
+    config = JSON.parse(File.read(File.expand_path("../../../config/auth_config.json", __FILE__)))
+    configpart=config['oauth-v2']['providers']['google']
+    client = OAuth2::Client.new(configpart['identifier'],configpart['secret'], {
+        :authorize_url => 'https://accounts.google.com/o/oauth2/auth',
+        :token_url => 'https://accounts.google.com/o/oauth2/token'
+    })
+
+    access_token=OAuth2::AccessToken.from_hash client, {:access_token => metric.provider[:access_token],:refresh_token=>metric.provider[:refresh_token]}
+
+    new_access_token=access_token.refresh!
+
+    metric.provider[:access_token]=new_access_token.token
+    metric.provider[:expiration_date]=Time.now+new_access_token.expires_in.to_i
+    metric.provider.save!
+  end
+
   def self.perform(metric_id)
     puts 'MetricUpdate invoked'
 
@@ -96,6 +113,9 @@ class MetricUpdate
 
     begin
       begin
+        if Time.now>metric.provider[:expiration_date]
+          refresh_token(metric)
+        end
         #Update the stream
         update_metric(metric)
       rescue OAuth2::Error => e
@@ -103,20 +123,7 @@ class MetricUpdate
         if e.code['code']==401 or e.code=='invalid_grant'
 
           begin
-            config = JSON.parse(File.read(File.expand_path("../../../config/auth_config.json", __FILE__)))
-            configpart=config['oauth-v2']['providers']['google']
-            client = OAuth2::Client.new(configpart['identifier'],configpart['secret'], {
-                :authorize_url => 'https://accounts.google.com/o/oauth2/auth',
-                :token_url => 'https://accounts.google.com/o/oauth2/token'
-            })
-
-            access_token=OAuth2::AccessToken.from_hash client, {:access_token => metric.provider[:access_token],:refresh_token=>metric.provider[:refresh_token]}
-
-            new_access_token=access_token.refresh!
-
-            metric.provider[:access_token]=new_access_token.token
-            metric.provider[:expiration_date]=Time.now+new_access_token.expires_in.to_i
-            metric.provider.save!
+            refresh_token(metric)
 
             update_metric(metric)
           rescue OAuth2::Error
