@@ -59,8 +59,7 @@ GIT
 
 GIT
   remote: git@github.com:uphex/uphex-prototype-cynosure.git
-  revision: 33116b4b1511311e63ce644f6b66925b0e285191
-  branch: master
+  revision: 5273f276f4dc48b9c85e1d88d499d67f3b5f4093
   specs:
     uphex-prototype-cynosure (0.0.6)
       koala
