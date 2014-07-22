@@ -113,7 +113,7 @@ class MetricUpdate
 
     begin
       begin
-        if Time.now>metric.provider[:expiration_date]
+        if !metric.provider[:expiration_date].nil? and Time.now>metric.provider[:expiration_date]
           refresh_token(metric)
         end
         #Update the stream
