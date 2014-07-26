@@ -9,7 +9,7 @@ RSpec::Matchers.define :have_message do |expected_key|
     actual.include? to_html_message expected_key
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     message = to_html_message expected_key
     %|expected that #{actual} would contain message: #{message}|
   end

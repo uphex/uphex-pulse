@@ -23,7 +23,7 @@ RSpec::Matchers.define :be_routable do
     @routed_to.first
   end
 
-  failure_message_for_should_not do |path|
+  failure_message_when_negated do |path|
     "expected #{path.inspect} not to be routable, but it routes to #{@routed_to.inspect}"
   end
 end

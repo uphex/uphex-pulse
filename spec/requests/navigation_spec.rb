@@ -11,7 +11,7 @@ describe "page navigation request" do
 
   context "when logged in" do
     it "contains user name links" do
-      app_class.any_instance.stub :current_user => User.new(:name => 'Bobby Tables')
+      allow_any_instance_of(app_class).to receive(:current_user).and_return User.new(:name => 'Bobby Tables')
       get '/'
       expect(last_response.body).to include 'Bobby Tables'
     end
