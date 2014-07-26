@@ -9,10 +9,6 @@ describe Stream do
   context "validations" do
     validation_spec_for :presence, :name
     validation_spec_for :presence, :provider_name
-    validation_spec_for :presence, :access_token
-    validation_spec_for :presence, :access_token_secret
-    validation_spec_for :presence, :token_type
-    validation_spec_for :presence, :refresh_token
   end
 
   context "associations" do

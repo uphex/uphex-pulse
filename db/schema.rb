@@ -11,11 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 7) do
+ActiveRecord::Schema.define(version: 9) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+
+  create_table "credential_tokens", force: true do |t|
+    t.text "token",                 null: false
+    t.json "metadata", default: {}, null: false
+  end
+
+  add_index "credential_tokens", ["token"], name: "index_credential_tokens_on_token", using: :btree
 
   create_table "organization_memberships", force: true do |t|
     t.integer  "organization_id", null: false
@@ -59,14 +66,21 @@ ActiveRecord::Schema.define(version: 7) do
   add_index "portfolios", ["name"], name: "index_portfolios_on_name", using: :btree
   add_index "portfolios", ["organization_id"], name: "index_portfolios_on_organization_id", using: :btree
 
+  create_table "stream_credentials", force: true do |t|
+    t.integer  "credential_token_id", null: false
+    t.integer  "stream_id",           null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stream_credentials", ["credential_token_id", "stream_id"], name: "index_stream_credentials_on_credential_token_id_and_stream_id", unique: true, using: :btree
+  add_index "stream_credentials", ["credential_token_id"], name: "index_stream_credentials_on_credential_token_id", using: :btree
+  add_index "stream_credentials", ["stream_id"], name: "index_stream_credentials_on_stream_id", using: :btree
+
   create_table "streams", force: true do |t|
-    t.text     "name",                null: false
-    t.text     "provider_name",       null: false
-    t.integer  "organization_id",     null: false
-    t.text     "access_token",        null: false
-    t.text     "access_token_secret", null: false
-    t.text     "token_type",          null: false
-    t.text     "refresh_token",       null: false
+    t.text     "name",            null: false
+    t.text     "provider_name",   null: false
+    t.integer  "organization_id", null: false
     t.json     "metadata"
     t.datetime "expires_at"
     t.datetime "created_at"

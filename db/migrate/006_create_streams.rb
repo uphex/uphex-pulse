@@ -5,11 +5,6 @@ class CreateStreams < ActiveRecord::Migration
       t.text :provider_name,    :null => false
       t.belongs_to :organization, :null => false
 
-      t.text :access_token,        :null => false
-      t.text :access_token_secret, :null => false
-      t.text :token_type,          :null => false
-      t.text :refresh_token,       :null => false
-
       t.json :metadata
 
       t.datetime :expires_at
