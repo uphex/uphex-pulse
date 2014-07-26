@@ -21,7 +21,7 @@ describe StyledFormBuilder do
   let(:builder) { described_class.new template, model }
 
   describe StyledFormBuilder::Options do
-    let(:options_hash) { described_class::Options.new }
+    let(:options_hash) { described_class.new }
 
     it "returns a default caption when translation fails" do
       key  = "invalid.key_value"

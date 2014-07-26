@@ -25,17 +25,17 @@ describe NavigationHelper do
   it "shows the first organization name if the current user belongs to at least one" do
     name = "org-name"
     current_user = User.new.tap { |u| u.organizations.build :name => name }
-    model.stub :current_user => current_user
+    allow(model).to receive(:current_user).and_return current_user
     expect(model.organization_name_tag).to include(name)
   end
 
   it "shows the default navigation if the current user has no organizations" do
-    model.stub :current_user => User.new
+    allow(model).to receive(:current_user).and_return User.new
     expect(model.organization_name_tag).to have_message "navigation.title.default"
   end
 
   it "shows the default navigation if there is no current user" do
-    model.stub :current_user => nil
+    allow(model).to receive(:current_user).and_return nil
     expect(model.organization_name_tag).to have_message "navigation.title.default"
   end
 end
