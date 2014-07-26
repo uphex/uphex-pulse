@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/padrino/padrino-framework.git
-  revision: d957bbbe8b326847c5a482349e33d8dc47d52dfc
+  revision: b0f0b7260aa42f1ec07324f4a94625ce693c85fe
   specs:
     padrino (0.12.2)
       padrino-admin (= 0.12.2)
@@ -103,7 +103,7 @@ GEM
     http_router (0.11.1)
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
-    i18n (0.6.9)
+    i18n (0.6.11)
     jsmin (1.0.1)
     json (1.8.1)
     mail (2.5.4)
@@ -166,7 +166,7 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.39)
+    tzinfo (0.3.40)
     url_mount (0.2.1)
       rack
     warden (1.2.3)
