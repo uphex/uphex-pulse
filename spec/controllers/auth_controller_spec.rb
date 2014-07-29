@@ -133,4 +133,32 @@ describe 'AuthController' do
     MetricUpdate.should have_queue_size_of(3)
 
   end
+
+  it 'should refresh a provider if reauth_to is specified' do
+    create_sample_user
+    create_sample_portfolio
+
+    Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
+      OpenStruct.new({:access_token=>'access_token',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token'})
+    end
+
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>'test_profile',:id=>'test_profile_id1'}),OpenStruct.new({:name=>'test_profile2',:id=>'test_profile_id2'})]})])
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+    post '/auth/add_providers',{:provider_selected=>['0'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'})}
+
+    Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
+      OpenStruct.new({:access_token=>'access_token2',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token2'})
+    end
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id,:reauth_to=>Provider.all.first.id}.to_json)+'&code=sample_code'
+
+    expect(Provider.all).not_to be_empty
+    expect(Provider.all.size).to eql 1
+    expect(Provider.all.first.portfolio.id).to eql Portfolio.all.first.id
+    expect(Provider.all.first.profile_id).to eql 'test_profile_id1'
+    expect(Provider.all.first.access_token).to eql 'access_token2'
+    expect(Provider.all.first.refresh_token).to eql 'refresh_token2'
+  end
 end
