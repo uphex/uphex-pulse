@@ -24,19 +24,22 @@ class AuthHelper
   end
 
   def config
-    @in_config ||= JSON.parse(File.read(File.expand_path("../../../../config/auth_config.json", __FILE__)))
+    @config ||= JSON.parse(File.read(File.expand_path("../../../../config/auth_config.json", __FILE__)))
   end
 
   def authentication_strategy
-    @in_auth_strategy ||= config[params[:authstrategy]]['providers'][params[:provider]]['instantiateClass'].constantize.new
+    @authentication_strategy ||= begin
+      strategy_class=config[params[:authstrategy]]['providers'][params[:provider]]['instantiateClass']
+      strategy_class.constantize.new
+    end
   end
 
   def portfolio
-    @in_portfolio ||= Portfolio.find(authentication_strategy.getPortfolioid(params,session))
+    @portfolio ||= Portfolio.find(authentication_strategy.getPortfolioid(params,session))
   end
 
   def reauth_to
-    @in_reauth_to ||= authentication_strategy.getReauthTo(params,session)
+    @reauth_to ||= authentication_strategy.getReauthTo(params,session)
   end
 
   def redirect_uri
@@ -44,26 +47,28 @@ class AuthHelper
   end
 
   def tokens
-    @in_tokens ||= authentication_strategy.callback(config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
+    @tokens ||= authentication_strategy.callback(config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
+  end
+
+  def reauth_provider
+    @reauth_provider ||= Provider.find(reauth_to)
   end
 
   def handle_reauth
-    provider=Provider.find(reauth_to)
-    token=tokens.find{|t| authentication_strategy.profiles(t,config).any?{|profile| profile[:id]==provider[:profile_id]}}
+    token=tokens.find{|t| authentication_strategy.profiles(t,config).any?{|profile| profile[:id]==reauth_provider[:profile_id]}}
     if token.nil?
       raise I18n.t 'oauth.provider.reauth.error'
     else
-      provider[:access_token]=token['access_token']
-      provider[:access_token_secret]=token['access_token_secret']
-      provider[:expiration_date]=token['expiration_date']
-      provider[:refresh_token]=token['refresh_token']
-      provider.save!
+      [:access_token, :access_token_secret, :expiration_date, :refresh_token].each do |field|
+        reauth_provider[field] = token[field.to_s]
+      end
+      reauth_provider.save!
 
-      provider.metrics.each{|metric|
+      reauth_provider.metrics.each{|metric|
         Resque.enqueue(MetricUpdate,metric[:id])
       }
 
-      provider
+      reauth_provider
     end
   end
 
@@ -83,16 +88,14 @@ class AuthHelper
   end
 
   def handle_callback
-    begin
-      if reauth_to.nil?
-        handle_provider_add
-      else
-        handle_reauth
-      end
-
-    rescue => e
-      puts e.inspect, e.backtrace
-      raise I18n.t 'oauth.provider.error'
+    if reauth_to.nil?
+      handle_provider_add
+    else
+      handle_reauth
     end
+
+  rescue => e
+    puts e.inspect, e.backtrace
+    raise I18n.t 'oauth.provider.error'
   end
 end
