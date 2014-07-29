@@ -28,18 +28,7 @@ class AuthHelper
   end
 
   def authentication_strategy
-    @in_auth_strategy ||= case config[params[:authstrategy]]['providers'][params[:provider]]['instantiateClass']
-      when 'GoogleAuthenticationStrategy'
-        GoogleAuthenticationStrategy.new
-      when 'FacebookAuthenticationStrategy'
-        FacebookAuthenticationStrategy.new
-      when 'MailchimpAuthenticationStrategy'
-        MailchimpAuthenticationStrategy.new
-      when 'TwitterAuthenticationStrategy'
-        TwitterAuthenticationStrategy.new
-      else
-        raise
-    end
+    @in_auth_strategy ||= config[params[:authstrategy]]['providers'][params[:provider]]['instantiateClass'].constantize.new
   end
 
   def portfolio
@@ -58,42 +47,49 @@ class AuthHelper
     @in_tokens ||= authentication_strategy.callback(config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
   end
 
+  def handle_reauth
+    provider=Provider.find(reauth_to)
+    token=tokens.find{|t| authentication_strategy.profiles(t,config).any?{|profile| profile[:id]==provider[:profile_id]}}
+    if token.nil?
+      raise I18n.t 'oauth.provider.reauth.error'
+    else
+      provider[:access_token]=token['access_token']
+      provider[:access_token_secret]=token['access_token_secret']
+      provider[:expiration_date]=token['expiration_date']
+      provider[:refresh_token]=token['refresh_token']
+      provider.save!
+
+      provider.metrics.each{|metric|
+        Resque.enqueue(MetricUpdate,metric[:id])
+      }
+
+      provider
+    end
+  end
+
+  def handle_provider_add
+    providers=tokens.map{|token|
+      authentication_strategy.profiles(token,config).map{|profile|
+        Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>userid,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>authentication_strategy.raw_response)
+      }
+    }.flatten
+
+    if providers.size==1
+      providers.first.save!
+      Resque.enqueue(StreamCreate,providers.first[:id])
+    end
+
+    providers
+  end
+
   def handle_callback
     begin
       if reauth_to.nil?
-
-        providers=tokens.map{|token|
-          authentication_strategy.profiles(token,config).map{|profile|
-            Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>userid,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>authentication_strategy.raw_response)
-          }
-        }.flatten
-
-        if providers.size==1
-          providers.first.save!
-          Resque.enqueue(StreamCreate,providers.first[:id])
-        end
-
-        providers
-
+        handle_provider_add
       else
-        provider=Provider.find(reauth_to)
-        token=tokens.find{|t| authentication_strategy.profiles(t,config).any?{|profile| profile[:id]==provider[:profile_id]}}
-        if token.nil?
-          raise I18n.t 'oauth.provider.reauth.error'
-        else
-          provider[:access_token]=token['access_token']
-          provider[:access_token_secret]=token['access_token_secret']
-          provider[:expiration_date]=token['expiration_date']
-          provider[:refresh_token]=token['refresh_token']
-          provider.save!
-
-          provider.metrics.each{|metric|
-            Resque.enqueue(MetricUpdate,metric[:id])
-          }
-
-          provider
-        end
+        handle_reauth
       end
+
     rescue => e
       puts e.inspect, e.backtrace
       raise I18n.t 'oauth.provider.error'
