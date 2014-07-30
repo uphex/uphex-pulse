@@ -10,7 +10,10 @@
   .half
     %div.event-data<
       %span.icon-clock
-      = @event[:time].strftime('%B %d, %Y')
+      - if @event[:time].seconds_since_midnight===0
+        = @event[:time].strftime('%B %d, %Y')
+      - else
+        = @event[:time].strftime('%B %d, %Y %H:%M')
     %div.event-data
       - case @event[:type]
         - when 'positive_anomaly'

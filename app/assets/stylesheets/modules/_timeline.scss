@@ -21,6 +21,12 @@
         -ms-transition: opacity 200ms linear;
         -o-transition: opacity 200ms linear;
         transition: opacity 200ms linear;
+
+        &.whole-day{
+          .time{
+            visibility:hidden;
+          }
+        }
         > div {
           float: left;
           height:50px;
@@ -30,7 +36,6 @@
           float: none;
         }
         .time {
-          visibility:hidden;
           font-size: 14px;
           color: $light-font;
           width: 66px;
