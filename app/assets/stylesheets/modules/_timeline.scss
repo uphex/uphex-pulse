@@ -6,7 +6,7 @@
       font-size: 12px;
       .day {
         display: inline-block;
-        width: 75px;
+        width: 93px;
         padding-right: 15px;
         text-align: right;
       }
@@ -33,7 +33,7 @@
           visibility:hidden;
           font-size: 14px;
           color: $light-font;
-          width: 44px;
+          width: 66px;
           text-align: right;
           -webkit-transition: color 200ms linear;
           -moz-transition: color 200ms linear;
@@ -267,7 +267,7 @@
       &:before {
         position:absolute;
         content: '';
-        left: 61px;
+        left: 83px;
         top: 51px;
         width:8px;
         height: 8px;
