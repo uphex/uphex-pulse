@@ -11,7 +11,7 @@ describe 'UsersController' do
   end
 
   describe 'GET /me' do
-    let(:user) { User.new }
+    let(:user) { User.new(:organizations=>[Organization.new(:name=>'org')]) }
     before(:each) do
       app_class.any_instance.stub(:current_user).and_return user
     end
@@ -25,7 +25,7 @@ describe 'UsersController' do
   end
 
   describe 'GET /:id' do
-    let(:user) { User.new }
+    let(:user) { User.new(:organizations=>[Organization.new(:name=>'org')]) }
     before(:each) do
       app_class.any_instance.stub(:current_user).and_return user
     end
