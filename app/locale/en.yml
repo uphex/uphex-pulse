@@ -10,6 +10,7 @@ en:
       modified: Account modified
     portfolio:
       created: Portfolio created
+    impersonate_ended: Impersonation ended
   portfolio:
     modified: Portfolio modified
   oauth:

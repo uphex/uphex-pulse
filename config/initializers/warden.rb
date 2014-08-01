@@ -3,6 +3,7 @@ module UpHex
     module Warden
       def self.registered(app)
         ::Warden::Strategies.add :password, UserPasswordStrategy
+        ::Warden::Strategies.add :impersonate, ImpersonateStrategy
 
         ::Warden::Manager.serialize_into_session do |user|
           user.id

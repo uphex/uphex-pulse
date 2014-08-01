@@ -81,4 +81,10 @@ UpHex::Pulse.controllers :users do
 
     render 'dashboard/index'
   end
+
+  get '/' do
+    error(403) unless is_admin?
+    @users=User.all
+    render 'users/index'
+  end
 end
