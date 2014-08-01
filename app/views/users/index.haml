@@ -26,9 +26,20 @@
           - user.roles.each do |role|
             %span{:class=>'role'}<
               = role.name
-        %td
+        %td{:class=>'actions'}
           - if current_user.id != user.id
-            %form{:action=>'/sessions/impersonate',:method=>'POST'}
-              = csrf_token_field
-              %input{:type=>'hidden',:name=>'impersonate_userid',:value=>user.id}
-              %input{:type=>'submit',:value=>'Impersonate',:class=>'button-standard'}
+            - if current_user(:impersonate).nil?
+              %form{:action=>'/sessions/impersonate',:method=>'POST'}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'impersonate_userid',:value=>user.id}
+                %input{:type=>'submit',:value=>'Impersonate',:class=>'button-standard'}
+            - if is_admin?(user)
+              %form{:action=>'/users/revoke_admin',:method=>'POST'}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'userid',:value=>user.id}
+                %input{:type=>'submit',:value=>'Revoke admin',:class=>'button-standard'}
+            - else
+              %form{:action=>'/users/make_admin',:method=>'POST'}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'userid',:value=>user.id}
+                %input{:type=>'submit',:value=>'Make admin',:class=>'button-standard'}

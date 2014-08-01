@@ -6,6 +6,8 @@ en:
     user:
       created: User created
       modified: Profile modified
+      admin_granted: User %{username} has been made admin
+      admin_revoken: Admin role revoken from user %{username}
     account:
       modified: Account modified
     portfolio:

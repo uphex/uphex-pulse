@@ -87,4 +87,20 @@ UpHex::Pulse.controllers :users do
     @users=User.all
     render 'users/index'
   end
+
+  post '/revoke_admin' do
+    error(403) unless is_admin?
+    u=User.find(params['userid'])
+    u.user_roles.select{|user_role| user_role.role.name=='admin'}.each{|user_role| user_role.destroy}
+    flash[:notice] = I18n.t 'authn.user.admin_revoken',username:u.name
+    redirect '/users'
+  end
+
+  post '/make_admin' do
+    error(403) unless is_admin?
+    u=User.find(params['userid'])
+    UserRole.create(:user=>u,:role=>Role.find_by_name('admin'))
+    flash[:notice] = I18n.t 'authn.user.admin_granted',username:u.name
+    redirect '/users'
+  end
 end
