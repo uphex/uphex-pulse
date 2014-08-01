@@ -1,5 +1,6 @@
 class SparklineNormalizer
   def normalize(sparkline)
+    return [] if sparkline.empty?
     sparkline=sparkline.sort_by{|s| s[:index]}
     sparkline_ranges=[]
     for i in 0..sparkline.size-2
