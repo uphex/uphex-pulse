@@ -26,4 +26,14 @@ class User < ActiveRecord::Base
 
   has_many :accounts, :class_name => "Account", :foreign_key => 'users_id'
   has_many :organizations, through: :accounts, source: :organization
+
+  has_many :user_roles, :class_name => "UserRole", :foreign_key => 'users_id'
+
+  def roles
+    roles=user_roles.map{|user_role| user_role.role}
+    if !roles.any?{|role| role.name=='user'}
+      roles<< Role.find_by_name('user')
+    end
+    roles
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 14) do
+ActiveRecord::Schema.define(version: 15) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,17 @@ ActiveRecord::Schema.define(version: 14) do
     t.integer  "portfolios_id"
     t.string   "provider_name"
     t.string   "profile_id"
+  end
+
+  create_table "roles", force: true do |t|
+    t.string "name"
+  end
+
+  add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+
+  create_table "user_roles", force: true do |t|
+    t.integer "users_id"
+    t.integer "roles_id"
   end
 
   create_table "users", force: true do |t|
