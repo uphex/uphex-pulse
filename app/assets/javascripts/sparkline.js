@@ -1,220 +1,113 @@
-
-uphex=window.uphex || {};
-
-/**
- * @typedef {Object}
- * @property {number} x
- * @property {number} y
- */
-uphex.Point;
-
-/**
- * @typedef {Array.<uphex.Point>}
- * */
-uphex.QuadraticSegment;
-
-/**
- * @typedef {Object}
- * @property {number} minX
- * @property {number} minY
- * @property {number} width
- * @property {number} height
- */
-uphex.ViewBox;
-
-/**
- * @typedef {Object}
- * @property {number} min
- * @property {number} max
- */
-uphex.MinMax;
-
 (function(){
-    /**
-     * @param {Array.<uphex.Point>} points
-     * @returns {Array.<uphex.QuadraticSegment>}
-     * */
-    function catmullRom2bezier(points) {
-        var result = [];
-        for (var i = 0; i < points.length - 1; i++) {
-            var p = [];
-
-            p.push({
-                x: points[Math.max(i - 1, 0)].x,
-                y: points[Math.max(i - 1, 0)].y
-            });
-            p.push({
-                x: points[i].x,
-                y: points[i].y
-            });
-            p.push({
-                x: points[i + 1].x,
-                y: points[i + 1].y
-            });
-            p.push({
-                x: points[Math.min(i + 2, points.length - 1)].x,
-                y: points[Math.min(i + 2, points.length - 1)].y
-            });
-
-            // Catmull-Rom to Cubic Bezier conversion matrix
-            //    0       1       0       0
-            //  -1/6      1      1/6      0
-            //    0      1/6      1     -1/6
-            //    0       0       1       0
-
-            var bp = [];
-            //bp.push( { x: p[1].x,  y: p[1].y } );
-            bp.push({
-                x: ((-p[0].x + 6 * p[1].x + p[2].x) / 6),
-                y: ((-p[0].y + 6 * p[1].y + p[2].y) / 6)
-            });
-            bp.push({
-                x: ((p[1].x + 6 * p[2].x - p[3].x) / 6),
-                y: ((p[1].y + 6 * p[2].y - p[3].y) / 6)
-            });
-            bp.push({
-                x: p[2].x,
-                y: p[2].y
-            });
-            result.push(bp);
-        }
-
-        return result;
-    }
-
-    /**
-     * @param {Array.<number>} sparkline
-     * @return {uphex.MinMax}
-     * */
-    function calculateMinMax(sparkline){
-        var min = Number.MAX_VALUE;
-        var max = Number.NEGATIVE_INFINITY;
-        for (var i = 0; i < sparkline.length; i++) {
-            min = Math.min(min, sparkline[i]);
-            max = Math.max(max, sparkline[i]);
-        }
-        return {min:min,max:max}
-    }
-
-    /**
-     * @param {Array.<number>} sparkline
-     * @param {number} center
-     * @param {number} left
-     * @param {number} right
-     * @param {number} bottom
-     * @param {number} top
-     * @return {Array.<uphex.Point>}
-     * */
-    function sparkline2Points(sparkline,center,left,right,bottom,top) {
-        var result = [];
-        var leftmost = Math.floor(center - Math.floor(Math.max(center, sparkline.length - center)));
-        var rightmost = Math.ceil(center + Math.floor(Math.max(center, sparkline.length - center)));
-        var minmax=calculateMinMax(sparkline);
-        for (var i = 0; i < sparkline.length; i++) {
-            result.push({
-                x: left+(right-left)/(rightmost-leftmost-1)*(i-leftmost),
-                y: bottom+(sparkline[i]-minmax.min)/(minmax.max-minmax.min)*(top-bottom)
-            });
-        }
-        return result;
-    }
-
-    /**
-     * @param {Array.<number>} sparkline
-     * @param {number} center
-     * @param {number} left
-     * @param {number} right
-     * @param {number} bottom
-     * @param {number} top
-     * @return {string}
-     * */
-    function sparkline2SVG(sparkline,center,left,right,bottom,top) {
-        var points=sparkline2Points(sparkline,center,left,right,bottom,top);
-        var result = "M"+points[0].x+"," + points[0].y + " ";
-        var catmull = catmullRom2bezier(points);
-        for (var i = 0; i < catmull.length; i++) {
-            result += "C" + catmull[i][0].x + "," + catmull[i][0].y + " " + catmull[i][1].x + "," + catmull[i][1].y + " " + catmull[i][2].x + "," + catmull[i][2].y + " ";
-        }
-        return result;
-    }
 
     function initializeSparkline(){
         var sparklines=document.getElementsByClassName('mod-sparkline');
         for(var spi=0;spi<sparklines.length;spi++){
+            /** @const*/
             var sparklineElement=sparklines[spi];
+            /** @const*/
             var containerWidth=sparklineElement.parentNode.offsetWidth;
+            /** @const*/
             var containerHeight=sparklineElement.parentNode.offsetHeight;
             /** @const*/
-            var padding=3;
-            /** @type {Array.<number>}*/
+            var padding=10;
+            /** @type {Array.<number>}
+             * @const*/
             var sparkline = JSON.parse(sparklineElement.getAttribute('data-sparkline'));
 
+            //Transform the sparkline to a graph, eg. an array with x and y coordinates
             /** @const*/
-            var minmax=calculateMinMax(sparkline);
-
-            var center = null;
-            if (sparklineElement.getAttribute('data-center')) {
-                center = parseFloat(sparklineElement.getAttribute('data-center'))
-            } else {
-                center = sparkline.length / 2;
-            }
-
-            var groupElement=sparklineElement.getElementsByTagNameNS('*', 'g')[0];
-            groupElement.setAttribute("transform","scale(1,-1) translate(0,-"+containerHeight+")");
-            groupElement.getElementsByTagNameNS('*','path')[0].setAttribute('d', sparkline2SVG(sparkline,center,padding,containerWidth-2*padding,padding,containerHeight-2*padding));
-
-            var eventpredictedstart = null;
-            var eventpredictedend = null;
-            if (sparklineElement.getAttribute('data-predictedstart')) {
-                eventpredictedstart = parseFloat(sparklineElement.getAttribute('data-predictedstart'));
-                eventpredictedend = parseFloat(sparklineElement.getAttribute('data-predictedend'));
-            }
-
-            sparklineElement.setAttribute('viewBox', "0 0 "+containerWidth+" "+containerHeight);
-            var circles = sparkline2Points(sparkline,center,padding,containerWidth-2*padding,padding,containerHeight-2*padding);
-            for (var i = 0; i < circles.length; i++) {
-                if (!eventpredictedstart || i !== center) {
-                    var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    c.setAttribute("cx", circles[i].x);
-                    c.setAttribute("cy", circles[i].y);
-                    c.setAttribute("r", "3");
-                    groupElement.appendChild(c);
+            var lineData=(function(){
+                var result=[];
+                for(var j=0;j<sparkline.length;j++){
+                    result.push({x:j,y:sparkline[j]});
                 }
-            }
+                return result;
+            })();
 
+            /** The position of the center element
+             * @const*/
+            var center = sparklineElement.getAttribute('data-center')?parseFloat(sparklineElement.getAttribute('data-center')):sparkline.length / 2;
+
+            /** @const*/
+            var eventpredictedstart = sparklineElement.getAttribute('data-predictedstart')?parseFloat(sparklineElement.getAttribute('data-predictedstart')):null;
+            /** @const*/
+            var eventpredictedend = sparklineElement.getAttribute('data-predictedstart')?parseFloat(sparklineElement.getAttribute('data-predictedend')):null;
+
+            /** The SVG element
+             * @const*/
+            var vis = d3.select(sparklineElement);
+
+            //Scales
+            /** @const*/
+            var xRange = d3.scale.linear().range([padding, containerWidth - padding]).domain([d3.min(lineData, function (d) {
+                    return d.x;
+                }),
+                    d3.max(lineData, function (d) {
+                        return d.x;
+                    })
+                ]);
+
+            /** @const*/
+            var yRange = d3.scale.linear().range([containerHeight - padding, padding]).domain([d3.min(lineData, function (d) {
+                return d.y;
+            }),
+                d3.max(lineData, function (d) {
+                    return d.y;
+                })
+            ]);
+
+            /** The sparkline
+             * @const*/
+            var lineFunc = d3.svg.line()
+                .x(function (d) {
+                    return xRange(d.x);
+                })
+                .y(function (d) {
+                    return yRange(d.y);
+                })
+                .interpolate('cardinal');
+
+            vis.append("svg:path")
+                .attr("d", lineFunc(lineData));
+
+            //The circles. The center circle is skipped
+            vis.selectAll("circle")
+                .data(lineData.filter(function(d,i){
+                    return typeof eventpredictedstart !== "number" || i !== center;
+                }))
+                .enter().append("circle")
+                .attr("r", 3)
+                .attr("cx", function(d){return xRange(d.x);})
+                .attr("cy", function(d){return yRange(d.y);});
+
+            //If there is event
             if (typeof eventpredictedstart === "number") {
-                var ec = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                ec.setAttribute("cx", circles[center].x);
-                ec.setAttribute("cy", circles[center].y);
-                ec.setAttribute("r", "3");
-                ec.setAttribute('class', 'event');
-                groupElement.appendChild(ec);
+                //The center circle
+                vis.append('circle')
+                    .attr('cx',xRange(lineData[center].x))
+                    .attr('cy',yRange(lineData[center].y))
+                    .attr('r',3)
+                    .attr('class','event');
 
-                function calculateEventY(y){
-                    return padding+(y-minmax.min)/(minmax.max-minmax.min)*(containerHeight-2*padding-padding);
-                }
+                vis.append('rect')
+                    .attr('x',xRange(center-0.5))
+                    .attr('y',yRange(eventpredictedend))
+                    .attr('width',xRange(center+0.5)-xRange(center-0.5))
+                    .attr('height',yRange(eventpredictedstart)-yRange(eventpredictedend))
+                    .attr('fill','lightGrey');
 
-                var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                rect.setAttribute("x", String((circles[center-1].x+circles[center].x)/2));
-                rect.setAttribute("y", String(calculateEventY(eventpredictedstart)));
-                rect.setAttribute("width", String((circles[center].x+circles[center+1].x)/2-(circles[center-1].x+circles[center].x)/2));
-                rect.setAttribute("height", String(calculateEventY(eventpredictedend)-calculateEventY(eventpredictedstart)));
-                rect.setAttribute("fill", "lightGrey");
-                groupElement.appendChild(rect);
+                vis.append('line')
+                    .attr('x1',xRange(center-0.5))
+                    .attr('y1',0)
+                    .attr('x2',xRange(center-0.5))
+                    .attr('y2',containerHeight);
 
-                var l1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                l1.setAttribute("x1", String((circles[center-1].x+circles[center].x)/2));
-                l1.setAttribute("y1", String(0));
-                l1.setAttribute("x2", String((circles[center-1].x+circles[center].x)/2));
-                l1.setAttribute("y2", String(containerHeight));
-                groupElement.appendChild(l1);
-
-                var l2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                l2.setAttribute("x1", String((circles[center].x+circles[center+1].x)/2));
-                l2.setAttribute("y1", String(0));
-                l2.setAttribute("x2", String((circles[center].x+circles[center+1].x)/2));
-                l2.setAttribute("y2", String(containerHeight));
-                groupElement.appendChild(l2);
+                vis.append('line')
+                    .attr('x1',xRange(center+0.5))
+                    .attr('y1',0)
+                    .attr('x2',xRange(center+0.5))
+                    .attr('y2',containerHeight);
             }
         }
     }
