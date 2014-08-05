@@ -111,6 +111,7 @@ GEM
     diff-lcs (1.2.5)
     equalizer (0.0.9)
     eventmachine (1.0.3)
+    execjs (2.0.2)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
     haml (4.0.5)
@@ -241,6 +242,9 @@ GEM
       naught (~> 1.0)
       simple_oauth (~> 0.2.0)
     tzinfo (0.3.39)
+    uglifier (2.3.3)
+      execjs (>= 0.3.0)
+      json (>= 1.8.0)
     url_mount (0.2.1)
       rack
     vegas (0.1.11)
@@ -274,6 +278,7 @@ DEPENDENCIES
   sinatra-assetpack
   thin
   timecop
+  uglifier
   uphex-estimation!
   uphex-flatty!
   uphex-prototype-cynosure (= 0.0.6)!

@@ -71,3 +71,5 @@ gem 'resque-scheduler'
 #Estimation
 gem 'uphex-estimation',
     :git => "git@github.com:uphex/uphex-prototype-estimation.git"
+
+gem 'uglifier'
