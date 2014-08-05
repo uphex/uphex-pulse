@@ -36,7 +36,8 @@ module UpHex
               '/js/jquery/jquery-migrate.min.js',
               '/js/bootstrap/bootstrap.min.js',
               '/js/theme.js',
-              '/assets/javascripts/application.js'
+              '/assets/javascripts/application.js',
+              '/assets/javascripts/sparkline.js'
           ]
 
           css :application, [
