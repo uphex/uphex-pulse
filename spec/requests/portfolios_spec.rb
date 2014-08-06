@@ -40,5 +40,32 @@ describe "portfolios" do
       get '/clients/'+Portfolio.all.first.id.to_s
       expect(last_response.body).to include "new_portfolio_name"
     end
+
+    it 'deletes a provider from a portfolio' do
+      create_sample_user
+      create_sample_portfolio
+      create_sample_metric
+
+      expect(Provider.all.size).to eql 1
+
+      get '/clients/'+Portfolio.first.id.to_s
+      expect(last_response.body).to include "account/test_profile"
+      get '/portfolios/'+Portfolio.first.id.to_s
+      expect(last_response.body).to include "account/test_profile"
+      get '/users/me/dashboard'
+      expect(last_response.body).not_to include "Client has no streams"
+
+      delete '/providers/'+Provider.first.id.to_s
+
+      get '/clients/'+Portfolio.first.id.to_s
+      expect(last_response.body).not_to include "account/test_profile"
+      get '/portfolios/'+Portfolio.first.id.to_s
+      expect(last_response.body).not_to include "account/test_profile"
+      get '/users/me/dashboard'
+      expect(last_response.body).to include "Client has no streams"
+
+      #the provider is not deleted, just hidden from the portfolio
+      expect(Provider.all.size).to eql 1
+    end
   end
 end

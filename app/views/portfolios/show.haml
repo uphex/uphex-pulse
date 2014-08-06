@@ -28,7 +28,7 @@
     %a{:href=>"/auth/oauth-v1/twitter?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
       Add Twitter
 
-- unless @portfolio.providers.blank?
+- unless @portfolio.providers.select{|p| !p.deleted}.blank?
   %h3
     Current providers
   %table{:class=>'table table-bordered table-striped'}
@@ -42,7 +42,7 @@
           Info
         %th
     %tbody
-      - @portfolio.providers.each do |provider|
+      - @portfolio.providers.select{|p| !p.deleted}.each do |provider|
         %tr
           %td
             = provider.name

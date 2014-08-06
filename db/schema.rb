@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 15) do
+ActiveRecord::Schema.define(version: 16) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 15) do
     t.integer  "portfolios_id"
     t.string   "provider_name"
     t.string   "profile_id"
+    t.boolean  "deleted",             default: false
   end
 
   create_table "roles", force: true do |t|

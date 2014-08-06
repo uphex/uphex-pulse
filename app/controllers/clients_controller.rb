@@ -8,7 +8,7 @@ UpHex::Pulse.controllers :clients do
     @client=Portfolio.find(params[:id])
     error(403) unless current_ability.can? :read, @client
 
-    metrics=@client.providers.map{|provider|
+    metrics=@client.providers.select{|p| !p.deleted}.map{|provider|
       provider.metrics
     }.flatten
 
