@@ -11,7 +11,7 @@ module EventsHelper
   def transform_event(event,whole_sparkline)
     eventdate=event[:date].in_time_zone('UTC')
     if whole_sparkline
-      observations=event.metric.observations.all
+      observations=event.metric.observations
     else
       start_time=eventdate.beginning_of_day
       end_time=eventdate.beginning_of_day+1.days

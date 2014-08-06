@@ -121,10 +121,7 @@ class Ability
     def authorize
       ability.instance_eval do
         can :read, Event do |e|
-          puts user
-          puts e.metric.provider.portfolio.organization
-          puts user.organizations.include? e.metric.provider.portfolio.organization
-          user.organizations.include? e.metric.provider.portfolio.organization
+          !e.metric.provider.deleted and !e.metric.provider.portfolio.deleted and user.organizations.include? e.metric.provider.portfolio.organization
         end
       end
     end
