@@ -225,4 +225,56 @@ describe 'MetricUpdate' do
 
     expect(Event.all.size).to eql 1
   end
+
+  it 'should set and update the metric timestamps' do
+    create_sample_user
+    create_sample_portfolio
+
+    Rack::OAuth2::Client.any_instance.should_receive(:authorization_code=) do |arg|
+      expect(arg).to eql 'sample_code'
+    end
+
+    Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
+      OpenStruct.new({:access_token=>'access_token',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token'})
+    end
+
+    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
+        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
+         OpenStruct.new(:date=>'20140121',:visits=>'1'),
+         OpenStruct.new(:date=>'20140122',:visits=>'1'),
+         OpenStruct.new(:date=>'20140123',:visits=>'1'),
+         OpenStruct.new(:date=>'20140124',:visits=>'1'),
+         OpenStruct.new(:date=>'20140125',:visits=>'1')
+        ]
+                            })
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>'test_profile',:id=>'test_profile_id'})]})])
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+    Timecop.freeze(Time.utc(2014,03,01))
+
+    ResqueSpec.perform_all(:StreamCreate)
+
+    Metric.all.each{|metric|
+      expect(metric.created_at).to eql Time.utc(2014,03,01)
+      expect(metric.updated_at).to be < Time.utc(2014,03,01)
+      expect(metric.analyzed_at).to be < Time.utc(2014,03,01)
+    }
+
+    Timecop.freeze(Time.utc(2014,03,02))
+
+    metric_to_update=Metric.all.first
+
+    MetricUpdate.perform(metric_to_update.id)
+
+    metric_to_update=Metric.find(metric_to_update.id)
+
+    expect(metric_to_update.created_at).to eql Time.utc(2014,03,01)
+    expect(metric_to_update.updated_at).to eql Time.utc(2014,03,02)
+    expect(metric_to_update.analyzed_at).to eql Time.utc(2014,03,02)
+
+  end
 end
