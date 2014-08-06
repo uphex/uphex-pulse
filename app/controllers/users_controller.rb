@@ -59,7 +59,7 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/me/dashboard' do
-    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten.map{|portfolio|
+    @clients=current_user.organizations.map{|organization| organization.portfolios.select{|p| !p.deleted}}.flatten.map{|portfolio|
       a=portfolio.clone
       a.alert=nil
       if portfolio.providers.select{|p| !p.deleted}.blank?

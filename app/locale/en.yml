@@ -15,6 +15,7 @@ en:
     impersonate_ended: Impersonation ended
   portfolio:
     modified: Portfolio modified
+    deleted: Portfolio deleted
   oauth:
     added:
       one: "Profile added: %{profiles}"

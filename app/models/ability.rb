@@ -72,8 +72,8 @@ class Ability
 
     def authorize
       ability.instance_eval do
-        can [:read,:update], Portfolio do |p|
-          user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
+        can [:read,:update,:delete], Portfolio do |p|
+          !p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
         end
       end
     end
@@ -105,7 +105,7 @@ class Ability
     def authorize
       ability.instance_eval do
         can [:read,:update,:delete], Provider do |p|
-          !p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.providers.any?{|provider|provider.id==p.id}}}
+          !p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| !portfolio.deleted and portfolio.providers.any?{|provider|provider.id==p.id}}}
         end
       end
     end

@@ -18,6 +18,12 @@
         = f.submit 'Send',:class => "btn btn-primary"
 
 %h3
+  Delete portfolio
+%form{:action=>"/portfolios/#{@portfolio.id}",:method=>'POST'}
+  = csrf_token_field
+  %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
+  %input{:type=>'submit',:value=>'Delete',:class=>'button-standard'}
+%h3
   Add providers
 .row
   .col-md-10

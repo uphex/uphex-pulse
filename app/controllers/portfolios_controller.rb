@@ -45,6 +45,15 @@ UpHex::Pulse.controllers :portfolios do
     end
   end
 
+  delete '/:id' do
+    portfolio=Portfolio.find(params[:id])
+    error(403) unless current_ability.can? :delete, portfolio
+    portfolio.deleted=true
+    portfolio.save!
+    flash[:notice] = t 'portfolio.deleted'
+    redirect '/users/me/dashboard'
+  end
+
 
 
 end
