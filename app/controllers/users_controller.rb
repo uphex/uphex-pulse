@@ -73,7 +73,7 @@ UpHex::Pulse.controllers :users do
       a
     }
     @announcements=[]
-    @dashboardevents=@clients.map{|portfolio| portfolio.providers}.flatten.map{|provider| provider.metrics}.flatten.map{|metric|
+    @dashboardevents=@clients.map{|portfolio| portfolio.providers}.flatten.select{|p| !p.deleted}.map{|provider| provider.metrics}.flatten.map{|metric|
       metric.events.map{|event|
         transform_event(event,false)
       }
