@@ -3,6 +3,10 @@ require 'ostruct'
 
 describe 'MetricUpdate' do
 
+  before do
+    ResqueSpec.reset!
+  end
+
   after do
     Timecop.return
   end
