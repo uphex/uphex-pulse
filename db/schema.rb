@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 7) do
   enable_extension "hstore"
 
   create_table "organization_memberships", force: true do |t|
-    t.integer  "organization_id"
-    t.integer  "user_id"
+    t.integer  "organization_id", null: false
+    t.integer  "user_id",         null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(version: 7) do
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
 
   create_table "portfolio_streams", force: true do |t|
-    t.integer  "portfolio_id"
-    t.integer  "stream_id"
+    t.integer  "portfolio_id", null: false
+    t.integer  "stream_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

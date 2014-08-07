@@ -1,8 +1,8 @@
 class CreatePortfolioStreams < ActiveRecord::Migration
   def change
     create_table :portfolio_streams do |t|
-      t.references :portfolio
-      t.references :stream
+      t.references :portfolio, :null => false
+      t.references :stream,    :null => false
       t.timestamps
 
       t.index :portfolio_id
