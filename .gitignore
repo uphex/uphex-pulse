@@ -1,6 +1,7 @@
 .bundle
 .gem/**/*
 /config/database.yml
+/config/providers.yml
 .DS_Store
 log/**/*
 tmp/**/*
