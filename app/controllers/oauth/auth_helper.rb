@@ -80,8 +80,19 @@ class AuthHelper
     }.flatten
 
     if providers.size==1
-      providers.first.save!
-      Resque.enqueue(StreamCreate,providers.first[:id])
+      restoring_provider=portfolio.providers.find{|provider| provider.provider_name==providers.first.provider_name and provider.profile_id==providers.first.profile_id}
+      if restoring_provider.nil?
+        providers.first.save!
+        Resque.enqueue(StreamCreate,providers.first[:id])
+      else
+        raise 'oauth.provider.exists' unless restoring_provider.deleted
+        restoring_provider.deleted=false
+        [:access_token, :access_token_secret, :expiration_date, :refresh_token].each do |field|
+          restoring_provider[field] = providers.first[field.to_s]
+        end
+        restoring_provider.save!
+      end
+
     end
 
     providers
@@ -95,6 +106,7 @@ class AuthHelper
     end
 
   rescue => e
+    raise I18n.t e.message if e.message.starts_with? 'oauth'
     puts e.inspect, e.backtrace
     raise I18n.t 'oauth.provider.error'
   end

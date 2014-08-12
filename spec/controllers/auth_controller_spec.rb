@@ -84,7 +84,7 @@ describe 'AuthController' do
     expect(last_response.body).to include 'test_profile_id1'
     expect(last_response.body).to include 'test_profile_id2'
 
-    post '/auth/add_providers',{:provider_selected=>['0'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'})}
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'})}
 
     expect(Provider.all).not_to be_empty
     expect(Provider.all.size).to eql 1
@@ -94,7 +94,7 @@ describe 'AuthController' do
     expect(Provider.all.first.refresh_token).to eql 'refresh_token'
   end
 
-  it 'should be add multiple providers if multiple is selected' do
+  it 'should add multiple providers if multiple is selected' do
     create_sample_user
     create_sample_portfolio
 
@@ -106,7 +106,7 @@ describe 'AuthController' do
 
     get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
 
-    post '/auth/add_providers',{:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id2',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id2',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
 
     expect(Provider.all.size).to eql 2
   end
@@ -146,7 +146,7 @@ describe 'AuthController' do
 
     get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
 
-    post '/auth/add_providers',{:provider_selected=>['0'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'})}
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'})}
 
     Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
       OpenStruct.new({:access_token=>'access_token2',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token2'})
@@ -160,5 +160,40 @@ describe 'AuthController' do
     expect(Provider.all.first.profile_id).to eql 'test_profile_id1'
     expect(Provider.all.first.access_token).to eql 'access_token2'
     expect(Provider.all.first.refresh_token).to eql 'refresh_token2'
+  end
+
+  it 'should not allow a provider to be added to a portfolio more than once' do
+    create_sample_user
+    create_sample_portfolio
+
+    Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
+      OpenStruct.new({:access_token=>'access_token',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token'})
+    end
+
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>'test_profile',:id=>'test_profile_id'})]})])
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+    provider=Provider.first
+    provider.name='test'
+    provider.save!
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+    expect(Provider.all.size).to eql 1
+    follow_redirect!
+    expect(last_response.body).to include 'exists'
+  end
+
+  it 'should not allow a provider to be added to a portfolio more than once even if multiple is selected' do
+    create_sample_user
+    create_sample_portfolio
+
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id2',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
+
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id3',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
+
+    expect(Provider.all.size).to eql 3
+
   end
 end

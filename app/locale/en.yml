@@ -27,6 +27,7 @@ en:
       reauth:
         error: Reauthentication failure
         success: Reathentication successful. Please wait a few seconds for the stream to update
+      exists: The provider already exists in the portfolio
   provider:
     modified: Provider modified
     deleted: Provider deleted

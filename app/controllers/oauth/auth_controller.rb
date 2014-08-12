@@ -48,11 +48,25 @@ UpHex::Pulse.controllers :auth do
       flash[:notice] = I18n.t 'oauth.no_providers_added'
       redirect "portfolios/#{params[:portfolio_id]}"
     else
+      portfolio=Portfolio.find(params[:portfolio_id])
       providers=[]
       params[:provider_selected].each{|provider_index|
-        provider=Provider.create(YAML::load(params['provider_'+provider_index]))
-        providers.push(provider)
-        Resque.enqueue(StreamCreate,provider[:id])
+        provider=Provider.new(YAML::load(params['provider_'+provider_index]))
+        restoring_provider=portfolio.providers.find{|ex_provider| ex_provider.provider_name==provider.provider_name and ex_provider.profile_id==provider.profile_id}
+        if restoring_provider.nil?
+          provider.save!
+          Resque.enqueue(StreamCreate,provider[:id])
+          providers.push(provider)
+        elsif restoring_provider.deleted
+          restoring_provider.deleted=false
+          [:access_token, :access_token_secret, :expiration_date, :refresh_token].each do |field|
+            restoring_provider[field] = provider[field.to_s]
+          end
+          restoring_provider.save!
+          providers.push(restoring_provider)
+        else
+          #Do not handle, just skip it
+        end
       }
       flash[:notice] = I18n.t 'oauth.added',profiles:providers.map{|provider| provider[:name]}.join(','),:count=>providers.size
       redirect "portfolios/#{params[:portfolio_id]}"

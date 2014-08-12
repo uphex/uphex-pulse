@@ -189,5 +189,54 @@ describe "portfolios" do
       expect(Portfolio.all.size).to eql 1
       expect(Portfolio.first.deleted).to eql false
     end
+
+    it 'should restore a deleted provider with updated keys when a deleted one exists for the same provider and profile' do
+      create_sample_user
+      create_sample_portfolio
+      create_sample_metric
+
+      delete '/providers/'+Provider.first.id.to_s
+
+      expect(Provider.all.size).to eql 1
+
+      Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
+        OpenStruct.new({:access_token=>'new_access_token',:expires_in=>DateTime.now+1.days,:refresh_token=>'new_refresh_token'})
+      end
+
+      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>Provider.first.name,:id=>Provider.first.profile_id})]})])
+
+      get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+      expect(Provider.all.size).to eql 1
+      expect(Provider.first.access_token).to eql 'new_access_token'
+      expect(Provider.first.refresh_token).to eql 'new_refresh_token'
+      expect(Provider.first.deleted).to eql false
+    end
+
+    it 'should restore a deleted provider when one is selected from multiple profiles' do
+      create_sample_user
+      create_sample_portfolio
+      create_sample_metric
+
+      delete '/providers/'+Provider.first.id.to_s
+
+      provider_id=Provider.first.id
+      provider_name=Provider.first.name
+
+      Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
+        OpenStruct.new({:access_token=>'access_token',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token'})
+      end
+
+      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>Provider.first.name,:id=>Provider.first.profile_id}),OpenStruct.new({:name=>'test_profile2',:id=>'test_profile_id2'})]})])
+
+      post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>Provider.first.profile_id,:provider_name=>'google',:refresh_token=>'new_refresh_token',:access_token=>'new_access_token',:userid=>User.all.first.id,:name=>'account/new_test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id2',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
+
+      expect(Provider.all.size).to eql 2
+      expect(Provider.find(provider_id).name).to eql provider_name
+      expect(Provider.find(provider_id).deleted).to eql false
+      expect(Provider.find(provider_id).access_token).to eql 'new_access_token'
+      expect(Provider.find(provider_id).refresh_token).to eql 'new_refresh_token'
+    end
+
   end
 end
