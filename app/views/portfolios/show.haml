@@ -19,7 +19,7 @@
 
 %h3
   Delete portfolio
-%form{:action=>"/portfolios/#{@portfolio.id}",:method=>'POST'}
+%form{:action=>"/portfolios/#{@portfolio.id}",:method=>'POST',:onsubmit=>'return confirm("Are you sure you want to delete this portfolio?");'}
   = csrf_token_field
   %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
   %input{:type=>'submit',:value=>'Delete',:class=>'button-standard'}
@@ -63,7 +63,7 @@
           %td
             %a{:href=>"/providers/#{provider.id}",:class=>'button-standard'}
               Edit
-            %a{:onclick=>"delete_form_#{provider.id}.submit();",:href=>'#',:class=>'button-standard'}
+            %a{:onclick=>"if(confirm('Are you sure you want to delete this provider?')){ delete_form_#{provider.id}.submit();}",:href=>'#',:class=>'button-standard'}
               Delete
               %form{:action=>"/providers/#{provider.id}",:method=>'POST',:id=>"delete_form_#{provider.id}"}
                 = csrf_token_field
