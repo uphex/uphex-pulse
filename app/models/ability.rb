@@ -75,6 +75,9 @@ class Ability
         can [:read,:update,:delete], Portfolio do |p|
           !p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
         end
+        can [:restore], Portfolio do |p|
+          p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
+        end
       end
     end
   end

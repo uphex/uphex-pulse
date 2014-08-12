@@ -16,6 +16,7 @@ en:
   portfolio:
     modified: Portfolio modified
     deleted: Portfolio deleted
+    restored: Portfolio %{portfolio} restored
   oauth:
     added:
       one: "Profile added: %{profiles}"

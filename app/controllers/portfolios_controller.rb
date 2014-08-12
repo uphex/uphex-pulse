@@ -19,9 +19,14 @@ UpHex::Pulse.controllers :portfolios do
       flash[:notice] = t 'authn.portfolio.created'
       redirect '/users/me/dashboard'
     else
-      @portfolios_for_account=current_user.accounts.map{|account| {account.organization=>account.organization.portfolios}}
-      @organizations=current_user.organizations
-      render 'portfolios/new'
+      @existing_portfolio=current_user.accounts.map{|account| account.organization.portfolios}.flatten.find{|portfolio| portfolio.name===@portfolio[:name]}
+      if @existing_portfolio.nil?
+        @portfolios_for_account=current_user.accounts.map{|account| {account.organization=>account.organization.portfolios}}
+        @organizations=current_user.organizations
+        render 'portfolios/new'
+      else
+        render 'portfolios/restore'
+      end
     end
   end
 
@@ -51,6 +56,15 @@ UpHex::Pulse.controllers :portfolios do
     portfolio.deleted=true
     portfolio.save!
     flash[:notice] = t 'portfolio.deleted'
+    redirect '/users/me/dashboard'
+  end
+
+  post '/restore/:id' do
+    portfolio=Portfolio.find(params[:id])
+    error(403) unless current_ability.can? :restore, portfolio
+    portfolio.deleted=false
+    portfolio.save!
+    flash[:notice] = t 'portfolio.restored',portfolio:portfolio.name
     redirect '/users/me/dashboard'
   end
 

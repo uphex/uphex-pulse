@@ -171,5 +171,23 @@ describe "portfolios" do
       get '/events/'+event2.id.to_s
       expect(last_response.status).to eql 403
     end
+
+    it 'should prompt for restore when a deleted portfolio is created again' do
+      create_sample_user
+      create_sample_portfolio
+
+      delete '/portfolios/'+Portfolio.first.id.to_s
+
+      post '/portfolios', :portfolio=>{:name=>Portfolio.first.name,:organization=>Organization.first.id}
+      expect(last_response.body).to include "Would you like to restore the deleted portfolio"
+      expect(last_response.body).to include Portfolio.first.name
+
+      post '/portfolios/restore/'+Portfolio.first.id.to_s
+      follow_redirect!
+      expect(last_response.body).to include "restored"
+
+      expect(Portfolio.all.size).to eql 1
+      expect(Portfolio.first.deleted).to eql false
+    end
   end
 end
