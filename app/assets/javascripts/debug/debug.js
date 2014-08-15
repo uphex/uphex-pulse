@@ -1,28 +1,28 @@
 var lineData=JSON.parse(document.getElementById('sparkline').value).map(function(obs){
     return {
         x:new Date(obs.index),
-        y:obs.value
+        y:Number(obs.value)
     }
 });
 
 var observations_points=JSON.parse(document.getElementById('observations').value).map(function(obs){
     return {
         x:new Date(obs.index),
-        y:obs.value
+        y:Number(obs.value)
     }
 });
 
 var bands_lower=JSON.parse(document.getElementById('bands').value).map(function(obs){
     return {
         x:new Date(obs.date),
-        y:obs.low
+        y:Number(obs.low)
     }
 });
 
 var bands_upper=JSON.parse(document.getElementById('bands').value).map(function(obs){
     return {
         x:new Date(obs.date),
-        y:obs.high
+        y:Number(obs.high)
     }
 });
 
@@ -162,13 +162,13 @@ for(var i in observations_points){
 
 vis.append('svg:path')
     .attr('d', lineFunc(bands_lower))
-    .attr('stroke', 'red')
+    .attr('stroke', 'orange')
     .attr('stroke-width', 2)
     .attr('fill', 'none');
 
 vis.append('svg:path')
     .attr('d', lineFunc(bands_upper))
-    .attr('stroke', 'red')
+    .attr('stroke', 'orange')
     .attr('stroke-width', 2)
     .attr('fill', 'none');
 
