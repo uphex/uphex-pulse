@@ -1,0 +1,32 @@
+%form{:action=>"/debug",:method=>'GET'}
+  %select{:name=>'metric'}
+    - @metrics.each do |metric|
+      %option{:value=>metric.id,:selected=>params['metric'].to_s==metric.id.to_s}
+        #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}
+  %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
+%input{:type=>'hidden',:id=>'observations',:value=>@observations.to_json}
+%input{:type=>'hidden',:id=>'sparkline',:value=>@sparkline.to_json}
+%input{:type=>'hidden',:id=>'bands',:value=>@bands.to_json}
+%input{:type=>'hidden',:id=>'events',:value=>@events.to_json}
+%h3
+  Legend
+%ul
+  %li
+    Black dot: Observation
+  %li
+    Blue line: Sparkline
+  %li
+    Red lines: Lower and upper bands
+  %li
+    Red dot: Event
+%svg{:id=>'debug-chart',:style=>'width:100%;height:550px'}
+%script{:src=>'/assets/javascripts/debug/debug.js'}
+%style{:type => "text/css" }
+  :plain
+
+    #debug-popup {
+      position:absolute;
+      background-color:white;
+      border:1px solid black;
+      padding:5px;
+    }
