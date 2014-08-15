@@ -2,7 +2,7 @@ UpHex::Pulse.controllers :debug do
 
   get '/' do
     error(403) unless is_admin?
-    @metrics = Metric.all
+    @metrics = Metric.all.sort_by{|metric| metric.provider.portfolio.organization.name+'/'+metric.provider.portfolio.name+'/'+metric.provider.name+'/'+metric.name}
     params['metric'] ||= @metrics.first.id.to_s
 
     metric=Metric.find(params['metric'])
