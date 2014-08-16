@@ -5,8 +5,14 @@ module UpHex
       #   validation_spec_for(:bar, :baz)
       #   # --> it { expect(subject).to validate_bar_of(:baz) }
       # end
-      def validation_spec_for(kind, field)
-        method_name = "validate_#{kind}_of"
+      def validation_spec_for(kind, field, &block)
+        method_name = case kind
+        when :inclusion
+          "ensure_inclusion_of"
+        else
+          "validate_#{kind}_of"
+        end
+
         it {
           expect(subject).to(
             block_given? ?
