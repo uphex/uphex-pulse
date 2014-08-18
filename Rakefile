@@ -25,6 +25,19 @@ def ignore_enoent_errors(&block)
   end
 end
 
+def environment_guard(&block)
+  target_env = ENV['RACK_ENV']
+  raise ArgumentError, "won't run this task without an environment specified" unless target_env
+
+  legal_environments = %w{development test}
+
+  unless legal_environments.include? target_env
+    raise RuntimeError, "environment is \"#{target_env}\", but will only run this task in #{legal_environments}"
+  end
+
+  block.call
+end
+
 ignore_load_errors do
   require 'rspec/core/rake_task'
   RSpec::Core::RakeTask.new(:spec)
@@ -58,6 +71,19 @@ ignore_load_errors do
 end
 
 namespace :uphex do
+  desc "Drop database and rebuild from scratch"
+  task :clean, [:target_env] do |t, args|
+    ENV['RACK_ENV'] = target_env = args[:target_env]
+
+    environment_guard do
+      tasks = %w{ar:drop ar:create ar:migrate}
+      invoker = ->(t) { Rake::Task[t].invoke }
+
+      puts "running tasks #{tasks} on environment [#{target_env}]"
+      tasks.each(&invoker)
+    end
+  end
+
   desc "Write database.yml"
   task :make_database_config do
     src  = 'config/database.yml.example'
