@@ -30,3 +30,33 @@
       border:1px solid black;
       padding:5px;
     }
+
+%h3
+  Metric data
+
+%table
+  %thead
+    %tr
+      %th
+        Name
+      %th
+        Last updated
+      %th
+        Last error
+      %th
+        Last error type
+      %th
+        Last observation date
+  %tbody
+    - @metrics.each do |metric|
+      %tr
+        %td
+          #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}#{' (deleted)' if metric.provider.deleted? or metric.provider.portfolio.deleted?}
+        %td
+          #{metric.updated_at}
+        %td
+          #{metric.last_error_time}
+        %td
+          #{metric.last_error_type}
+        %td
+          #{metric.observations.last.index unless metric.observations.empty?}
