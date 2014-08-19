@@ -4,7 +4,7 @@ class MetricUpdate
   def self.update_metric(metric)
     config = JSON.parse(File.read(File.expand_path("../../../config/auth_config.json", __FILE__)))
 
-    since= metric['updated_at'] < DateTime.now.to_date - 180 ? DateTime.now.to_date - 180 : metric['updated_at'].to_date-2
+    since= metric['updated_at'] < DateTime.now.to_date - 360 ? DateTime.now.to_date - 360 : metric['updated_at'].to_date-2
 
     case metric.provider['provider_name']
       when 'google'
