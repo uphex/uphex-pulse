@@ -1,62 +1,75 @@
-%form{:action=>"/debug",:method=>'GET'}
-  %select{:name=>'metric'}
-    - @metrics.each do |metric|
-      %option{:value=>metric.id,:selected=>params['metric'].to_s==metric.id.to_s}
-        #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}#{' (deleted)' if metric.provider.deleted? or metric.provider.portfolio.deleted?}
-  %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
-%input{:type=>'hidden',:id=>'observations',:value=>@observations.to_json}
-%input{:type=>'hidden',:id=>'sparkline',:value=>@sparkline.to_json}
-%input{:type=>'hidden',:id=>'bands',:value=>@bands.to_json}
-%input{:type=>'hidden',:id=>'events',:value=>@events.to_json}
-%h3
-  Legend
-%ul
-  %li
-    Black dot: Observation
-  %li
-    Blue line: Sparkline
-  %li
-    Orange lines: Lower and upper bands
-  %li
-    Red dot: Event
-%svg{:id=>'debug-chart',:style=>'width:100%;height:550px'}
-%script{:src=>'/assets/javascripts/debug/debug.js'}
-%style{:type => "text/css" }
-  :plain
+- unless params['metric'].nil?
+  %input{:type=>'hidden',:id=>'observations',:value=>@observations.to_json}
+  %input{:type=>'hidden',:id=>'sparkline',:value=>@sparkline.to_json}
+  %input{:type=>'hidden',:id=>'bands',:value=>@bands.to_json}
+  %input{:type=>'hidden',:id=>'events',:value=>@events.to_json}
+  %a{:href=>'/debug',:class=>'button-standard'}
+    Back
+  %h2
+    #{@metric.provider.portfolio.organization.name}/#{@metric.provider.portfolio.name}/#{@metric.provider.name}/#{@metric.name}#{' (deleted)' if @metric.provider.deleted? or @metric.provider.portfolio.deleted?}
+  %h3
+    Info
+  %ul
+    %li
+      Added at: #{@metric.created_at}
+    %li
+      Last updated at: #{@metric.updated_at}
+    %li
+      Last analyzed at: #{@metric.analyzed_at}
+  %h3
+    Legend
+  %ul
+    %li
+      Black dot: Observation
+    %li
+      Blue line: Sparkline
+    %li
+      Orange lines: Lower and upper bands
+    %li
+      Red dot: Event
+  %svg{:id=>'debug-chart',:style=>'width:100%;height:550px'}
+  %script{:src=>'/assets/javascripts/debug/debug.js'}
+  %style{:type => "text/css" }
+    :plain
 
-    #debug-popup {
-      position:absolute;
-      background-color:white;
-      border:1px solid black;
-      padding:5px;
-    }
+      #debug-popup {
+        position:absolute;
+        background-color:white;
+        border:1px solid black;
+        padding:5px;
+      }
 
-%h3
-  Metric data
+- if params['metric'].nil?
+  %h3
+    Metric data
 
-%table
-  %thead
-    %tr
-      %th
-        Name
-      %th
-        Last updated
-      %th
-        Last error
-      %th
-        Last error type
-      %th
-        Last observation date
-  %tbody
-    - @metrics.each do |metric|
+  %table
+    %thead
       %tr
-        %td
-          #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}#{' (deleted)' if metric.provider.deleted? or metric.provider.portfolio.deleted?}
-        %td
-          #{metric.updated_at}
-        %td
-          #{metric.last_error_time}
-        %td
-          #{metric.last_error_type}
-        %td
-          #{metric.observations.last.index unless metric.observations.empty?}
+        %th
+          Name
+        %th
+          Last updated
+        %th
+          Last error
+        %th
+          Last error type
+        %th
+          Last observation date
+        %th
+    %tbody
+      - @metrics.each do |metric|
+        %tr
+          %td
+            #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}#{' (deleted)' if metric.provider.deleted? or metric.provider.portfolio.deleted?}
+          %td
+            #{metric.updated_at}
+          %td
+            #{metric.last_error_time}
+          %td
+            #{metric.last_error_type}
+          %td
+            #{metric.observations.last.index unless metric.observations.empty?}
+          %td
+            %a{:href=>"/debug?metric=#{metric.id}",:class=>'button-standard'}
+              Chart
