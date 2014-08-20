@@ -6,9 +6,9 @@ describe 'EventsController' do
     create_sample_portfolio
     create_sample_metric
 
-    Observation.create(:index=>Time.utc(2014,02,27),:value=>2,:metric=>Metric.first).save!
-    Observation.create(:index=>Time.utc(2014,02,28),:value=>2,:metric=>Metric.first).save!
-    event1=Event.create(:date=>Time.utc(2014,02,27),:prediction_low=>0,:prediction_high=>1,:metric=>Metric.first)
+    Observation.create(:index=>Time.utc(2014,2,27),:value=>2,:metric=>Metric.first).save!
+    Observation.create(:index=>Time.utc(2014,2,28),:value=>2,:metric=>Metric.first).save!
+    event1=Event.create(:date=>Time.utc(2014,2,27),:prediction_low=>0,:prediction_high=>1,:metric=>Metric.first)
     event1.save!
 
     get '/users/me/dashboard'

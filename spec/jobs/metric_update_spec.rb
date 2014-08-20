@@ -12,7 +12,7 @@ describe 'MetricUpdate' do
     create_sample_portfolio
     create_sample_metric
 
-    Timecop.freeze(Time.utc(2014,02,29)) do
+    Timecop.freeze(Time.utc(2014,2,29)) do
 
       profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
           [OpenStruct.new(:date=>'20140220',:visits=>'1'),
@@ -56,7 +56,7 @@ describe 'MetricUpdate' do
          OpenStruct.new(:date=>'20140228',:visits=>'2')
         ]
                             })
-    Timecop.freeze(Time.utc(2014,02,27)) do
+    Timecop.freeze(Time.utc(2014,2,27)) do
 
       Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
 
@@ -70,13 +70,13 @@ describe 'MetricUpdate' do
 
     expect(Observation.all.size).to eq profile1[:visits].size-2
 
-    Timecop.freeze(Time.utc(2014,02,28,2)) do
+    Timecop.freeze(Time.utc(2014,2,28,2)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
     expect(Metric.all.first['last_error_type']).to be_nil
     expect(Observation.all.size).to eq profile1[:visits].size-1
 
-    Timecop.freeze(Time.utc(2014,02,29)) do
+    Timecop.freeze(Time.utc(2014,2,29)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
     expect(Metric.all.first['last_error_type']).to be_nil
@@ -105,7 +105,7 @@ describe 'MetricUpdate' do
     create_sample_portfolio
     create_sample_metric
 
-    Timecop.freeze(Time.utc(2014,02,21)) do
+    Timecop.freeze(Time.utc(2014,2,21)) do
 
       profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
           [OpenStruct.new(:date=>'20140220',:visits=>'1')
@@ -140,11 +140,11 @@ describe 'MetricUpdate' do
     create_sample_metric
 
     Provider.all.each{|provider|
-      provider[:expiration_date]=Time.utc(2014,02,21)-1.days
+      provider[:expiration_date]=Time.utc(2014,2,21)-1.days
       provider.save!
     }
 
-    Timecop.freeze(Time.utc(2014,02,21)) do
+    Timecop.freeze(Time.utc(2014,2,21)) do
 
       profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
           [OpenStruct.new(:date=>'20140220',:visits=>'1')
@@ -224,7 +224,7 @@ describe 'MetricUpdate' do
         ]
                             })
 
-    Timecop.freeze(Time.utc(2014,02,29)) do
+    Timecop.freeze(Time.utc(2014,2,29)) do
 
       Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
 
@@ -264,17 +264,17 @@ describe 'MetricUpdate' do
 
     get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
 
-    Timecop.freeze(Time.utc(2014,03,01)) do
+    Timecop.freeze(Time.utc(2014,3,1)) do
       ResqueSpec.perform_all(:StreamCreate)
     end
 
     Metric.all.each{|metric|
-      expect(metric.created_at).to eq Time.utc(2014,03,01)
-      expect(metric.updated_at).to be < Time.utc(2014,03,01)
-      expect(metric.analyzed_at).to be < Time.utc(2014,03,01)
+      expect(metric.created_at).to eq Time.utc(2014,3,1)
+      expect(metric.updated_at).to be < Time.utc(2014,3,1)
+      expect(metric.analyzed_at).to be < Time.utc(2014,3,1)
     }
 
-    Timecop.freeze(Time.utc(2014,03,02)) do
+    Timecop.freeze(Time.utc(2014,3,2)) do
 
       metric_to_update=Metric.all.first
 
@@ -282,9 +282,9 @@ describe 'MetricUpdate' do
 
       metric_to_update=Metric.find(metric_to_update.id)
 
-      expect(metric_to_update.created_at).to eq Time.utc(2014,03,01)
-      expect(metric_to_update.updated_at).to eq Time.utc(2014,03,02)
-      expect(metric_to_update.analyzed_at).to eq Time.utc(2014,03,02)
+      expect(metric_to_update.created_at).to eq Time.utc(2014,3,1)
+      expect(metric_to_update.updated_at).to eq Time.utc(2014,3,2)
+      expect(metric_to_update.analyzed_at).to eq Time.utc(2014,3,2)
     end
 
   end
@@ -327,14 +327,14 @@ describe 'MetricUpdate' do
     Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
 
 
-    hour = Time.utc(2014,02,10)
+    hour = Time.utc(2014,2,10)
     begin
       Timecop.freeze(hour) do
         allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits.select{|v| Date.parse(v.date).to_time<hour})
 
         MetricUpdate.perform(Metric.all.first.id)
       end
-    end while (hour += 36000) < Time.utc(2014,02,15)
+    end while (hour += 36000) < Time.utc(2014,2,15)
 
     expect(Event.all.size).to eq 2
   end
@@ -358,7 +358,7 @@ describe 'MetricUpdate' do
         ]
                             })
 
-    Timecop.freeze(Time.utc(2014,01,21)) do
+    Timecop.freeze(Time.utc(2014,1,21)) do
       create_sample_metric
 
       Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
@@ -373,14 +373,14 @@ describe 'MetricUpdate' do
     allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){raise OAuth2::Error.new({})}
 
     (22...29).each{|day|
-      Timecop.freeze(Time.utc(2014,01,day)) do
+      Timecop.freeze(Time.utc(2014,1,day)) do
         MetricUpdate.perform(Metric.all.first.id)
       end
     }
 
     allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){profile1.visits.select{|v| Date.parse(v.date).to_time<=Time.now}}
 
-    Timecop.freeze(Time.utc(2014,01,29)) do
+    Timecop.freeze(Time.utc(2014,1,29)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
 

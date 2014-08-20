@@ -11,17 +11,17 @@ describe 'ClientsController' do
     create_sample_portfolio
     create_sample_metric
 
-    Timecop.freeze(Time.utc(2014,02,29)) do
+    Timecop.freeze(Time.utc(2014,2,29)) do
 
       get '/clients/'+Portfolio.all.first.id.to_s
       expect(last_response.body).to include 'Fetching data'
 
-      Observation.create(:index=>Time.utc(2014,02,26),:value=>2,:metric=>Metric.first).save!
+      Observation.create(:index=>Time.utc(2014,2,26),:value=>2,:metric=>Metric.first).save!
 
       get '/clients/'+Portfolio.all.first.id.to_s
       expect(last_response.body).to include 'Not enough data yet'
 
-      Observation.create(:index=>Time.utc(2014,02,28),:value=>2,:metric=>Metric.first).save!
+      Observation.create(:index=>Time.utc(2014,2,28),:value=>2,:metric=>Metric.first).save!
 
       get '/clients/'+Portfolio.all.first.id.to_s
       expect(last_response.body).not_to include 'Fetching data'

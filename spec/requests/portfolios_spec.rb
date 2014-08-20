@@ -121,9 +121,9 @@ describe "portfolios" do
       get '/clients/'+Portfolio.first.id.to_s
       expect(last_response.body).to include "No events"
 
-      Observation.create(:index=>Time.utc(2014,02,27),:value=>2,:metric=>Metric.first).save!
-      Observation.create(:index=>Time.utc(2014,02,28),:value=>2,:metric=>Metric.first).save!
-      event1=Event.create(:date=>Time.utc(2014,02,27),:prediction_low=>0,:prediction_high=>1,:metric=>Metric.first)
+      Observation.create(:index=>Time.utc(2014,2,27),:value=>2,:metric=>Metric.first).save!
+      Observation.create(:index=>Time.utc(2014,2,28),:value=>2,:metric=>Metric.first).save!
+      event1=Event.create(:date=>Time.utc(2014,2,27),:prediction_low=>0,:prediction_high=>1,:metric=>Metric.first)
       event1.save!
 
       get '/users/me/dashboard'
@@ -148,9 +148,9 @@ describe "portfolios" do
 
       provider=Provider.create({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id2',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2',:expiration_date=>DateTime.now+1.days})
       metric=Metric.create({:provider=>provider,:name=>'visits',:updated_at=>DateTime.new,:analyzed_at=>DateTime.new})
-      Observation.create(:index=>Time.utc(2014,02,27),:value=>2,:metric=>metric).save!
-      Observation.create(:index=>Time.utc(2014,02,28),:value=>2,:metric=>metric).save!
-      event2=Event.create(:date=>Time.utc(2014,02,27),:prediction_low=>0,:prediction_high=>1,:metric=>metric)
+      Observation.create(:index=>Time.utc(2014,2,27),:value=>2,:metric=>metric).save!
+      Observation.create(:index=>Time.utc(2014,2,28),:value=>2,:metric=>metric).save!
+      event2=Event.create(:date=>Time.utc(2014,2,27),:prediction_low=>0,:prediction_high=>1,:metric=>metric)
       event2.save!
 
       get '/users/me/dashboard'
