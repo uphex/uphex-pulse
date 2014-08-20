@@ -281,4 +281,54 @@ describe 'MetricUpdate' do
     expect(metric_to_update.analyzed_at).to eql Time.utc(2014,03,02)
 
   end
+
+  it 'should generate an event for an extraneous data point when fetching continuously' do
+    create_sample_user
+    create_sample_portfolio
+    create_sample_metric
+
+    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
+        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
+         OpenStruct.new(:date=>'20140121',:visits=>'1'),
+         OpenStruct.new(:date=>'20140122',:visits=>'1'),
+         OpenStruct.new(:date=>'20140123',:visits=>'1'),
+         OpenStruct.new(:date=>'20140124',:visits=>'1'),
+         OpenStruct.new(:date=>'20140125',:visits=>'1'),
+         OpenStruct.new(:date=>'20140126',:visits=>'1'),
+         OpenStruct.new(:date=>'20140127',:visits=>'2'),
+         OpenStruct.new(:date=>'20140128',:visits=>'1'),
+         OpenStruct.new(:date=>'20140129',:visits=>'1'),
+         OpenStruct.new(:date=>'20140130',:visits=>'1'),
+         OpenStruct.new(:date=>'20140131',:visits=>'1'),
+         OpenStruct.new(:date=>'20140201',:visits=>'1'),
+         OpenStruct.new(:date=>'20140202',:visits=>'1'),
+         OpenStruct.new(:date=>'20140203',:visits=>'1'),
+         OpenStruct.new(:date=>'20140204',:visits=>'1'),
+         OpenStruct.new(:date=>'20140205',:visits=>'1'),
+         OpenStruct.new(:date=>'20140206',:visits=>'1'),
+         OpenStruct.new(:date=>'20140207',:visits=>'2'),
+         OpenStruct.new(:date=>'20140208',:visits=>'1'),
+         OpenStruct.new(:date=>'20140209',:visits=>'1'),
+         OpenStruct.new(:date=>'20140210',:visits=>'1'),
+         OpenStruct.new(:date=>'20140211',:visits=>'200'),
+         OpenStruct.new(:date=>'20140212',:visits=>'1'),
+         OpenStruct.new(:date=>'20140213',:visits=>'1'),
+         OpenStruct.new(:date=>'20140214',:visits=>'1'),
+         OpenStruct.new(:date=>'20140215',:visits=>'1')
+        ]
+                            })
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
+
+
+    hour = Time.utc(2014,02,10)
+    begin
+      Timecop.freeze(hour)
+      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits.select{|v| Date.parse(v.date).to_time<hour})
+
+      MetricUpdate.perform(Metric.all.first.id)
+
+    end while (hour += 36000) < Time.utc(2014,02,15)
+
+    expect(Event.all.size).to eql 2
+  end
 end
