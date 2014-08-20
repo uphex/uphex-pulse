@@ -331,4 +331,51 @@ describe 'MetricUpdate' do
 
     expect(Event.all.size).to eql 2
   end
+
+
+  it 'should fetch intermittent data points when a period of error occures then the connection is restored' do
+    create_sample_user
+    create_sample_portfolio
+
+    Timecop.freeze(Time.utc(2014,01,21))
+    create_sample_metric
+
+    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
+        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
+         OpenStruct.new(:date=>'20140121',:visits=>'1'),
+         OpenStruct.new(:date=>'20140122',:visits=>'1'),
+         OpenStruct.new(:date=>'20140123',:visits=>'1'),
+         OpenStruct.new(:date=>'20140124',:visits=>'1'),
+         OpenStruct.new(:date=>'20140125',:visits=>'1'),
+         OpenStruct.new(:date=>'20140126',:visits=>'1'),
+         OpenStruct.new(:date=>'20140127',:visits=>'1'),
+         OpenStruct.new(:date=>'20140128',:visits=>'1'),
+         OpenStruct.new(:date=>'20140129',:visits=>'1')
+        ]
+                            })
+
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
+
+    OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){profile1.visits.select{|v| Date.parse(v.date).to_time<=Time.now}}
+
+    MetricUpdate.perform(Metric.all.first.id)
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){raise OAuth2::Error.new({})}
+
+    (22...29).each{|day|
+      Timecop.freeze(Time.utc(2014,01,day))
+      MetricUpdate.perform(Metric.all.first.id)
+    }
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){profile1.visits.select{|v| Date.parse(v.date).to_time<=Time.now}}
+
+    Timecop.freeze(Time.utc(2014,01,29))
+    MetricUpdate.perform(Metric.all.first.id)
+
+    expect(Observation.all.size).to eql 9
+
+  end
+
 end
