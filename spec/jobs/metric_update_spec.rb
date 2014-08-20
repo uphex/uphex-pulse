@@ -34,7 +34,7 @@ describe 'MetricUpdate' do
 
       expect(Metric.all.first['last_error_type']).to be_nil
 
-      expect(Observation.all.size).to eql profile1[:visits].size
+      expect(Observation.all.size).to eq profile1[:visits].size
     end
 
   end
@@ -68,19 +68,19 @@ describe 'MetricUpdate' do
 
     expect(Metric.all.first['last_error_type']).to be_nil
 
-    expect(Observation.all.size).to eql profile1[:visits].size-2
+    expect(Observation.all.size).to eq profile1[:visits].size-2
 
     Timecop.freeze(Time.utc(2014,02,28,2)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
     expect(Metric.all.first['last_error_type']).to be_nil
-    expect(Observation.all.size).to eql profile1[:visits].size-1
+    expect(Observation.all.size).to eq profile1[:visits].size-1
 
     Timecop.freeze(Time.utc(2014,02,29)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
     expect(Metric.all.first['last_error_type']).to be_nil
-    expect(Observation.all.size).to eql profile1[:visits].size
+    expect(Observation.all.size).to eq profile1[:visits].size
   end
 
   it 'should report disconnected error when an auth error occurs' do
@@ -96,7 +96,7 @@ describe 'MetricUpdate' do
 
     MetricUpdate.perform(Metric.all.first.id)
 
-    expect(Metric.all.first['last_error_type']).to eql 'disconnected'
+    expect(Metric.all.first['last_error_type']).to eq 'disconnected'
   end
 
 
@@ -174,7 +174,7 @@ describe 'MetricUpdate' do
     end
 
     expect(Observation.all.size).to be >= 1
-    expect(@called_without_refresh).to eql nil
+    expect(@called_without_refresh).to eq nil
   end
 
   it 'should generate an event for an extraneous data point' do
@@ -233,7 +233,7 @@ describe 'MetricUpdate' do
       MetricUpdate.perform(Metric.all.first.id)
     end
 
-    expect(Event.all.size).to eql 1
+    expect(Event.all.size).to eq 1
   end
 
   it 'should set and update the metric timestamps' do
@@ -241,7 +241,7 @@ describe 'MetricUpdate' do
     create_sample_portfolio
 
     Rack::OAuth2::Client.any_instance.should_receive(:authorization_code=) do |arg|
-      expect(arg).to eql 'sample_code'
+      expect(arg).to eq 'sample_code'
     end
 
     Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
@@ -269,7 +269,7 @@ describe 'MetricUpdate' do
     end
 
     Metric.all.each{|metric|
-      expect(metric.created_at).to eql Time.utc(2014,03,01)
+      expect(metric.created_at).to eq Time.utc(2014,03,01)
       expect(metric.updated_at).to be < Time.utc(2014,03,01)
       expect(metric.analyzed_at).to be < Time.utc(2014,03,01)
     }
@@ -282,9 +282,9 @@ describe 'MetricUpdate' do
 
       metric_to_update=Metric.find(metric_to_update.id)
 
-      expect(metric_to_update.created_at).to eql Time.utc(2014,03,01)
-      expect(metric_to_update.updated_at).to eql Time.utc(2014,03,02)
-      expect(metric_to_update.analyzed_at).to eql Time.utc(2014,03,02)
+      expect(metric_to_update.created_at).to eq Time.utc(2014,03,01)
+      expect(metric_to_update.updated_at).to eq Time.utc(2014,03,02)
+      expect(metric_to_update.analyzed_at).to eq Time.utc(2014,03,02)
     end
 
   end
@@ -336,7 +336,7 @@ describe 'MetricUpdate' do
       end
     end while (hour += 36000) < Time.utc(2014,02,15)
 
-    expect(Event.all.size).to eql 2
+    expect(Event.all.size).to eq 2
   end
 
 
@@ -384,7 +384,7 @@ describe 'MetricUpdate' do
       MetricUpdate.perform(Metric.all.first.id)
     end
 
-    expect(Observation.all.size).to eql 9
+    expect(Observation.all.size).to eq 9
 
   end
 

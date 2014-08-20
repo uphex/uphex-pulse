@@ -178,7 +178,7 @@ describe "users" do
 
       get '/users'
 
-      expect(last_response.status).to eql 403
+      expect(last_response.status).to eq 403
     end
 
     it 'does have access to the users list with an admin user' do

@@ -16,7 +16,7 @@ describe 'AuthController' do
 
     get '/auth/oauth-v1/twitter'
     expect(last_response.status).to eq 302
-    expect(last_response.headers['Location']).to eql 'https://api.twitter.com'
+    expect(last_response.headers['Location']).to eq 'https://api.twitter.com'
   end
 
   it 'should redirect to google' do
@@ -46,7 +46,7 @@ describe 'AuthController' do
     create_sample_portfolio
 
     Rack::OAuth2::Client.any_instance.should_receive(:authorization_code=) do |arg|
-      expect(arg).to eql 'sample_code'
+      expect(arg).to eq 'sample_code'
     end
 
     Rack::OAuth2::Client.any_instance.stub(:access_token!) do |arg|
@@ -58,10 +58,10 @@ describe 'AuthController' do
     get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
 
     expect(Provider.all).not_to be_empty
-    expect(Provider.all.first.portfolio.id).to eql Portfolio.all.first.id
-    expect(Provider.all.first.profile_id).to eql 'test_profile_id'
-    expect(Provider.all.first.access_token).to eql 'access_token'
-    expect(Provider.all.first.refresh_token).to eql 'refresh_token'
+    expect(Provider.all.first.portfolio.id).to eq Portfolio.all.first.id
+    expect(Provider.all.first.profile_id).to eq 'test_profile_id'
+    expect(Provider.all.first.access_token).to eq 'access_token'
+    expect(Provider.all.first.refresh_token).to eq 'refresh_token'
   end
 
   it 'should redirect to the selector page if multiple profiles are present' do
@@ -87,11 +87,11 @@ describe 'AuthController' do
     post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'})}
 
     expect(Provider.all).not_to be_empty
-    expect(Provider.all.size).to eql 1
-    expect(Provider.all.first.portfolio.id).to eql Portfolio.all.first.id
-    expect(Provider.all.first.profile_id).to eql 'test_profile_id1'
-    expect(Provider.all.first.access_token).to eql 'access_token'
-    expect(Provider.all.first.refresh_token).to eql 'refresh_token'
+    expect(Provider.all.size).to eq 1
+    expect(Provider.all.first.portfolio.id).to eq Portfolio.all.first.id
+    expect(Provider.all.first.profile_id).to eq 'test_profile_id1'
+    expect(Provider.all.first.access_token).to eq 'access_token'
+    expect(Provider.all.first.refresh_token).to eq 'refresh_token'
   end
 
   it 'should add multiple providers if multiple is selected' do
@@ -108,7 +108,7 @@ describe 'AuthController' do
 
     post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id2',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
 
-    expect(Provider.all.size).to eql 2
+    expect(Provider.all.size).to eq 2
   end
 
   it 'should enque a StreamCreate job when creating a provider' do
@@ -126,10 +126,10 @@ describe 'AuthController' do
     StreamCreate.should have_queued(Provider.all.first.id)
     StreamCreate.should have_queue_size_of(1)
 
-    expect(Metric.all.size).to eql 0
+    expect(Metric.all.size).to eq 0
     ResqueSpec.perform_all(:StreamCreate)
 
-    expect(Metric.all.size).to eql 3
+    expect(Metric.all.size).to eq 3
     MetricUpdate.should have_queue_size_of(3)
 
   end
@@ -155,11 +155,11 @@ describe 'AuthController' do
     get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id,:reauth_to=>Provider.all.first.id}.to_json)+'&code=sample_code'
 
     expect(Provider.all).not_to be_empty
-    expect(Provider.all.size).to eql 1
-    expect(Provider.all.first.portfolio.id).to eql Portfolio.all.first.id
-    expect(Provider.all.first.profile_id).to eql 'test_profile_id1'
-    expect(Provider.all.first.access_token).to eql 'access_token2'
-    expect(Provider.all.first.refresh_token).to eql 'refresh_token2'
+    expect(Provider.all.size).to eq 1
+    expect(Provider.all.first.portfolio.id).to eq Portfolio.all.first.id
+    expect(Provider.all.first.profile_id).to eq 'test_profile_id1'
+    expect(Provider.all.first.access_token).to eq 'access_token2'
+    expect(Provider.all.first.refresh_token).to eq 'refresh_token2'
   end
 
   it 'should not allow a provider to be added to a portfolio more than once' do
@@ -180,7 +180,7 @@ describe 'AuthController' do
 
     get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
 
-    expect(Provider.all.size).to eql 1
+    expect(Provider.all.size).to eq 1
     follow_redirect!
     expect(last_response.body).to include 'exists'
   end
@@ -193,7 +193,7 @@ describe 'AuthController' do
 
     post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id1',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>'test_profile_id3',:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
 
-    expect(Provider.all.size).to eql 3
+    expect(Provider.all.size).to eq 3
 
   end
 end
