@@ -7,34 +7,54 @@ describe 'MetricUpdate' do
     ResqueSpec.reset!
   end
 
+  def test_profile_1
+    OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
+        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
+         OpenStruct.new(:date=>'20140121',:visits=>'1'),
+         OpenStruct.new(:date=>'20140122',:visits=>'1'),
+         OpenStruct.new(:date=>'20140123',:visits=>'1'),
+         OpenStruct.new(:date=>'20140124',:visits=>'1'),
+         OpenStruct.new(:date=>'20140125',:visits=>'1'),
+         OpenStruct.new(:date=>'20140126',:visits=>'1'),
+         OpenStruct.new(:date=>'20140127',:visits=>'2'),
+         OpenStruct.new(:date=>'20140128',:visits=>'1'),
+         OpenStruct.new(:date=>'20140129',:visits=>'1'),
+         OpenStruct.new(:date=>'20140130',:visits=>'1'),
+         OpenStruct.new(:date=>'20140131',:visits=>'1'),
+         OpenStruct.new(:date=>'20140201',:visits=>'1'),
+         OpenStruct.new(:date=>'20140202',:visits=>'1'),
+         OpenStruct.new(:date=>'20140203',:visits=>'1'),
+         OpenStruct.new(:date=>'20140204',:visits=>'1'),
+         OpenStruct.new(:date=>'20140205',:visits=>'1'),
+         OpenStruct.new(:date=>'20140206',:visits=>'1'),
+         OpenStruct.new(:date=>'20140207',:visits=>'2'),
+         OpenStruct.new(:date=>'20140208',:visits=>'1'),
+         OpenStruct.new(:date=>'20140209',:visits=>'1'),
+         OpenStruct.new(:date=>'20140210',:visits=>'1'),
+         OpenStruct.new(:date=>'20140211',:visits=>'200'),
+         OpenStruct.new(:date=>'20140212',:visits=>'1'),
+         OpenStruct.new(:date=>'20140213',:visits=>'1'),
+         OpenStruct.new(:date=>'20140214',:visits=>'1'),
+         OpenStruct.new(:date=>'20140215',:visits=>'1')
+        ]
+                   })
+  end
+
   it 'should be able to fetch observations' do
     create_sample_user
     create_sample_portfolio
     create_sample_metric
 
     Timecop.freeze(Time.utc(2014,2,29)) do
+      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
 
-      profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-          [OpenStruct.new(:date=>'20140220',:visits=>'1'),
-           OpenStruct.new(:date=>'20140221',:visits=>'2'),
-           OpenStruct.new(:date=>'20140222',:visits=>'2'),
-           OpenStruct.new(:date=>'20140223',:visits=>'1'),
-           OpenStruct.new(:date=>'20140224',:visits=>'1'),
-           OpenStruct.new(:date=>'20140225',:visits=>'1'),
-           OpenStruct.new(:date=>'20140226',:visits=>'1'),
-           OpenStruct.new(:date=>'20140227',:visits=>'2'),
-           OpenStruct.new(:date=>'20140228',:visits=>'2')
-          ]
-      })
-      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
-
-      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(test_profile_1.visits)
 
       MetricUpdate.perform(Metric.all.first.id)
 
       expect(Metric.all.first['last_error_type']).to be_nil
 
-      expect(Observation.all.size).to eq profile1[:visits].size
+      expect(Observation.all.size).to eq test_profile_1[:visits].size
     end
 
   end
@@ -44,23 +64,11 @@ describe 'MetricUpdate' do
     create_sample_portfolio
     create_sample_metric
 
-    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-        [OpenStruct.new(:date=>'20140220',:visits=>'1'),
-         OpenStruct.new(:date=>'20140221',:visits=>'2'),
-         OpenStruct.new(:date=>'20140222',:visits=>'2'),
-         OpenStruct.new(:date=>'20140223',:visits=>'1'),
-         OpenStruct.new(:date=>'20140224',:visits=>'1'),
-         OpenStruct.new(:date=>'20140225',:visits=>'1'),
-         OpenStruct.new(:date=>'20140226',:visits=>'1'),
-         OpenStruct.new(:date=>'20140227',:visits=>'2'),
-         OpenStruct.new(:date=>'20140228',:visits=>'2')
-        ]
-                            })
-    Timecop.freeze(Time.utc(2014,2,27)) do
+    Timecop.freeze(Time.utc(2014,2,14)) do
 
-      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
+      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
 
-      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(test_profile_1.visits)
 
       MetricUpdate.perform(Metric.all.first.id)
 
@@ -68,19 +76,19 @@ describe 'MetricUpdate' do
 
     expect(Metric.all.first['last_error_type']).to be_nil
 
-    expect(Observation.all.size).to eq profile1[:visits].size-2
+    expect(Observation.all.size).to eq test_profile_1[:visits].size-2
 
-    Timecop.freeze(Time.utc(2014,2,28,2)) do
+    Timecop.freeze(Time.utc(2014,2,15,2)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
     expect(Metric.all.first['last_error_type']).to be_nil
-    expect(Observation.all.size).to eq profile1[:visits].size-1
+    expect(Observation.all.size).to eq test_profile_1[:visits].size-1
 
-    Timecop.freeze(Time.utc(2014,2,29)) do
+    Timecop.freeze(Time.utc(2014,2,16)) do
       MetricUpdate.perform(Metric.all.first.id)
     end
     expect(Metric.all.first['last_error_type']).to be_nil
-    expect(Observation.all.size).to eq profile1[:visits].size
+    expect(Observation.all.size).to eq test_profile_1[:visits].size
   end
 
   it 'should report disconnected error when an auth error occurs' do
@@ -105,21 +113,15 @@ describe 'MetricUpdate' do
     create_sample_portfolio
     create_sample_metric
 
-    Timecop.freeze(Time.utc(2014,2,21)) do
-
-      profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-          [OpenStruct.new(:date=>'20140220',:visits=>'1')
-          ]
-                              })
-
-      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+    Timecop.freeze(Time.utc(2014,2,11)) do
+      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(test_profile_1.visits)
 
       OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
 
       Legato::User.any_instance.stub(:accounts) do
         Legato::User.any_instance.unstub(:accounts)
         Legato::User.any_instance.stub(:accounts) do
-          [OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})]
+          [OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})]
         end
         raise OAuth2::Error.new({})
       end
@@ -146,18 +148,13 @@ describe 'MetricUpdate' do
 
     Timecop.freeze(Time.utc(2014,2,21)) do
 
-      profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-          [OpenStruct.new(:date=>'20140220',:visits=>'1')
-          ]
-                              })
-
-      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(test_profile_1.visits)
 
       OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
 
       Legato::User.any_instance.stub(:accounts) do
         if @refreshed==true
-          [OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})]
+          [OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})]
         else
           @called_without_refresh=true
           raise OAuth2::Error.new({})
@@ -182,53 +179,11 @@ describe 'MetricUpdate' do
     create_sample_portfolio
     create_sample_metric
 
-    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
-         OpenStruct.new(:date=>'20140121',:visits=>'1'),
-         OpenStruct.new(:date=>'20140122',:visits=>'1'),
-         OpenStruct.new(:date=>'20140123',:visits=>'1'),
-         OpenStruct.new(:date=>'20140124',:visits=>'1'),
-         OpenStruct.new(:date=>'20140125',:visits=>'1'),
-         OpenStruct.new(:date=>'20140126',:visits=>'1'),
-         OpenStruct.new(:date=>'20140127',:visits=>'1'),
-         OpenStruct.new(:date=>'20140128',:visits=>'1'),
-         OpenStruct.new(:date=>'20140129',:visits=>'1'),
-         OpenStruct.new(:date=>'20140130',:visits=>'1'),
-         OpenStruct.new(:date=>'20140131',:visits=>'1'),
-         OpenStruct.new(:date=>'20140201',:visits=>'1'),
-         OpenStruct.new(:date=>'20140202',:visits=>'1'),
-         OpenStruct.new(:date=>'20140203',:visits=>'1'),
-         OpenStruct.new(:date=>'20140204',:visits=>'1'),
-         OpenStruct.new(:date=>'20140205',:visits=>'1'),
-         OpenStruct.new(:date=>'20140206',:visits=>'1'),
-         OpenStruct.new(:date=>'20140207',:visits=>'1'),
-         OpenStruct.new(:date=>'20140208',:visits=>'1'),
-         OpenStruct.new(:date=>'20140209',:visits=>'1'),
-         OpenStruct.new(:date=>'20140210',:visits=>'1'),
-         OpenStruct.new(:date=>'20140211',:visits=>'1'),
-         OpenStruct.new(:date=>'20140212',:visits=>'1'),
-         OpenStruct.new(:date=>'20140213',:visits=>'1'),
-         OpenStruct.new(:date=>'20140214',:visits=>'1'),
-         OpenStruct.new(:date=>'20140215',:visits=>'1'),
-         OpenStruct.new(:date=>'20140216',:visits=>'1'),
-         OpenStruct.new(:date=>'20140217',:visits=>'1'),
-         OpenStruct.new(:date=>'20140218',:visits=>'1'),
-         OpenStruct.new(:date=>'20140219',:visits=>'1'),
-         OpenStruct.new(:date=>'20140221',:visits=>'2'),
-         OpenStruct.new(:date=>'20140222',:visits=>'2'),
-         OpenStruct.new(:date=>'20140223',:visits=>'1'),
-         OpenStruct.new(:date=>'20140224',:visits=>'1'),
-         OpenStruct.new(:date=>'20140225',:visits=>'1'),
-         OpenStruct.new(:date=>'20140226',:visits=>'1'),
-         OpenStruct.new(:date=>'20140227',:visits=>'200')
-        ]
-                            })
+    Timecop.freeze(Time.utc(2014,2,13)) do
 
-    Timecop.freeze(Time.utc(2014,2,29)) do
+      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
 
-      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
-
-      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(test_profile_1.visits)
 
       MetricUpdate.perform(Metric.all.first.id)
     end
@@ -248,17 +203,7 @@ describe 'MetricUpdate' do
       OpenStruct.new({:access_token=>'access_token',:expires_in=>DateTime.now+1.days,:refresh_token=>'refresh_token'})
     end
 
-    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
-         OpenStruct.new(:date=>'20140121',:visits=>'1'),
-         OpenStruct.new(:date=>'20140122',:visits=>'1'),
-         OpenStruct.new(:date=>'20140123',:visits=>'1'),
-         OpenStruct.new(:date=>'20140124',:visits=>'1'),
-         OpenStruct.new(:date=>'20140125',:visits=>'1')
-        ]
-                            })
-
-    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits)
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(test_profile_1.visits)
 
     Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>'test_profile',:id=>'test_profile_id'})]})])
 
@@ -294,44 +239,17 @@ describe 'MetricUpdate' do
     create_sample_portfolio
     create_sample_metric
 
-    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
-         OpenStruct.new(:date=>'20140121',:visits=>'1'),
-         OpenStruct.new(:date=>'20140122',:visits=>'1'),
-         OpenStruct.new(:date=>'20140123',:visits=>'1'),
-         OpenStruct.new(:date=>'20140124',:visits=>'1'),
-         OpenStruct.new(:date=>'20140125',:visits=>'1'),
-         OpenStruct.new(:date=>'20140126',:visits=>'1'),
-         OpenStruct.new(:date=>'20140127',:visits=>'2'),
-         OpenStruct.new(:date=>'20140128',:visits=>'1'),
-         OpenStruct.new(:date=>'20140129',:visits=>'1'),
-         OpenStruct.new(:date=>'20140130',:visits=>'1'),
-         OpenStruct.new(:date=>'20140131',:visits=>'1'),
-         OpenStruct.new(:date=>'20140201',:visits=>'1'),
-         OpenStruct.new(:date=>'20140202',:visits=>'1'),
-         OpenStruct.new(:date=>'20140203',:visits=>'1'),
-         OpenStruct.new(:date=>'20140204',:visits=>'1'),
-         OpenStruct.new(:date=>'20140205',:visits=>'1'),
-         OpenStruct.new(:date=>'20140206',:visits=>'1'),
-         OpenStruct.new(:date=>'20140207',:visits=>'2'),
-         OpenStruct.new(:date=>'20140208',:visits=>'1'),
-         OpenStruct.new(:date=>'20140209',:visits=>'1'),
-         OpenStruct.new(:date=>'20140210',:visits=>'1'),
-         OpenStruct.new(:date=>'20140211',:visits=>'200'),
-         OpenStruct.new(:date=>'20140212',:visits=>'1'),
-         OpenStruct.new(:date=>'20140213',:visits=>'1'),
-         OpenStruct.new(:date=>'20140214',:visits=>'1'),
-         OpenStruct.new(:date=>'20140215',:visits=>'1')
-        ]
-                            })
-    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(
+                                                                              test_profile_1.visits.select{
+                                                                                  |v| Date.parse(v.date).to_time<Time.now
+                                                                              }
+                                                                          )
 
-
+    #Fetch every 10 hours
     hour = Time.utc(2014,2,10)
     begin
       Timecop.freeze(hour) do
-        allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(profile1.visits.select{|v| Date.parse(v.date).to_time<hour})
-
         MetricUpdate.perform(Metric.all.first.id)
       end
     end while (hour += 36000) < Time.utc(2014,2,15)
@@ -344,32 +262,22 @@ describe 'MetricUpdate' do
     create_sample_user
     create_sample_portfolio
 
-    profile1=OpenStruct.new({:name=>'test_profile_id1',:id=>'test_profile_id1',:visits=>
-        [OpenStruct.new(:date=>'20140120',:visits=>'1'),
-         OpenStruct.new(:date=>'20140121',:visits=>'1'),
-         OpenStruct.new(:date=>'20140122',:visits=>'1'),
-         OpenStruct.new(:date=>'20140123',:visits=>'1'),
-         OpenStruct.new(:date=>'20140124',:visits=>'1'),
-         OpenStruct.new(:date=>'20140125',:visits=>'1'),
-         OpenStruct.new(:date=>'20140126',:visits=>'1'),
-         OpenStruct.new(:date=>'20140127',:visits=>'1'),
-         OpenStruct.new(:date=>'20140128',:visits=>'1'),
-         OpenStruct.new(:date=>'20140129',:visits=>'1')
-        ]
-                            })
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
 
+    OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){
+      test_profile_1.visits.select { |v| Date.parse(v.date).to_time<=Time.now }
+    }
+
+    #Initial fetch
     Timecop.freeze(Time.utc(2014,1,21)) do
       create_sample_metric
-
-      Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[profile1]})])
-
-      OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
-
-      allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){profile1.visits.select{|v| Date.parse(v.date).to_time<=Time.now}}
 
       MetricUpdate.perform(Metric.all.first.id)
     end
 
+    #Fetches each day and receives an error
     allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){raise OAuth2::Error.new({})}
 
     (22...29).each{|day|
@@ -378,7 +286,12 @@ describe 'MetricUpdate' do
       end
     }
 
-    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){profile1.visits.select{|v| Date.parse(v.date).to_time<=Time.now}}
+    #Fetch again without error
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){
+      test_profile_1.visits.select{
+          |v| Date.parse(v.date).to_time<=Time.now
+      }
+    }
 
     Timecop.freeze(Time.utc(2014,1,29)) do
       MetricUpdate.perform(Metric.all.first.id)
