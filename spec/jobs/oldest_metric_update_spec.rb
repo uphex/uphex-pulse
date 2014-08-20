@@ -7,10 +7,6 @@ describe 'OldestMetricUpdate' do
     ResqueSpec.reset!
   end
 
-  after do
-    Timecop.return
-  end
-
   it 'should pick the metric that is updated sooner' do
     create_sample_user
     create_sample_portfolio
@@ -18,9 +14,9 @@ describe 'OldestMetricUpdate' do
 
     original_metric_id=Metric.all.first.id
 
-    Timecop.freeze(Time.utc(2014,02,28))
-
-    OldestMetricUpdate.perform
+    Timecop.freeze(Time.utc(2014,2,28)) do
+      OldestMetricUpdate.perform
+    end
 
     MetricUpdate.should have_queued(original_metric_id)
     ResqueSpec.reset!
@@ -29,13 +25,14 @@ describe 'OldestMetricUpdate' do
     metric['updated_at']=Time.now
     metric.save!
 
-    Timecop.freeze(Time.utc(2014,03,01))
+    Timecop.freeze(Time.utc(2014,3,1)) do
 
-    new_metric=Metric.create({:provider=>Provider.all.first,:name=>'visitors',:updated_at=>DateTime.new,:analyzed_at=>DateTime.new})
+      new_metric=Metric.create({:provider=>Provider.all.first,:name=>'visitors',:updated_at=>DateTime.new,:analyzed_at=>DateTime.new})
 
-    OldestMetricUpdate.perform
+      OldestMetricUpdate.perform
 
-    MetricUpdate.should have_queued(new_metric[:id])
+      MetricUpdate.should have_queued(new_metric[:id])
+    end
     ResqueSpec.reset!
 
   end
@@ -47,9 +44,9 @@ describe 'OldestMetricUpdate' do
 
     original_metric_id=Metric.all.first.id
 
-    Timecop.freeze(Time.utc(2014,02,28))
-
-    OldestMetricUpdate.perform
+    Timecop.freeze(Time.utc(2014,2,28)) do
+      OldestMetricUpdate.perform
+    end
 
     MetricUpdate.should have_queued(original_metric_id)
     ResqueSpec.reset!
@@ -58,13 +55,13 @@ describe 'OldestMetricUpdate' do
     metric['last_error_time']=Time.now
     metric.save!
 
-    Timecop.freeze(Time.utc(2014,03,01))
+    Timecop.freeze(Time.utc(2014,3,1)) do
+      new_metric=Metric.create({:provider=>Provider.all.first,:name=>'visitors',:updated_at=>DateTime.new,:analyzed_at=>DateTime.new})
 
-    new_metric=Metric.create({:provider=>Provider.all.first,:name=>'visitors',:updated_at=>DateTime.new,:analyzed_at=>DateTime.new})
+      OldestMetricUpdate.perform
 
-    OldestMetricUpdate.perform
-
-    MetricUpdate.should have_queued(new_metric[:id])
+      MetricUpdate.should have_queued(new_metric[:id])
+    end
     ResqueSpec.reset!
 
   end
