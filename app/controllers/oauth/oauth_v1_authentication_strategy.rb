@@ -20,4 +20,5 @@ class OAuthV1AuthenticationStrategy
   def getReauthTo(params,session)
     session[:reauth_to]
   end
+
 end

@@ -34,13 +34,20 @@
       }
     }
     .sparkline-container {
-      padding-bottom: 10px;
-      border-bottom: $light-border;
       height:120px;
+
+      &:after{
+        content: ' ';
+        height: 10px;
+        width: 100%;
+        border-bottom: $light-border;
+        display: block;
+        margin-bottom: 10px;
+      }
     }
 
     .result-comment {
-      margin-top: 10px;
+      margin-top: 20px;
       span {
         position: relative;
         top: 3px;

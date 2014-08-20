@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 11) do
+ActiveRecord::Schema.define(version: 17) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,10 +24,10 @@ ActiveRecord::Schema.define(version: 11) do
   end
 
   create_table "events", force: true do |t|
-    t.date    "date"
-    t.decimal "prediction_low"
-    t.decimal "prediction_high"
-    t.integer "metrics_id"
+    t.datetime "date"
+    t.decimal  "prediction_low"
+    t.decimal  "prediction_high"
+    t.integer  "metrics_id"
   end
 
   create_table "metrics", force: true do |t|
@@ -60,22 +60,35 @@ ActiveRecord::Schema.define(version: 11) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "organizations_id"
+    t.boolean  "deleted",          default: false
   end
 
   add_index "portfolios", ["name"], name: "index_portfolios_on_name", unique: true, using: :btree
 
   create_table "providers", force: true do |t|
-    t.string  "name"
-    t.decimal "userid"
-    t.string  "access_token"
-    t.string  "access_token_secret"
-    t.date    "expiration_date"
-    t.string  "token_type"
-    t.string  "refresh_token"
-    t.string  "raw_response"
-    t.integer "portfolios_id"
-    t.string  "provider_name"
-    t.string  "profile_id"
+    t.string   "name"
+    t.decimal  "userid"
+    t.string   "access_token"
+    t.string   "access_token_secret"
+    t.datetime "expiration_date"
+    t.string   "token_type"
+    t.string   "refresh_token"
+    t.text     "raw_response"
+    t.integer  "portfolios_id"
+    t.string   "provider_name"
+    t.string   "profile_id"
+    t.boolean  "deleted",             default: false
+  end
+
+  create_table "roles", force: true do |t|
+    t.string "name"
+  end
+
+  add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+
+  create_table "user_roles", force: true do |t|
+    t.integer "users_id"
+    t.integer "roles_id"
   end
 
   create_table "users", force: true do |t|

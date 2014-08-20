@@ -44,5 +44,9 @@
                   %g
                     %path
               - else
-                .no-elements
-                  No sparkline yet
+                - if stream[:num_observations]==0
+                  .no-elements
+                    Fetching data
+                - else
+                  .no-elements
+                    Not enough data yet

@@ -4,13 +4,13 @@ UpHex::Pulse.controllers :events do
   end
 
   get '/' do
-    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten
+    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten.select{|portfolio| !portfolio.deleted}
     if params[:portfolioid]
       @client=@clients.find{|portfolio| portfolio.id.to_s==params[:portfolioid]}
       @clients=[@client]
     end
     @announcements=[]
-    @allevents=@clients.map{|portfolio| portfolio.providers}.flatten.map{|provider| provider.metrics}.flatten.map{|metric|
+    @allevents=@clients.map{|portfolio| portfolio.providers}.flatten.select{|provider| !provider.deleted}.map{|provider| provider.metrics}.flatten.map{|metric|
       metric.events.map{|event|
         transform_event(event,false)
       }

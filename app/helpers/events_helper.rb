@@ -11,7 +11,7 @@ module EventsHelper
   def transform_event(event,whole_sparkline)
     eventdate=event[:date].in_time_zone('UTC')
     if whole_sparkline
-      observations=event.metric.observations.all
+      observations=event.metric.observations
     else
       start_time=eventdate.beginning_of_day
       end_time=eventdate.beginning_of_day+1.days
@@ -27,7 +27,8 @@ module EventsHelper
     sparkline=([].concat(sparkline_points_before_event)<<points.find{|p| p[:index]==eventdate}).concat(sparkline_points_after_event).map{|collection|
       collection[:value].round
     }
-    type = point[:value]>event[:prediction_high] ? 'positive_anomaly' : 'negative_anomaly'
+    positive_metric=event.metric.name!='bounces'
+    type = !positive_metric ^ (point[:value]>event[:prediction_high]) ? 'positive_anomaly' : 'negative_anomaly'
     {:id=>event[:id],:time=>eventdate,:type=>type,:stream=>event.metric,:eventpredictedstart=>event[:prediction_low],:eventpredictedend=>event[:prediction_high],:eventactual=>point[:value],:sparkline=>sparkline,:eventpositioninsparkline=>sparkline_points_before_event.size,:categoryicon=>icons[event.metric.provider.provider_name.to_sym]}
 
   end

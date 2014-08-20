@@ -6,12 +6,17 @@ en:
     user:
       created: User created
       modified: Profile modified
+      admin_granted: User %{username} has been made admin
+      admin_revoken: Admin role revoken from user %{username}
     account:
       modified: Account modified
     portfolio:
       created: Portfolio created
+    impersonate_ended: Impersonation ended
   portfolio:
     modified: Portfolio modified
+    deleted: Portfolio deleted
+    restored: Portfolio %{portfolio} restored
   oauth:
     added:
       one: "Profile added: %{profiles}"
@@ -22,6 +27,7 @@ en:
       reauth:
         error: Reauthentication failure
         success: Reathentication successful. Please wait a few seconds for the stream to update
+      exists: The provider already exists in the portfolio
   provider:
     modified: Provider modified
     deleted: Provider deleted

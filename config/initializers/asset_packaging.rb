@@ -36,7 +36,9 @@ module UpHex
               '/js/jquery/jquery-migrate.min.js',
               '/js/bootstrap/bootstrap.min.js',
               '/js/theme.js',
-              '/assets/javascripts/application.js'
+              '/assets/javascripts/vendor/d3.min.js',
+              '/assets/javascripts/application.js',
+              '/assets/javascripts/sparkline.js'
           ]
 
           css :application, [
@@ -47,7 +49,7 @@ module UpHex
               '/assets/stylesheets/application.css'
           ]
 
-          js_compression  :jsmin    # :jsmin | :yui | :closure | :uglify
+          js_compression  :uglify    # :jsmin | :yui | :closure | :uglify
           css_compression :simple   # :simple | :sass | :yui | :sqwish
         }
       end

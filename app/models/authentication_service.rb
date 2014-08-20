@@ -13,8 +13,12 @@ class AuthenticationService
     warden
   end
 
-  def authenticate
-    service.authenticate!
+  def authenticate(strategy=nil)
+    if strategy.nil?
+      service.authenticate!(:scope=>@scope)
+    else
+      service.authenticate!(strategy,:scope=>@scope)
+    end
   end
 
   def authenticated?
@@ -26,14 +30,22 @@ class AuthenticationService
   end
 
   def user
-    service.user(scope)
+    if service.user(:impersonate).nil?
+      service.user(@scope)
+    else
+      service.user(:impersonate)
+    end
   end
 
   def user_is?(u)
     self.user == u
   end
 
-  def logout()
-    service.logout
+  def logout
+    if @scope.nil?
+      service.logout
+    else
+      service.logout(@scope)
+    end
   end
 end

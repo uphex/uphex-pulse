@@ -159,5 +159,9 @@ describe 'SparklineNormalizer' do
                                                           [{:index=>DateTime.new(2014,5,4,0,0).to_date,:value=>113.125}]
                                                       )
     end
+
+    it 'should return an empty array if called with an empty array' do
+      expect(SparklineNormalizer.new.normalize([])).to match_array([])
+    end
   end
 end

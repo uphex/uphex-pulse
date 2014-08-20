@@ -59,13 +59,13 @@ UpHex::Pulse.controllers :users do
   end
 
   get '/me/dashboard' do
-    @clients=current_user.organizations.map{|organization| organization.portfolios}.flatten.map{|portfolio|
+    @clients=current_user.organizations.map{|organization| organization.portfolios.select{|p| !p.deleted}}.flatten.map{|portfolio|
       a=portfolio.clone
       a.alert=nil
-      if portfolio.providers.blank?
+      if portfolio.providers.select{|p| !p.deleted}.blank?
         a.alert=I18n.t 'alert.no_streams'
       end
-      errors=portfolio.providers.map{|provider| provider.metrics}.flatten.select{|metric| !metric.last_error_type.nil?}
+      errors=portfolio.providers.select{|p| !p.deleted}.map{|provider| provider.metrics}.flatten.select{|metric| !metric.last_error_type.nil?}
       unless errors.empty?
         a.alert=I18n.t 'alert.disconnected',:stream=>errors.first.provider.provider_name.capitalize if errors.first.last_error_type==:disconnected.to_s
         a.alert=I18n.t 'alert.other',:stream=>errors.first.provider.provider_name.capitalize if errors.first.last_error_type==:other.to_s
@@ -73,12 +73,34 @@ UpHex::Pulse.controllers :users do
       a
     }
     @announcements=[]
-    @dashboardevents=@clients.map{|portfolio| portfolio.providers}.flatten.map{|provider| provider.metrics}.flatten.map{|metric|
+    @dashboardevents=@clients.map{|portfolio| portfolio.providers}.flatten.select{|p| !p.deleted}.map{|provider| provider.metrics}.flatten.map{|metric|
       metric.events.map{|event|
         transform_event(event,false)
       }
     }.flatten.sort_by{|event| event[:time]}.reverse.take(5).group_by{|e| e[:time].beginning_of_day}
 
     render 'dashboard/index'
+  end
+
+  get '/' do
+    error(403) unless is_admin?
+    @users=User.all
+    render 'users/index'
+  end
+
+  post '/revoke_admin' do
+    error(403) unless is_admin?
+    u=User.find(params['userid'])
+    u.user_roles.select{|user_role| user_role.role.name=='admin'}.each{|user_role| user_role.destroy}
+    flash[:notice] = I18n.t 'authn.user.admin_revoken',username:u.name
+    redirect '/users'
+  end
+
+  post '/make_admin' do
+    error(403) unless is_admin?
+    u=User.find(params['userid'])
+    UserRole.create(:user=>u,:role=>Role.find_by_name('admin'))
+    flash[:notice] = I18n.t 'authn.user.admin_granted',username:u.name
+    redirect '/users'
   end
 end

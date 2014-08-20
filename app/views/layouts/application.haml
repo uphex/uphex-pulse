@@ -7,21 +7,38 @@
 
 
 %body
+  - if !current_user(:impersonate).nil?
+    .mod-impersonation-box
+      .box{:class=>'container box-transparent'}
+        .box-header
+          Impersonation notice
+        .box-content
+          .text
+            You are currently impersonating a user:
+          .username
+            = current_user(:impersonate).name
+          %form{:action=>'/sessions/impersonate',:method=>'POST'}
+            = csrf_token_field
+            %input{:type=>'hidden',:name=>'_method',:value=>'DELETE'}
+            %input{:type=>'submit',:value=>'End impersonation',:class=>'button-standard'}
   %header
     .container
       %img{:src => "/images/logo.png", :alt => "UpHex logo"}
 
         %a{:href => "/", :class => "agency-name"}
-          - if env['warden'].authenticated?
-            = env['warden'].user.organizations.first.name
+          - if !current_user.nil?
+            = current_user.organizations.first.name
           - else
             Uphex
         %div.user-nav
-          - if env['warden'].authenticated?
+          - if !current_user.nil?
             %ul
               %li.username
                 %a{:href => "/users/me"}
-                  = env['warden'].user.name
+                  = current_user.name
+              - if is_admin?
+                %li
+                  %a{:href => "/users"} Users
               %li
                 %a{:href => "/accounts/me"} Account
               %li

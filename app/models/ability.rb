@@ -72,8 +72,11 @@ class Ability
 
     def authorize
       ability.instance_eval do
-        can [:read,:update], Portfolio do |p|
-          user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
+        can [:read,:update,:delete], Portfolio do |p|
+          !p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
+        end
+        can [:restore], Portfolio do |p|
+          p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.id==p.id}}
         end
       end
     end
@@ -105,7 +108,7 @@ class Ability
     def authorize
       ability.instance_eval do
         can [:read,:update,:delete], Provider do |p|
-          user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| portfolio.providers.any?{|provider|provider.id==p.id}}}
+          !p.deleted and user.organizations.any?{|organization| organization.portfolios.any?{|portfolio| !portfolio.deleted and portfolio.providers.any?{|provider|provider.id==p.id}}}
         end
       end
     end
@@ -121,10 +124,7 @@ class Ability
     def authorize
       ability.instance_eval do
         can :read, Event do |e|
-          puts user
-          puts e.metric.provider.portfolio.organization
-          puts user.organizations.include? e.metric.provider.portfolio.organization
-          user.organizations.include? e.metric.provider.portfolio.organization
+          !e.metric.provider.deleted and !e.metric.provider.portfolio.deleted and user.organizations.include? e.metric.provider.portfolio.organization
         end
       end
     end

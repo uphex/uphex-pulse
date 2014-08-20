@@ -8,7 +8,7 @@ UpHex::Pulse.controllers :clients do
     @client=Portfolio.find(params[:id])
     error(403) unless current_ability.can? :read, @client
 
-    metrics=@client.providers.map{|provider|
+    metrics=@client.providers.select{|p| !p.deleted}.map{|provider|
       provider.metrics
     }.flatten
 
@@ -33,7 +33,7 @@ UpHex::Pulse.controllers :clients do
         average=(sparkline.last(7).reduce(:+).to_f / sparkline.last(7).size).round(0)
       end
 
-      {:categorytype=>metric.provider.name,:categoryicon=>icons[metric.provider.provider_name.to_sym],:id=>metric.provider.id,:metricname=>metric.name,:average=>average,:rangestart=>rangestart,:rangeend=>rangeend,:sparkline=>sparkline}
+      {:categorytype=>metric.provider.name,:categoryicon=>icons[metric.provider.provider_name.to_sym],:id=>metric.provider.id,:metricname=>metric.name,:average=>average,:rangestart=>rangestart,:rangeend=>rangeend,:sparkline=>sparkline,:num_observations=>metric.observations.size}
     }.group_by{|s| [s[:categorytype],s[:categoryicon],s[:id]]}
     render 'clients/show'
   end

@@ -24,7 +24,8 @@ UpHex::Pulse.controllers :providers do
   delete '/:id' do
     @provider=Provider.find(params[:id])
     error(403) unless current_ability.can? :delete, @provider
-    @provider.destroy
+    @provider.deleted=true
+    @provider.save!
     flash[:notice] = t 'provider.deleted'
     redirect "portfolios/#{@provider.portfolio.id}"
   end
