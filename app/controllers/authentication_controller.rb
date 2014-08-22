@@ -38,5 +38,8 @@ UpHex::Pulse.controllers :authn do
   get '/:authn_strategy/:provider_id/callback' do
     o = @provider.new(request)
     token = o.make_access_token_request
+
+    ct = CredentialTokenConversionService.credential_token_from_oauth2_access_token(token)
+    ct.save!
   end
 end
