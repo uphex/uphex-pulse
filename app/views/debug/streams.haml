@@ -2,7 +2,7 @@
   %select{:name=>'metric'}
     - @metrics.each do |metric|
       %option{:value=>metric.id,:selected=>params['metric'].to_s==metric.id.to_s}
-        #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}#{' (deleted)' if metric.provider.deleted? or metric.provider.portfolio.deleted?}
+        #{full_metric_name(metric)}#{' (deleted)' if deleted?(metric)}
   %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
 - unless params['metric'].nil?
   %input{:type=>'hidden',:id=>'observations',:value=>@observations.to_json}
@@ -12,7 +12,7 @@
   %a{:href=>'/debug',:class=>'button-standard'}
     Back
   %h2
-    #{@metric.provider.portfolio.organization.name}/#{@metric.provider.portfolio.name}/#{@metric.provider.name}/#{@metric.name}#{' (deleted)' if @metric.provider.deleted? or @metric.provider.portfolio.deleted?}
+    #{full_metric_name(@metric)}#{' (deleted)' if deleted?(@metric)}
   %h3
     Info
   %ul
@@ -67,7 +67,7 @@
       - @metrics.each do |metric|
         %tr
           %td
-            #{metric.provider.portfolio.organization.name}/#{metric.provider.portfolio.name}/#{metric.provider.name}/#{metric.name}#{' (deleted)' if metric.provider.deleted? or metric.provider.portfolio.deleted?}
+            #{full_metric_name(metric)}#{' (deleted)' if deleted?(metric)}
           %td
             #{metric.updated_at}
           %td

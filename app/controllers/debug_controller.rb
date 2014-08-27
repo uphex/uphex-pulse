@@ -3,7 +3,7 @@ UpHex::Pulse.controllers :debug do
   get '/' do
     error(403) unless is_admin?
 
-    @metrics = Metric.all.sort_by{|metric| metric.provider.portfolio.organization.name+'/'+metric.provider.portfolio.name+'/'+metric.provider.name+'/'+metric.name}
+    @metrics = Metric.all.sort_by{|metric| full_metric_name(metric)}
 
     unless params['metric'].nil?
       metric_helper=DebugHelper.new(params['metric'])
@@ -14,6 +14,7 @@ UpHex::Pulse.controllers :debug do
       @events=metric_helper.events
     end
 
+    puts eventName
 
     render 'debug/streams'
   end
