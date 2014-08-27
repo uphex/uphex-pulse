@@ -59,9 +59,9 @@ GIT
 
 GIT
   remote: git@github.com:uphex/uphex-prototype-cynosure.git
-  revision: 5273f276f4dc48b9c85e1d88d499d67f3b5f4093
+  revision: 630b48d001af639ed1803ffe681b73fb0087ab91
   specs:
-    uphex-prototype-cynosure (0.0.6)
+    uphex-prototype-cynosure (0.0.7)
       koala
       legato
       oauth2
@@ -116,7 +116,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     haml (4.0.5)
       tilt
-    http (0.6.1)
+    http (0.6.2)
       http_parser.rb (~> 0.6.0)
     http_parser.rb (0.6.0)
     http_router (0.11.1)
@@ -131,7 +131,7 @@ GEM
       addressable
       faraday
       multi_json
-    legato (0.3.1)
+    legato (0.3.3)
       multi_json
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -281,5 +281,5 @@ DEPENDENCIES
   uglifier
   uphex-estimation!
   uphex-flatty!
-  uphex-prototype-cynosure (= 0.0.6)!
+  uphex-prototype-cynosure (= 0.0.7)!
   warden

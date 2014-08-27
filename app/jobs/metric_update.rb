@@ -18,6 +18,12 @@ class MetricUpdate
             value=client.visitors(since,DateTime.now,:day)
           when 'bounces'
             value=client.bounces(since,DateTime.now,:day)
+          when 'impressions'
+            value=client.impressions(since,DateTime.now,:day)
+          when 'adClicks'
+            value=client.ad_clicks(since,DateTime.now,:day)
+          when 'organicSearches'
+            value=client.organic_searches(since,DateTime.now,:day)
         end
         value.value.select{|metric_day| metric_day[:timestamp]<DateTime.now.new_offset(0).beginning_of_day}.each{|metric_day|
           Observation.destroy_all({:metric=>metric,:index => metric_day[:timestamp]})
