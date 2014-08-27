@@ -14,8 +14,6 @@ UpHex::Pulse.controllers :debug do
       @events=metric_helper.events
     end
 
-    puts eventName
-
     render 'debug/streams'
   end
 end
