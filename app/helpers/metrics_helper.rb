@@ -1,7 +1,10 @@
 module MetricsHelper
 
   def full_metric_name(metric)
-    metric.provider.portfolio.organization.name+'/'+metric.provider.portfolio.name+'/'+metric.provider.name+'/'+metric.name
+    provider_name=metric.provider.name
+    portfolio_name=metric.provider.portfolio.name
+    organization_name=metric.provider.portfolio.organization.name
+    [organization_name,portfolio_name,provider_name,metric.name].join('/')
   end
 
   def deleted?(metric)
