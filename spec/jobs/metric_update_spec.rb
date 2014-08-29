@@ -301,4 +301,69 @@ describe 'MetricUpdate' do
 
   end
 
+  it 'should generate an event for a lagging stream' do
+    create_sample_user
+    create_sample_portfolio
+    create_sample_metric
+
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results).and_return(
+                                                                              test_profile_1.visits.select{
+                                                                                  |v| Date.parse(v.date).to_time<Time.now-2.days
+                                                                              }
+                                                                          )
+
+    #Fetch every 10 hours
+    hour = Time.utc(2014,2,10)
+    begin
+      Timecop.freeze(hour) do
+        MetricUpdate.perform(Metric.all.first.id)
+      end
+    end while (hour += 36000) < Time.utc(2014,2,15)
+
+    expect(Event.all.size).to eq 2
+  end
+
+  it 'should generate an event when a stream is halted then restored' do
+    create_sample_user
+    create_sample_portfolio
+
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[test_profile_1]})])
+
+    OAuth2::Error.any_instance.stub(:initialize=>{},:code=>'invalid_grant')
+
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){
+      test_profile_1.visits.select { |v| Date.parse(v.date).to_time<=Time.now }
+    }
+
+    #Initial fetch
+    Timecop.freeze(Time.utc(2014,2,10)) do
+      create_sample_metric
+
+      MetricUpdate.perform(Metric.all.first.id)
+    end
+
+    #Fetches each day and receives an error
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){raise OAuth2::Error.new({})}
+
+    (10...15).each{|day|
+      Timecop.freeze(Time.utc(2014,2,day)) do
+        MetricUpdate.perform(Metric.all.first.id)
+      end
+    }
+
+    #Fetch again without error
+    allow(Uphex::Prototype::Cynosure::Shiatsu::Google::Client::Visits).to receive(:results){
+      test_profile_1.visits.select{
+          |v| Date.parse(v.date).to_time<=Time.now
+      }
+    }
+
+    Timecop.freeze(Time.utc(2014,2,16)) do
+      MetricUpdate.perform(Metric.all.first.id)
+    end
+
+    expect(Event.all.size).to eq 2
+  end
+
 end
