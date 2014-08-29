@@ -45,5 +45,5 @@
                     - else
                       %span.icon-arrow-down-right3
                   .text
-                    #{event[:stream].name+" "+(event[:eventactual]>event[:eventpredictedend] ? ' up to '+((event[:eventactual].to_d/event[:eventpredictedend].to_d-1)*100).round.to_s+'%':'down to '+((event[:eventactual].to_d/event[:eventpredictedstart].to_d)*100).round.to_s+'%')+' then expected'}
+                    #{event[:stream].name.titleize.humanize+" "+(event[:eventactual]>event[:eventpredictedend] ? ' up to '+((event[:eventactual].to_d/event[:eventpredictedend].to_d-1)*100).round.to_s+'%':'down to '+((event[:eventactual].to_d/event[:eventpredictedstart].to_d)*100).round.to_s+'%')+' then expected'}
 
