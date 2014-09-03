@@ -39,7 +39,7 @@ class DebugHelper
       sparkline.map{|point|
         matching_band=bands.find{|band| band[:date]==point[:index]}
         matching_event=events.find{|event| event[:date]==point[:index]}
-        crossing=(!matching_band.nil? and (matching_band[:high]<point[:value] or matching_band[:low]>point[:value]))
+        crossing=(!matching_band.nil? and (matching_band[:high]<point[:value].round or matching_band[:low]>point[:value].round))
         {:metric=>metric,:date=>point[:index],:crossing=>crossing,:event=>!matching_event.nil?} unless !crossing and matching_event.nil?
       }.compact
     end
