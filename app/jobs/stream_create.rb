@@ -9,7 +9,7 @@ class StreamCreate
 
     metric_names = case provider['provider_name']
        when 'google'
-         ['visits', 'visitors', 'bounces']
+         ['visits', 'visitors', 'bounces','impressions','adClicks','organicSearches']
        when 'facebook'
          ['visits', 'likes']
        when 'twitter'

@@ -129,8 +129,8 @@ describe 'AuthController' do
     expect(Metric.all.size).to eq 0
     ResqueSpec.perform_all(:StreamCreate)
 
-    expect(Metric.all.size).to eq 3
-    MetricUpdate.should have_queue_size_of(3)
+    expect(Metric.all.size).to eq 6
+    MetricUpdate.should have_queue_size_of(6)
 
   end
 
