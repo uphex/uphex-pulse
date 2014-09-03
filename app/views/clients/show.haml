@@ -26,7 +26,7 @@
         - streams.each do |stream|
           .stream-line
             .metric-name
-              #{stream[:metricname].titleize.humanize}
+              #{format_stream_name(stream[:metric_name])}
             .average
               %strong
                 - if stream[:average].nil?
@@ -36,7 +36,7 @@
               %span 7d average
             .range
               %strong
-                #{stream[:rangestart]} - #{stream[:rangeend]}
+                #{stream[:range_start]} - #{stream[:range_end]}
               %span range
             .sparkline-container
               - if !stream[:sparkline].nil?
