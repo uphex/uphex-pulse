@@ -35,13 +35,21 @@ class DebugHelper
   end
 
   def anomalies
-    @anomalies ||= begin
-      sparkline.map{|point|
-        matching_band=bands.find{|band| band[:date]==point[:index]}
-        matching_event=events.find{|event| event[:date]==point[:index]}
-        crossing=(!matching_band.nil? and (matching_band[:high]<point[:value].round or matching_band[:low]>point[:value].round))
-        {:metric=>metric,:date=>point[:index],:crossing=>crossing,:event=>!matching_event.nil?} unless !crossing and matching_event.nil?
-      }.compact
-    end
+    @anomalies ||= make_anomalies
+  end
+
+  def make_anomalies
+    anomalies_list=[]
+    sparkline.each{|point|
+      point_value=point[:value].round
+      matching_band=bands.find{|band| band[:date]==point[:index]}
+      crossing=(!matching_band.nil? and (matching_band[:high]<point_value or matching_band[:low]>point_value))
+      matching_event=events.find{|event| event[:date]==point[:index]}
+      event=!matching_event.nil?
+      if crossing or event
+        anomalies_list << {:metric=>metric,:date=>point[:index],:crossing=>crossing,:event=>event}
+      end
+    }
+    anomalies_list
   end
 end
