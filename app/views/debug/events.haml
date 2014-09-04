@@ -1,0 +1,37 @@
+%a{:href=>'/debug',:class=>'button-standard'}
+  Back
+%style{:type => "text/css" }
+  :plain
+
+    .debug-events-table .date {
+      font-weight:bold;
+    }
+    .debug-events-table .anomaly{
+      color:red;
+    }
+%table{:class=>'debug-events-table'}
+  %thead
+    %tr
+      %th
+        Metric name
+      %th
+        Crossing?
+      %th
+        Event?
+  %tbody
+    - @anomalies.each do |date,anomalies|
+      %tr{:class=>'date'}
+        %td
+          #{date.strftime('%B %d, %Y')}
+      %tr
+        - anomalies.each do |anomaly|
+          %tr{:class=>('anomaly' if anomaly[:crossing]!=anomaly[:event])}
+            %td
+              #{full_metric_name(anomaly[:metric])}
+            %td
+              #{anomaly[:crossing]}
+            %td
+              #{anomaly[:event]}
+            %td
+              %a{:href=>"/debug?metric=#{anomaly[:metric].id}",:class=>'button-standard'}
+                Chart

@@ -1,3 +1,5 @@
+%a{:href=>'/debug/events',:class=>'button-standard',:onclick=>"return confirm('Debugging events report will take some time to generate. Are you sure?')"}
+  Debug events
 %form{:action=>"/debug",:method=>'GET'}
   %select{:name=>'metric'}
     - @metrics.each do |metric|
