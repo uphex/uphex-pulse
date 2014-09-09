@@ -3,13 +3,23 @@
 %style{:type => "text/css" }
   :plain
 
-    .debug-events-table .date {
+    #debug-events-table .date {
       font-weight:bold;
     }
-    .debug-events-table .anomaly{
+    #debug-events-table .anomaly{
       color:red;
     }
-%table{:class=>'debug-events-table'}
+%input{:type=>'hidden',:id=>'metrics',:value=>@metrics.to_json}
+%input{:type=>'hidden',:id=>'metric_names',:value=>@metric_names.to_json}
+%script{:src=>'/assets/javascripts/debug/events.js'}
+%div{:id=>'loading_counter'}
+  Loading streams:
+  %span{:id=>'counter_current'}
+    0
+  \/
+  %span
+    = @metrics.size
+%table{:id=>'debug-events-table'}
   %thead
     %tr
       %th
@@ -19,19 +29,3 @@
       %th
         Event?
   %tbody
-    - @anomalies.each do |date,anomalies|
-      %tr{:class=>'date'}
-        %td
-          #{date.strftime('%B %d, %Y')}
-      %tr
-        - anomalies.each do |anomaly|
-          %tr{:class=>('anomaly' if anomaly[:crossing]!=anomaly[:event])}
-            %td
-              #{full_metric_name(anomaly[:metric])}
-            %td
-              #{anomaly[:crossing]}
-            %td
-              #{anomaly[:event]}
-            %td
-              %a{:href=>"/debug?metric=#{anomaly[:metric].id}",:class=>'button-standard'}
-                Chart
