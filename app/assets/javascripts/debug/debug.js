@@ -126,24 +126,6 @@ vis.append('svg:path')
     .attr('stroke', 'blue')
     .attr('stroke-width', 2)
     .attr('fill', 'none')
-    .on('mouseover',function(){
-        xpos=xRange.invert(d3.mouse(this)[0]);
-        var closestDate=lineData.sort(function(a,b){return Math.abs(xpos.getTime()- a.x.getTime())-Math.abs(xpos.getTime()- b.x.getTime())})[0].x;
-        var text='Date:'+closestDate+"<br/>";
-        var closestLineData=lineData.filter(function(d){return d.x===closestDate});
-        if(closestLineData.length){
-            text+='<b>Sparkline</b><br/>Value:'+closestLineData[0].y+'<br/>'
-        }
-        var closestUpperBand=bands_upper.filter(function(d){return d.x.getTime()===closestDate.getTime()});
-        if(closestUpperBand.length){
-            text+='<b>Upper band</b><br/>Value:'+closestUpperBand[0].y+'<br/>'
-        }
-        var closestLowerBand=bands_lower.filter(function(d){return d.x.getTime()===closestDate.getTime()});
-        if(closestLowerBand.length){
-            text+='<b>Lower band</b><br/>Value:'+closestLowerBand[0].y+'<br/>'
-        }
-        displayPopup(d3.mouse(this),text);
-    })
     .on('mouseout',hidePopup);
 
 for(var i in observations_points){
@@ -157,6 +139,34 @@ for(var i in observations_points){
             })
             .on('mouseout',hidePopup);
     })(observations_points[i])
+}
+
+for(var i in lineData){
+    (function(sparkline){
+        vis.append('circle')
+            .attr('r', 3)
+            .attr("cx", xRange(sparkline.x))
+            .attr("cy", yRange(sparkline.y))
+            .attr('class','sparkline-point')
+            .on('mouseover',function(){
+                var closestDate=sparkline.x;
+                var text='Date:'+closestDate+"<br/>";
+                var closestLineData=lineData.filter(function(d){return d.x===closestDate});
+                if(closestLineData.length){
+                    text+='<b>Sparkline</b><br/>Value:'+closestLineData[0].y+'<br/>'
+                }
+                var closestUpperBand=bands_upper.filter(function(d){return d.x.getTime()===closestDate.getTime()});
+                if(closestUpperBand.length){
+                    text+='<b>Upper band</b><br/>Value:'+closestUpperBand[0].y+'<br/>'
+                }
+                var closestLowerBand=bands_lower.filter(function(d){return d.x.getTime()===closestDate.getTime()});
+                if(closestLowerBand.length){
+                    text+='<b>Lower band</b><br/>Value:'+closestLowerBand[0].y+'<br/>'
+                }
+                displayPopup(d3.mouse(this),text);
+            })
+            .on('mouseout',hidePopup);
+    })(lineData[i])
 }
 
 
