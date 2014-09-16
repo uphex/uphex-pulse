@@ -47,7 +47,7 @@ class DebugHelper
       matching_event=events.find{|event| event[:date]==point[:index]}
       event=!matching_event.nil?
       if crossing or event
-        anomalies_list << {:metric=>metric,:date=>point[:index],:crossing=>crossing,:event=>event}
+        anomalies_list << {:date=>point[:index],:crossing=>crossing,:event=>event}
       end
     }
     anomalies_list

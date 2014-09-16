@@ -20,10 +20,21 @@ UpHex::Pulse.controllers :debug do
   get '/events' do
     error(403) unless is_admin?
 
-    @anomalies=Metric.all.flat_map{|metric|
-      DebugHelper.new(metric.id).anomalies
-    }.compact.group_by{|anomaly| anomaly[:date]}.to_a.sort_by{|a| a}.reverse
+    @metrics = Metric.all
+
+    @metric_names = @metrics.map{|metric|
+      {:id=>metric.id,:full_name=>full_metric_name(metric)}
+    }
 
     render 'debug/events'
+  end
+
+  get '/events/:id' do
+    error(403) unless is_admin?
+
+    require 'json'
+
+    content_type :json
+    DebugHelper.new(params[:id]).anomalies.to_json
   end
 end
