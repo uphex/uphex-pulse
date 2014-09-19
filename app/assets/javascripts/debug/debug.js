@@ -258,7 +258,7 @@
 
         var observations_table=$('.data-table .observations-table table tbody');
         $.each(observations_points,function(idx,observation_pont){
-            observations_table.append('<tr data-time="'+observation_pont.x.getTime()+'"><td>'+observation_pont.x+'</td><td>'+observation_pont.y+'</td></tr>');
+            observations_table.append('<tr data-time="'+observation_pont.x.getTime()+'"><td>'+$('.data-table .observations-table .table tbody tr').length+'</td><td>'+observation_pont.x+'</td><td>'+observation_pont.y+'</td></tr>');
         });
 
         function selectFromObservationsTable(time){
@@ -364,7 +364,7 @@
                 return event.x.getTime()==sparkline_point.x.getTime();
             }).length!=0;
 
-            sparkline_table.append('<tr data-time="' + sparkline_point.x.getTime() + '"><td>' + sparkline_point.x + '</td><td>' + sparkline_point.y + '</td><td>' + (typeof lower!='undefined'?lower:'-') + '</td><td>' + (typeof upper!='undefined'?upper:'-') + '</td><td>'+(anomaly?'Yes':'')+'</td><td>'+(event?'Yes':'')+'</td></tr>');
+            sparkline_table.append('<tr data-time="' + sparkline_point.x.getTime() + '"><td>'+$('.data-table .sparkline-table .table tbody tr').length+'</td><td>' + sparkline_point.x + '</td><td>' + sparkline_point.y + '</td><td>' + (typeof lower!='undefined'?lower:'-') + '</td><td>' + (typeof upper!='undefined'?upper:'-') + '</td><td>'+(anomaly?'Yes':'')+'</td><td>'+(event?'Yes':'')+'</td></tr>');
         });
 
         function selectFromSparklineTable(time) {
