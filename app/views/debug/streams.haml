@@ -36,7 +36,6 @@
     %li
       Red dot: Event
   %svg{:id=>'debug-chart',:style=>'width:100%;height:550px'}
-  %script{:src=>'/assets/javascripts/debug/debug.js'}
   %style{:type => "text/css" }
     :plain
 
@@ -47,9 +46,94 @@
         padding:5px;
       }
 
+      #debug-chart circle.observation-selected{
+        fill: transparent;
+        stroke: grey;
+        stroke-width: 2px;
+      }
+
       .sparkline-point{
         fill:blue;
       }
+
+      #debug-chart circle{
+        cursor:pointer;
+      }
+
+      #debug-chart circle.sparkline-selected{
+        fill: white;
+        stroke: lightblue;
+        stroke-width: 2;
+      }
+
+      .data-table{
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .data-table .table-name{
+        margin:5px;
+        font-weight:bold;
+      }
+
+      .data-table .observations-table .table, .data-table .sparkline-table .table{
+        max-height:500px;
+        overflow-y:scroll;
+      }
+
+      .data-table tbody tr{
+        border-top: 1px dashed grey;
+        border-bottom: 1px dashed grey;
+        cursor:pointer;
+      }
+
+      .data-table tbody tr td{
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      .data-table .observation-selected{
+        background-color:lightGrey;
+      }
+
+      .data-table .sparkline-selected{
+        background-color:lightBlue;
+      }
+  .data-table
+    .observations-table
+      .table-name
+        Observations
+      .table
+        %table
+          %thead
+            %tr
+              %th
+                Date
+              %th
+                Value
+          %tbody
+    .sparkline-table
+      .table-name
+        Sparkline
+      .table
+        %table
+          %thead
+            %tr
+              %th
+                Date
+              %th
+                Value
+              %th
+                Lower band
+              %th
+                Upper band
+              %th
+                Anomaly?
+              %th
+                Event?
+          %tbody
+
+  %script{:src=>'/assets/javascripts/debug/debug.js'}
 
 - if params['metric'].nil?
   %h3
