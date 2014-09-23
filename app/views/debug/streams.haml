@@ -76,11 +76,6 @@
         font-weight:bold;
       }
 
-      .data-table .observations-table .table, .data-table .sparkline-table .table{
-        max-height:500px;
-        overflow-y:scroll;
-      }
-
       .data-table tbody tr{
         border-top: 1px dashed grey;
         border-bottom: 1px dashed grey;
@@ -137,6 +132,7 @@
                 Event?
           %tbody
 
+  %script{:src=>'/assets/javascripts/debug/vendor/jquery.scrollTableBody-1.0.0.js'}
   %script{:src=>'/assets/javascripts/debug/debug.js'}
 
 - if params['metric'].nil?
