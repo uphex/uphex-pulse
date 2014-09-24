@@ -166,7 +166,7 @@
     var selection_mode=null;
 
     function scrollToSelectedElementOnObservationsTable(){
-        var container=$('.data-table .observations-table .table');
+        var container=$('.data-table .observations-table .table .jqstb-scroll');
         var firstSelected=container.find('.observation-selected,.sparkline-selected')[0];
         if(!(container.scrollTop() <= firstSelected.offsetTop && container.scrollTop()+container.height()>=firstSelected.offsetTop)) {
             container.scrollTop(firstSelected.offsetTop);
@@ -174,7 +174,7 @@
     }
 
     function scrollToSelectedElementOnSparklineTable(){
-        var container=$('.data-table .sparkline-table .table');
+        var container=$('.data-table .sparkline-table .table .jqstb-scroll');
         var firstSelected=container.find('.observation-selected,.sparkline-selected')[0];
         if(!(container.scrollTop() <= firstSelected.offsetTop && container.scrollTop()+container.height()>=firstSelected.offsetTop)) {
             container.scrollTop(firstSelected.offsetTop);
@@ -420,4 +420,9 @@
             mouseOutOnSparkline($(this).attr('data-time'));
         });
     })();
+
+    //Fix the table headers
+    setTimeout(function(){
+        $('.data-table .observations-table .table table, .data-table .sparkline-table .table table').scrollTableBody();
+    },0);
 })();

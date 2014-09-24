@@ -4,7 +4,7 @@ module AuthorizationHelper
   end
 
   def is_admin?(user=nil)
-    (user || current_user).roles.any?{|role| role.name==='admin'}
+    !(user || current_user).nil? and (user || current_user).roles.any?{|role| role.name==='admin'}
   end
 end
 
