@@ -1,0 +1,6 @@
+- content_for :title, "Unauthorized"
+%h3
+  - if current_user.nil?
+    You must be logged in to view this page
+  - else
+    You do not have the required privileges to view this page

@@ -62,5 +62,9 @@ module UpHex
     #     render 'errors/505'
     #   end
     #
+
+    error 403 do
+      render 'errors/403'
+    end
   end
 end
