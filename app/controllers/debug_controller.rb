@@ -6,7 +6,7 @@ UpHex::Pulse.controllers :debug do
     @metrics = Metric.all.sort_by{|metric| full_metric_name(metric)}
 
     unless params['metric'].nil?
-      metric_helper=DebugHelper.new(params['metric'])
+      metric_helper=DebugHelper.new(params['metric'],params['use_proposed']=='true')
       @metric=metric_helper.metric
       @observations=metric_helper.observations
       @sparkline=metric_helper.sparkline
@@ -35,6 +35,6 @@ UpHex::Pulse.controllers :debug do
     require 'json'
 
     content_type :json
-    DebugHelper.new(params[:id]).anomalies.to_json
+    DebugHelper.new(params[:id],false).anomalies.to_json
   end
 end
