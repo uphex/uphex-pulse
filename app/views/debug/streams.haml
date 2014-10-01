@@ -8,7 +8,7 @@
   %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
 - unless params['metric'].nil?
   %form{:action=>'/debug',:method=>'GET'}
-    Use proposed sparkline algorithm: 
+    Use proposed sparkline algorithm:
     %input{:type=>'hidden',:name=>'metric',:value=>params['metric']}
     %select{:name=>'use_proposed'}
       %option{:value=>'false'}
