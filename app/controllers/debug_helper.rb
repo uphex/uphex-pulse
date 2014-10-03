@@ -12,7 +12,7 @@ class DebugHelper
   end
 
   def sparkline
-    @sparkline ||= (@proposed_sparkline ? SparklineNormalizerProposed.new.normalize(observations): SparklineNormalizer.new.normalize(observations))
+    @sparkline ||= (@proposed_sparkline ? SparklineNormalizerProposed.new(observations).normalized: SparklineNormalizer.new.normalize(observations))
   end
 
   def bands
