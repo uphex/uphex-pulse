@@ -7,6 +7,15 @@
         #{full_metric_name(metric)}#{' (deleted)' if deleted?(metric)}
   %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
 - unless params['metric'].nil?
+  %form{:action=>'/debug',:method=>'GET'}
+    Use proposed sparkline algorithm:
+    %input{:type=>'hidden',:name=>'metric',:value=>params['metric']}
+    %select{:name=>'use_proposed'}
+      %option{:value=>'false'}
+        No
+      %option{:value=>'true',:selected=>params['use_proposed']=='true'}
+        Yes
+    %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
   %input{:type=>'hidden',:id=>'observations',:value=>@observations.to_json}
   %input{:type=>'hidden',:id=>'sparkline',:value=>@sparkline.to_json}
   %input{:type=>'hidden',:id=>'bands',:value=>@bands.to_json}
