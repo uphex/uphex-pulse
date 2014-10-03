@@ -34,7 +34,7 @@ class SparklineNormalizerProposed
   end
 
   def range_outside?(range, from, to)
-    (range[:from] < from && range[:to] < from) or (range[:from] > to && range[:to] > to)
+    (range[:from] < from && range[:to] < from) || (range[:from] > to && range[:to] > to)
   end
 
   def trim_range(range, from, to)
@@ -78,7 +78,7 @@ class SparklineNormalizerProposed
       (next_value - last_value) * relative_position + last_value
     end
 
-    observations_inside = @sparkline.select { |observation| observation[:index] >= date and observation[:index] < (date+1) }
+    observations_inside = @sparkline.select { |observation| observation[:index] >= date && observation[:index] < (date+1) }
     if observations_inside.empty?
       value_without_observations(date, last_observation_before(date), next_observation_after(date+1))
     else
