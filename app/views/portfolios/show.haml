@@ -33,6 +33,8 @@
       Add Facebook
     %a{:href=>"/auth/oauth-v1/twitter?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
       Add Twitter
+    %a{:href=>"/auth/oauth-v2/mailchimp?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
+      Add Mailchimp
 
 - unless @portfolio.providers.select{|p| !p.deleted}.blank?
   %h3
