@@ -185,21 +185,28 @@
         time=parseInt(time);
         var beginning_of_day=new Date(new Date(time).setUTCHours(0,0,0,0));
         var end_of_day=new Date(new Date(time).setUTCHours(24,0,0,0));
-        var first=$.grep(observations_points,function(observation){
-            return observation.x.getTime()<=beginning_of_day;
-        }).sort(function(obs_a,obs_b){
-            return obs_a.x-obs_b.x;
-        }).reverse()[0];
-        var last=$.grep(observations_points,function(observation){
-            return observation.x.getTime()>=end_of_day;
-        }).sort(function(obs_a,obs_b){
-            return obs_a.x-obs_b.x;
-        })[0];
-        return $.map($.grep(observations_points,function(observation){
-            return observation.x.getTime()>=first.x.getTime() && observation.x.getTime()<=last.x.getTime();
-        }),function(observation){
-            return observation.x.getTime();
+        var inDayObservations=$.grep(observations_points,function(observation){
+            return observation.x.getTime()>=beginning_of_day && observation.x.getTime()<end_of_day;
         });
+        if(inDayObservations.length){
+            return $.map(inDayObservations,function(observation){
+                return observation.x.getTime();
+            })
+        }else {
+            var lastBefore = $.grep(observations_points, function (observation) {
+                return observation.x.getTime() <= beginning_of_day;
+            }).sort(function (obs_a, obs_b) {
+                return obs_a.x - obs_b.x;
+            }).reverse()[0];
+            var firstAfter = $.grep(observations_points, function (observation) {
+                return observation.x.getTime() >= end_of_day;
+            }).sort(function (obs_a, obs_b) {
+                return obs_a.x - obs_b.x;
+            })[0];
+            return $.map([lastBefore,firstAfter],function(observation){
+                return observation.x.getTime();
+            });
+        }
     }
 
     function getAffectingSparklineForObservation(time){
