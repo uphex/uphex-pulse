@@ -17,6 +17,8 @@ class DebugHelper
 
   def bands
     @bands ||= begin
+      return [] if sparkline.empty?
+
       full_data=sparkline.map{|sline|
         {:date=>sline[:index].to_date,:value=>sline[:value].round}
       }.sort_by{|val| val[:date]}

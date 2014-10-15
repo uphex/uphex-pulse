@@ -11,7 +11,7 @@ class StreamCreate
        when 'google'
          ['visits', 'visitors', 'bounces','impressions','adClicks','organicSearches']
        when 'facebook'
-         ['visits', 'likes']
+         %w(visits likes pageImpressionsPaid pagePostsImpressionsPaid postImpressionsPaid postImpressionsFanPaid postVideoCompleteViewsPaid postVideoViewsPaid)
        when 'twitter'
          ['followers']
      end

@@ -59,9 +59,9 @@ GIT
 
 GIT
   remote: git@github.com:uphex/uphex-prototype-cynosure.git
-  revision: 630b48d001af639ed1803ffe681b73fb0087ab91
+  revision: 465474348541753a2913727f4e943b474943292a
   specs:
-    uphex-prototype-cynosure (0.0.7)
+    uphex-prototype-cynosure (0.0.8)
       koala
       legato
       oauth2
@@ -127,7 +127,7 @@ GEM
     jsmin (1.0.1)
     json (1.8.1)
     jwt (1.0.0)
-    koala (1.10.0)
+    koala (1.10.1)
       addressable
       faraday
       multi_json
@@ -281,5 +281,5 @@ DEPENDENCIES
   uglifier
   uphex-estimation!
   uphex-flatty!
-  uphex-prototype-cynosure (= 0.0.7)!
+  uphex-prototype-cynosure (= 0.0.8)!
   warden

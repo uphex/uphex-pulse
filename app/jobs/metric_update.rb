@@ -37,11 +37,23 @@ class MetricUpdate
             value=client.page_visits(since)
           when 'likes'
             value=client.page_likes(since)
+          when 'pageImpressionsPaid'
+            value=client.page_impressions_paid(since)
+          when 'pagePostsImpressionsPaid'
+            value=client.page_posts_impressions_paid(since)
+          when 'postImpressionsPaid'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.post_impressions_paid.value[:payload])
+          when 'postImpressionsFanPaid'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.post_impressions_fan_paid.value[:payload])
+          when 'postVideoCompleteViewsPaid'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.post_video_complete_views_paid.value[:payload])
+          when 'postVideoViewsPaid'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.post_video_views_paid.value[:payload])
         end
         value.value.select{|metric_day| metric_day[:timestamp]<DateTime.now.new_offset(0).beginning_of_day}.each{|metric_day|
           Observation.destroy_all({:metric=>metric,:index => metric_day[:timestamp]})
           Observation.create(:metric=>metric,:index=>metric_day[:timestamp],:value=>metric_day[:payload])
-        }
+        } unless value.nil?
 
       when 'twitter'
         configpart=config['oauth-v1']['providers']['twitter']
