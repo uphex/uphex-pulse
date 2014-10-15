@@ -20,7 +20,7 @@ UpHex::Pulse.controllers :clients do
 
     @clientstreams=metrics.map{|metric|
       unless metric.observations.empty?
-        sparkline=SparklineNormalizer.new.normalize(metric.observations.where('index>=:time',{:time=>DateTime.now - 30.days}).sort_by(&:index)).map{|collection|
+        sparkline=SparklineNormalizer.new(metric.observations.where('index>=:time',{:time=>DateTime.now - 30.days}).sort_by(&:index)).normalized.map{|collection|
                 collection[:value].round
         }
         if sparkline.size<2

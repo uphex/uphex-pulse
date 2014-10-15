@@ -1,7 +1,6 @@
 class DebugHelper
-  def initialize(metric_id,proposed_sparkline)
+  def initialize(metric_id)
     @metric_id=metric_id
-    @proposed_sparkline=proposed_sparkline
   end
 
   def metric
@@ -12,7 +11,7 @@ class DebugHelper
   end
 
   def sparkline
-    @sparkline ||= (@proposed_sparkline ? SparklineNormalizerProposed.new(observations).normalized: SparklineNormalizer.new.normalize(observations))
+    @sparkline ||= SparklineNormalizer.new(observations).normalized
   end
 
   def bands
