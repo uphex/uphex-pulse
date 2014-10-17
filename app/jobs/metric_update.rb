@@ -72,7 +72,7 @@ class MetricUpdate
     require 'uphex-estimation'
 
 
-    sparkline=SparklineNormalizer.new.normalize(metric.observations)
+    sparkline=SparklineNormalizer.new(metric.observations).normalized
 
     full_data=sparkline.map{|sline|
       {:date=>sline[:index].to_date,:value=>sline[:value].round}

@@ -254,7 +254,7 @@ describe 'MetricUpdate' do
       end
     end while (hour += 36000) < Time.utc(2014,2,15)
 
-    expect(Event.all.size).to eq 2
+    expect(Event.all.size).to eq 1
   end
 
 
@@ -321,7 +321,7 @@ describe 'MetricUpdate' do
       end
     end while (hour += 36000) < Time.utc(2014,2,15)
 
-    expect(Event.all.size).to eq 2
+    expect(Event.all.size).to eq 1
   end
 
   it 'should generate an event when a stream is halted then restored' do
@@ -363,7 +363,7 @@ describe 'MetricUpdate' do
       MetricUpdate.perform(Metric.all.first.id)
     end
 
-    expect(Event.all.size).to eq 2
+    expect(Event.all.size).to eq 1
   end
 
 end
