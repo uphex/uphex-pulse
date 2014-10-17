@@ -22,6 +22,8 @@ class DebugHelper
         {:date=>sline[:index].to_date,:value=>sline[:value].round}
       }.sort_by{|val| val[:date]}
 
+      return [] if full_data.length<2
+
       ts = UpHex::Prediction::TimeSeries.new(full_data, :days => 1)
       range = 0..1
       results = UpHex::Prediction::ExponentialMovingAverageStrategy.new(ts).comparison_forecast(1, :range => range, :confidence => 0.99)

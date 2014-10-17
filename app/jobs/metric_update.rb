@@ -109,10 +109,10 @@ class MetricUpdate
 
   def self.refresh_token(metric)
     config = JSON.parse(File.read(File.expand_path("../../../config/auth_config.json", __FILE__)))
-    configpart=config['oauth-v2']['providers']['google']
+    configpart=config['oauth-v2']['providers'][metric.provider['provider_name']]
     client = OAuth2::Client.new(configpart['identifier'],configpart['secret'], {
-        :authorize_url => 'https://accounts.google.com/o/oauth2/auth',
-        :token_url => 'https://accounts.google.com/o/oauth2/token'
+        :authorize_url => 'https://'+configpart['token_host']+configpart['authorization_endpoint'],
+        :token_url => 'https://'+configpart['token_host']+configpart['token_endpoint'],
     })
 
     access_token=OAuth2::AccessToken.from_hash client, {:access_token => metric.provider[:access_token],:refresh_token=>metric.provider[:refresh_token]}
