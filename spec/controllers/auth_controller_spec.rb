@@ -39,6 +39,16 @@ describe 'AuthController' do
     expect(last_response.headers['Location']).to start_with 'https://www.facebook.com'
   end
 
+  it 'should redirect to mailchimp' do
+    expect(:get => '/auth/oauth-v2/mailchimp').to be_routable
+
+    create_sample_user
+
+    get '/auth/oauth-v2/mailchimp'
+    expect(last_response.status).to eq 302
+    expect(last_response.headers['Location']).to start_with 'https://login.mailchimp.com'
+  end
+
   it 'should create a provider if only 1 profile is returned upon callback' do
     expect(:get => '/auth/oauth-v2/google/callback').to be_routable
 
@@ -183,6 +193,18 @@ describe 'AuthController' do
     expect(Provider.all.size).to eq 1
     follow_redirect!
     expect(last_response.body).to include 'exists'
+
+    #Should work with number ids too
+    Legato::User.any_instance.stub(:accounts=>[OpenStruct.new({:id=>'account_id',:name=>'account',:profiles=>[OpenStruct.new({:name=>'test_profile2',:id=>2})]})])
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+    get '/auth/oauth-v2/google/callback?state='+CGI::escape({:portfolioid=>Portfolio.all.first.id}.to_json)+'&code=sample_code'
+
+    expect(Provider.all.size).to eq 2
+    follow_redirect!
+    expect(last_response.body).to include 'exists'
+
   end
 
   it 'should not allow a provider to be added to a portfolio more than once even if multiple is selected' do
@@ -195,5 +217,10 @@ describe 'AuthController' do
 
     expect(Provider.all.size).to eq 3
 
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>1,:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>2,:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
+
+    post '/auth/add_providers',{:portfolio_id=>Portfolio.first.id,:provider_selected=>['0','1'],:provider_0=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>1,:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile'}),:provider_1=>YAML::dump({:portfolios_id=>Portfolio.all.first.id,:profile_id=>3,:provider_name=>'google',:refresh_token=>'refresh_token',:access_token=>'access_token',:userid=>User.all.first.id,:name=>'account/test_profile2'})}
+
+    expect(Provider.all.size).to eq 6
   end
 end

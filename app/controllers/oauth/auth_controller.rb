@@ -52,7 +52,7 @@ UpHex::Pulse.controllers :auth do
       providers=[]
       params[:provider_selected].each{|provider_index|
         provider=Provider.new(YAML::load(params['provider_'+provider_index]))
-        restoring_provider=portfolio.providers.find{|ex_provider| ex_provider.provider_name==provider.provider_name && ex_provider.profile_id==provider.profile_id}
+        restoring_provider=portfolio.providers.find{|ex_provider| ex_provider.provider_name==provider.provider_name && ex_provider.profile_id==provider.profile_id.to_s}
         if restoring_provider.nil?
           provider.save!
           Resque.enqueue(StreamCreate,provider[:id])
