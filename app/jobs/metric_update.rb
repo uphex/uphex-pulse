@@ -62,6 +62,23 @@ class MetricUpdate
           when 'followers'
             Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.followers_count)
         end
+      when 'mailchimp'
+        configpart=config['oauth-v2']['providers']['mailchimp']
+        client=Uphex::Prototype::Cynosure::Shiatsu.client(:mailchimp,configpart['identifier'],configpart['secret']).authenticate(metric.provider[:access_token])
+        case metric['name']
+          when 'hard_bounces'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['hard_bounces'])
+          when 'soft_bounces'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['soft_bounces'])
+          when 'unsubscribes'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['unsubscribes'])
+          when 'forwards'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['forwards'])
+          when 'unique_opens'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['unique_opens'])
+          when 'unique_clicks'
+            Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['unique_clicks'])
+        end
     end
 
     metric['updated_at']=DateTime.now
