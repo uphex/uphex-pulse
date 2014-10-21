@@ -80,7 +80,7 @@ class AuthHelper
     }.flatten
 
     if providers.size==1
-      restoring_provider=portfolio.providers.find{|provider| provider.provider_name==providers.first.provider_name and provider.profile_id==providers.first.profile_id}
+      restoring_provider=portfolio.providers.find{|provider| provider.provider_name==providers.first.provider_name && provider.profile_id==providers.first.profile_id}
       if restoring_provider.nil?
         providers.first.save!
         Resque.enqueue(StreamCreate,providers.first[:id])

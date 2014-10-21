@@ -10,6 +10,6 @@ class MailchimpAuthenticationStrategy < OAuthV2AuthenticationStrategy
   def profiles(token,config)
     client= Uphex::Prototype::Cynosure::Shiatsu.client(:mailchimp,config['oauth-v2']['providers']['mailchimp']['identifier'],config['oauth-v2']['providers']['mailchimp']['secret'])
     client.authenticate(token['access_token'])
-    [{:name=>client.profile['account_name'],:id=>client.profile['id']}]
+    [{:name=>client.profile['account_name'],:id=>client.profile['id'].to_s}]
   end
 end
