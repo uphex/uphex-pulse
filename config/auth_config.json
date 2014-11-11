@@ -50,6 +50,17 @@
                 },
                 "token_endpoint":"/oauth2/token",
                 "token_host":"login.mailchimp.com"
+            },
+            "stripe":{
+                "instantiateClass":"StripeAuthenticationStrategy",
+                "identifier":"ca_4v6vmjuzX22xsa5HBhu0PlqlVDstqlug",
+                "secret":"sk_test_Lt92KDmwECAwI3xexmkoye7l",
+                "host":"connect.stripe.com",
+                "authorization_endpoint":"/oauth/authorize",
+                "authorization_params":{
+                },
+                "token_endpoint":"/oauth/token",
+                "token_host":"connect.stripe.com"
             }
         }
     }

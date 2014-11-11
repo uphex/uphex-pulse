@@ -79,6 +79,22 @@ class MetricUpdate
           when 'unique_clicks'
             Observation.create(:metric=>metric,:index=>DateTime.now,:value=>client.aggregated_campaign_stats['unique_clicks'])
         end
+      when 'stripe'
+        client=Uphex::Prototype::Cynosure::Shiatsu.client(:stripe,nil,nil).authenticate(metric.provider[:access_token])
+        case metric['name']
+          when 'customers'
+            value=client.customers(since.to_datetime)
+          when 'charges'
+            value=client.charges(since.to_datetime)
+          when 'invoices'
+            value=client.invoices(since.to_datetime)
+          when 'refunds'
+            value=client.refunds(since.to_datetime)
+        end
+        value.select{|metric_day| metric_day[:time]<DateTime.now.new_offset(0).beginning_of_day}.each{|metric_day|
+          Observation.destroy_all({:metric=>metric,:index => metric_day[:time]})
+          Observation.create(:metric=>metric,:index=>metric_day[:time],:value=>metric_day[:value])
+        }
     end
 
     metric['updated_at']=DateTime.now

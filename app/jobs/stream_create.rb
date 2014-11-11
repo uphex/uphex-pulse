@@ -16,6 +16,8 @@ class StreamCreate
          ['followers']
        when 'mailchimp'
          %w(hard_bounces soft_bounces unsubscribes forwards unique_opens unique_clicks)
+       when 'stripe'
+         %w(customers charges invoices refunds)
      end
 
     metric_names.each do |name|

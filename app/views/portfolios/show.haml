@@ -36,6 +36,8 @@
     - if ENV['MAILCHIMP_ENABLED']
       %a{:href=>"/auth/oauth-v2/mailchimp?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
         Add Mailchimp
+    %a{:href=>"/auth/oauth-v2/stripe?portfolioid=#{@portfolio.id}",:class=>'button-standard'}
+      Add Stripe
 
 - unless @portfolio.providers.select{|p| !p.deleted}.blank?
   %h3
