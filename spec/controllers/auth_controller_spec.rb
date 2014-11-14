@@ -49,6 +49,16 @@ describe 'AuthController' do
     expect(last_response.headers['Location']).to start_with 'https://login.mailchimp.com'
   end
 
+  it 'should redirect to stripe' do
+    expect(:get => '/auth/oauth-v2/stripe').to be_routable
+
+    create_sample_user
+
+    get '/auth/oauth-v2/stripe'
+    expect(last_response.status).to eq 302
+    expect(last_response.headers['Location']).to start_with 'https://connect.stripe.com'
+  end
+
   it 'should create a provider if only 1 profile is returned upon callback' do
     expect(:get => '/auth/oauth-v2/google/callback').to be_routable
 
