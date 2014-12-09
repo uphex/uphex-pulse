@@ -3,8 +3,8 @@
         "providers":{
             "twitter":{
                 "instantiateClass":"TwitterAuthenticationStrategy",
-                "consumer_key":"xWSlyE7nsL5fs1QH9NuNg",
-                "consumer_secret":"ksUpwzpCNiEZxfuhQ2UteoThbdm64k5b6V5X2dlU8g",
+                "consumer_key":"Spovbc1RvIHgRmbpVB99w",
+                "consumer_secret":"WnI9Y3TAQmQjKJjaiopcR9tGfzSd6n9rNcBFdbQN0k",
                 "options":{
                     "site":"https://api.twitter.com/"
                 }
@@ -16,8 +16,8 @@
         "providers":{
             "google":{
                 "instantiateClass":"GoogleAuthenticationStrategy",
-                "identifier":"1011373896516-52e40da4vb1plati9sv088tdg80l5efk.apps.googleusercontent.com",
-                "secret":"YlBuX-K9Bn5P9eFnM6O4jC6c",
+                "identifier":"836191453680-410bapsn1tn915kidm5tqv91g27ivffl.apps.googleusercontent.com",
+                "secret":"5tFdz4HJLZ9DpWjPVp5UT3WD",
                 "host":"accounts.google.com",
                 "authorization_endpoint":"/o/oauth2/auth",
                 "authorization_params":{

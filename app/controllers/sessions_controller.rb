@@ -26,4 +26,18 @@ UpHex::Pulse.controllers :sessions do
     @user = User.new(params['user'])
     redirect 'sessions/new'
   end
+
+  post '/impersonate' do
+    error(403) unless is_admin?
+    auth = AuthenticationService.new(request,:impersonate)
+    auth.authenticate(:impersonate)
+    redirect '/'
+  end
+
+  delete '/impersonate' do
+    auth = AuthenticationService.new(request,:impersonate)
+    auth.logout
+    flash[:notice] = I18n.t 'authn.impersonate_ended'
+    redirect '/'
+  end
 end

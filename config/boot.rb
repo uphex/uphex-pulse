@@ -34,6 +34,7 @@ Padrino::Logger::Config[:development][:log_static] = true
 # Add your before (RE)load hooks here
 #
 Padrino.before_load do
+  Padrino.dependency_paths << Padrino.root('app/jobs/*.rb')
   Dir.glob(File.join Padrino.root, 'config', 'initializers', '**', '*').each do |file|
     require file
   end

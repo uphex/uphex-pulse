@@ -1,0 +1,171 @@
+%a{:href=>'/debug/events',:class=>'button-standard',:onclick=>"return confirm('Debugging events report will take some time to generate. Are you sure?')"}
+  Debug events
+%form{:action=>"/debug",:method=>'GET'}
+  %select{:name=>'metric'}
+    - @metrics.each do |metric|
+      %option{:value=>metric.id,:selected=>params['metric'].to_s==metric.id.to_s}
+        #{full_metric_name(metric)}#{' (deleted)' if deleted?(metric)}
+  %input{:type=>'submit',:value=>'OK',:class=>'button-standard'}
+- unless params['metric'].nil?
+  %input{:type=>'hidden',:id=>'observations',:value=>@observations.to_json}
+  %input{:type=>'hidden',:id=>'sparkline',:value=>@sparkline.to_json}
+  %input{:type=>'hidden',:id=>'bands',:value=>@bands.to_json}
+  %input{:type=>'hidden',:id=>'events',:value=>@events.to_json}
+  %a{:href=>'/debug',:class=>'button-standard'}
+    Back
+  %h2
+    #{full_metric_name(@metric)}#{' (deleted)' if deleted?(@metric)}
+  %h3
+    Info
+  %ul
+    %li
+      Added at: #{@metric.created_at}
+    %li
+      Last updated at: #{@metric.updated_at}
+    %li
+      Last analyzed at: #{@metric.analyzed_at}
+  %h3
+    Legend
+  %ul
+    %li
+      Black dot: Observation
+    %li
+      Blue line: Sparkline
+    %li
+      Orange lines: Lower and upper bands
+    %li
+      Red dot: Event
+  %svg{:id=>'debug-chart',:style=>'width:100%;height:550px'}
+  %style{:type => "text/css" }
+    :plain
+
+      #debug-popup {
+        position:absolute;
+        background-color:white;
+        border:1px solid black;
+        padding:5px;
+      }
+
+      #debug-chart circle.observation-selected{
+        fill: transparent;
+        stroke: grey;
+        stroke-width: 2px;
+      }
+
+      .sparkline-point{
+        fill:blue;
+      }
+
+      #debug-chart circle{
+        cursor:pointer;
+      }
+
+      #debug-chart circle.sparkline-selected{
+        fill: white;
+        stroke: lightblue;
+        stroke-width: 2;
+      }
+
+      .data-table{
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .data-table .table-name{
+        margin:5px;
+        font-weight:bold;
+      }
+
+      .data-table tbody tr{
+        border-top: 1px dashed grey;
+        border-bottom: 1px dashed grey;
+        cursor:pointer;
+      }
+
+      .data-table tbody tr td{
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      .data-table .observation-selected{
+        background-color:lightGrey;
+      }
+
+      .data-table .sparkline-selected{
+        background-color:lightBlue;
+      }
+  .data-table
+    .observations-table
+      .table-name
+        Observations
+      .table
+        %table
+          %thead
+            %tr
+              %th
+                \#
+              %th
+                Date
+              %th
+                Value
+          %tbody
+    .sparkline-table
+      .table-name
+        Sparkline
+      .table
+        %table
+          %thead
+            %tr
+              %th
+                \#
+              %th
+                Date
+              %th
+                Value
+              %th
+                Lower band
+              %th
+                Upper band
+              %th
+                Anomaly?
+              %th
+                Event?
+          %tbody
+
+  %script{:src=>'/assets/javascripts/debug/vendor/jquery.scrollTableBody-1.0.0.js'}
+  %script{:src=>'/assets/javascripts/debug/debug.js'}
+
+- if params['metric'].nil?
+  %h3
+    Metric data
+
+  %table
+    %thead
+      %tr
+        %th
+          Name
+        %th
+          Last updated
+        %th
+          Last error
+        %th
+          Last error type
+        %th
+          Last observation date
+        %th
+    %tbody
+      - @metrics.each do |metric|
+        %tr
+          %td
+            #{full_metric_name(metric)}#{' (deleted)' if deleted?(metric)}
+          %td
+            #{metric.updated_at}
+          %td
+            #{metric.last_error_time}
+          %td
+            #{metric.last_error_type}
+          %td
+            #{metric.observations.last.index unless metric.observations.empty?}
+          %td
+            %a{:href=>"/debug?metric=#{metric.id}",:class=>'button-standard'}
+              Chart

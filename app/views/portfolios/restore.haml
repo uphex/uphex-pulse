@@ -1,0 +1,15 @@
+- content_for :title do
+  %a{:href=>"/users/me/dashboard"}
+    %span.icon-arrow-left2
+  Restore portfolio
+
+%h3
+  Would you like to restore the deleted portfolio #{@existing_portfolio.name}?
+%form{:action=>'/portfolios/restore/'+@existing_portfolio.id.to_s,:method=>'POST'}
+  = csrf_token_field
+  .form-actions
+    .row
+      .col-md-10{:class=>'col-md-offset-2'}
+        %input{:type=>'submit',:value=>'Restore',:class=>'btn btn-primary'}
+        %a{:href=>'/portfolios',:value=>'No',:class=>'btn btn-primary'}
+          No

@@ -6,7 +6,7 @@
       font-size: 12px;
       .day {
         display: inline-block;
-        width: 75px;
+        width: 93px;
         padding-right: 15px;
         text-align: right;
       }
@@ -21,6 +21,12 @@
         -ms-transition: opacity 200ms linear;
         -o-transition: opacity 200ms linear;
         transition: opacity 200ms linear;
+
+        &.whole-day{
+          .time{
+            visibility:hidden;
+          }
+        }
         > div {
           float: left;
           height:50px;
@@ -32,7 +38,7 @@
         .time {
           font-size: 14px;
           color: $light-font;
-          width: 44px;
+          width: 66px;
           text-align: right;
           -webkit-transition: color 200ms linear;
           -moz-transition: color 200ms linear;
@@ -77,7 +83,7 @@
           float: left;
           > div {
             float: left;
-            padding: 0 10px;
+            padding: 0 9px;
           }
         }
         .expander{
@@ -266,7 +272,7 @@
       &:before {
         position:absolute;
         content: '';
-        left: 61px;
+        left: 83px;
         top: 51px;
         width:8px;
         height: 8px;

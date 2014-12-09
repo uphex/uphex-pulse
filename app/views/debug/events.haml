@@ -1,0 +1,31 @@
+%a{:href=>'/debug',:class=>'button-standard'}
+  Back
+%style{:type => "text/css" }
+  :plain
+
+    #debug-events-table .date {
+      font-weight:bold;
+    }
+    #debug-events-table .anomaly{
+      color:red;
+    }
+%input{:type=>'hidden',:id=>'metrics',:value=>@metrics.to_json}
+%input{:type=>'hidden',:id=>'metric_names',:value=>@metric_names.to_json}
+%script{:src=>'/assets/javascripts/debug/events.js'}
+%div{:id=>'loading_counter'}
+  Loading streams:
+  %span{:id=>'counter_current'}
+    0
+  \/
+  %span
+    = @metrics.size
+%table{:id=>'debug-events-table'}
+  %thead
+    %tr
+      %th
+        Metric name
+      %th
+        Crossing?
+      %th
+        Event?
+  %tbody

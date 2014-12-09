@@ -1,0 +1,4 @@
+OldestMetricUpdate:
+  every:
+      - "5m"
+      - :first_in: '1s'

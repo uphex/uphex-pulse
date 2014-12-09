@@ -4,7 +4,7 @@
   #{@client.name}
 = partial 'layouts/timeline' , :locals=>{:timelineevents=>@clientevents, :eventurl=>"../../events/", :eventurlback=>"/"}
 - if !@clientevents.empty?
-  %a{:href => "/clients/#{@client.id}/events", :class => "more-events button-standard"} See all
+  %a{:href => "/events?portfolioid=#{@client.id}", :class => "more-events button-standard"} See all
 
 .mod-streams
   %h3.heading-with-icon
@@ -26,16 +26,27 @@
         - streams.each do |stream|
           .stream-line
             .metric-name
-              #{stream[:metricname]}
+              #{format_stream_name(stream[:metric_name])}
             .average
               %strong
-                #{stream[:average]}
+                - if stream[:average].nil?
+                  \-
+                - else
+                  #{stream[:average]}
               %span 7d average
             .range
               %strong
-                #{stream[:rangestart]} - #{stream[:rangeend]}
+                #{stream[:range_start]} - #{stream[:range_end]}
               %span range
             .sparkline-container
-              %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream[:sparkline], "preserveAspectRatio"=>"none"}
-                %g
-                  %path
+              - if !stream[:sparkline].nil?
+                %svg.mod-sparkline{"xmlns"=>"http://www.w3.org/2000/svg","data-sparkline"=>stream[:sparkline], "preserveAspectRatio"=>"none"}
+                  %g
+                    %path
+              - else
+                - if stream[:num_observations]==0
+                  .no-elements
+                    Fetching data
+                - else
+                  .no-elements
+                    Not enough data yet

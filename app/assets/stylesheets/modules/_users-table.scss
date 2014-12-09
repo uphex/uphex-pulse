@@ -1,0 +1,15 @@
+.mod-users-table{
+  .roles{
+    .role{
+      text-transform:capitalize;
+      &:not(:last-child):after{
+        content:',';
+      }
+    }
+  }
+  .actions{
+    form{
+      display:inline;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+- content_for :title do
+  %a{:href=>"/users/me/dashboard"}
+    %span.icon-arrow-left2
+  Users
+
+%h3
+  Users
+%table{:class=>'table table-bordered table-striped mod-users-table'}
+  %thead
+    %tr
+      %th
+        Name
+      %th
+        Email
+      %th
+        Roles
+      %th
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td
+          = user.name
+        %td
+          = user.email
+        %td{:class=>'roles'}
+          - user.roles.each do |role|
+            %span{:class=>'role'}<
+              = role.name
+        %td{:class=>'actions'}
+          - if current_user.id != user.id
+            - if current_user(:impersonate).nil?
+              %form{:action=>'/sessions/impersonate',:method=>'POST'}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'impersonate_userid',:value=>user.id}
+                %input{:type=>'submit',:value=>'Impersonate',:class=>'button-standard'}
+            - if is_admin?(user)
+              %form{:action=>'/users/revoke_admin',:method=>'POST'}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'userid',:value=>user.id}
+                %input{:type=>'submit',:value=>'Revoke admin',:class=>'button-standard'}
+            - else
+              %form{:action=>'/users/make_admin',:method=>'POST'}
+                = csrf_token_field
+                %input{:type=>'hidden',:name=>'userid',:value=>user.id}
+                %input{:type=>'submit',:value=>'Make admin',:class=>'button-standard'}

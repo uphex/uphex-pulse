@@ -48,6 +48,9 @@ group :test do
 
   # Code enforcement.
   gem 'rubocop', :require => false
+
+  gem 'resque_spec'
+  gem 'timecop'
 end
 
 # Padrino
@@ -57,6 +60,16 @@ gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
 gem 'sinatra-assetpack'
 
 #OAuth
-gem 'rack-oauth2'
+gem 'rack-oauth2','1.0.8'
 gem 'oauth'
-gem 'uphex-prototype-cynosure','0.0.5', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
+gem 'uphex-prototype-cynosure','0.0.9', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
+
+#Scheduling
+gem 'resque'
+gem 'resque-scheduler'
+
+#Estimation
+gem 'uphex-estimation',
+    :git => "git@github.com:uphex/uphex-prototype-estimation.git"
+
+gem 'uglifier'

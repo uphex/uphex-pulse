@@ -1,6 +1,18 @@
 require 'rack/oauth2'
+require 'json'
+require 'stringio'
+require 'logger'
+
 class OAuthV2AuthenticationStrategy
-  def getRedirectUri(config,request,session,portfolioid)
+
+  #This is needed because we can only set class level logger to Rack:OAuth2
+  @@lock = Mutex.new
+
+  def lock
+    @@lock
+  end
+
+  def getRedirectUri(config,request,session,portfolioid,reauth_to)
     client = Rack::OAuth2::Client.new(
         :identifier => config['identifier'],
         :secret => config['secret'],
@@ -10,11 +22,9 @@ class OAuthV2AuthenticationStrategy
     )
 
     params=config['authorization_params'].clone
-    params[:state]=portfolioid
+    params[:state]={:portfolioid=>portfolioid,:reauth_to=>reauth_to}.to_json
 
-    url=client.authorization_uri(params)
-
-    return url
+    client.authorization_uri(params)
   end
   def callback(config,params,request,session)
     if request.port!=80
@@ -33,12 +43,27 @@ class OAuthV2AuthenticationStrategy
 
     client.authorization_code = params[:code]
 
-    Rack::OAuth2.debugging =true
+    lock.synchronize do
+      Rack::OAuth2.debug do
+        @strio = StringIO.new
+        original_logger= Rack::OAuth2.logger
+        Rack::OAuth2.logger =Logger.new @strio
 
-    @token=client.access_token!(:authorization_code)
+        @token=client.access_token!(:authorization_code)
+        Rack::OAuth2.logger =original_logger
+      end
+    end
   end
 
   def getPortfolioid(params,session)
-    params[:state]
+    JSON.parse(params[:state])["portfolioid"]
+  end
+
+  def getReauthTo(params,session)
+    JSON.parse(params[:state])["reauth_to"]
+  end
+
+  def raw_response
+    @strio.string
   end
 end

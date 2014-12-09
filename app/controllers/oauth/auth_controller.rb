@@ -1,28 +1,11 @@
 UpHex::Pulse.controllers :auth do
 
-  define_method :read_config do
-    @config = JSON.parse(File.read(File.expand_path("../../../../config/auth_config.json", __FILE__)))
-
-    case @config[params[:authstrategy]]['providers'][params[:provider]]['instantiateClass']
-      when 'GoogleAuthenticationStrategy'
-        @authenticationStrategy=GoogleAuthenticationStrategy.new
-      when 'FacebookAuthenticationStrategy'
-        @authenticationStrategy=FacebookAuthenticationStrategy.new
-      when 'MailchimpAuthenticationStrategy'
-        @authenticationStrategy=MailchimpAuthenticationStrategy.new
-      when 'TwitterAuthenticationStrategy'
-        @authenticationStrategy=TwitterAuthenticationStrategy.new
-    end
-  end
-
   get '/:authstrategy/:provider' do
     unless env['warden'].authenticated?
       redirect '/sessions/new'
     end
 
-    read_config
-
-    redirect @authenticationStrategy.getRedirectUri(@config[params[:authstrategy]]['providers'][params[:provider]],request,session,params[:portfolioid])
+    redirect AuthHelper.new(params,request,session,env['warden'].user.id).redirect_uri
   end
 
   get '/:authstrategy/:provider/callback' do
@@ -30,57 +13,60 @@ UpHex::Pulse.controllers :auth do
       redirect '/sessions/new'
     end
 
-    read_config
-
-    portfolio=Portfolio.find(@authenticationStrategy.getPortfolioid(params,session))
+    auth_helper=AuthHelper.new(params,request,session,env['warden'].user.id)
 
     begin
-      tokens=@authenticationStrategy.callback(@config[params[:authstrategy]]['providers'][params[:provider]],params,request,session)
-      puts tokens
+      providers=auth_helper.handle_callback
 
-      @providers=[]
-
-      tokens.each{|token|
-        @authenticationStrategy.profiles(token,@config).each{|profile|
-          provider=Provider.new(:portfolio=>portfolio,:name=>profile[:name],:provider_name=>params[:provider],:userid=>env['warden'].user.id,:profile_id=>profile[:id],:access_token=>token['access_token'],:access_token_secret=>token['access_token_secret'],:expiration_date=>token['expiration_date'],:token_type=>'access',:refresh_token=>token['refresh_token'],:raw_response=>'TODO')
-          @providers.push(provider)
-        }
-      }
-
-      if @providers.size==1
-        @providers.first.save!
-        flash[:notice] = I18n.t 'oauth.added',profiles:@providers.map{|provider| provider[:name]}.join(','),:count=>@providers.size
-
-        redirect "portfolios/#{portfolio.id}"
-      else
-        @portfolio_id=portfolio.id
-
+      if auth_helper.reauth_to.nil? and providers.size!=1
+        @portfolio_id=auth_helper.portfolio.id
+        @providers=providers
         render 'portfolios/add_providers'
+      else
+        if auth_helper.reauth_to.nil?
+          flash[:notice] = I18n.t 'oauth.added',profiles:providers.map{|provider| provider[:name]}.join(','),:count=>providers.size
+        else
+          flash[:notice]=I18n.t 'oauth.provider.reauth.success'
+        end
+        redirect "portfolios/#{auth_helper.portfolio.id}"
       end
 
     rescue => e
-      puts e.inspect, e.backtrace
-      flash[:error]=I18n.t 'oauth.provider.error'
-      redirect "portfolios/#{portfolio.id}"
+      flash[:error]=e.message
+      redirect "portfolios/#{auth_helper.portfolio.id}"
     end
-
-
 
 
   end
 
   post '/add_providers' do
-    puts params[:provider_selected]
+    unless env['warden'].authenticated?
+      redirect '/sessions/new'
+    end
+
     if params[:provider_selected].blank?
       flash[:notice] = I18n.t 'oauth.no_providers_added'
       redirect "portfolios/#{params[:portfolio_id]}"
     else
+      portfolio=Portfolio.find(params[:portfolio_id])
       providers=[]
       params[:provider_selected].each{|provider_index|
-        puts params['provider_'+provider_index]
-        provider=Provider.create(YAML::load(params['provider_'+provider_index]))
-        puts provider
-        providers.push(provider)
+        provider=Provider.new(YAML::load(params['provider_'+provider_index]))
+        restoring_provider=portfolio.providers.find{|ex_provider| ex_provider.provider_name==provider.provider_name && ex_provider.profile_id==provider.profile_id.to_s}
+        if restoring_provider.nil?
+          provider.save!
+          Resque.enqueue(StreamCreate,provider[:id])
+          providers.push(provider)
+        elsif restoring_provider.deleted
+          restoring_provider.deleted=false
+          [:access_token, :access_token_secret, :expiration_date, :refresh_token].each do |field|
+            restoring_provider[field] = provider[field.to_s]
+          end
+          restoring_provider.save!
+          providers.push(restoring_provider)
+        else
+          #Do not handle, just skip it
+        end
       }
       flash[:notice] = I18n.t 'oauth.added',profiles:providers.map{|provider| provider[:name]}.join(','),:count=>providers.size
       redirect "portfolios/#{params[:portfolio_id]}"
