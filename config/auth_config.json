@@ -53,8 +53,8 @@
             },
             "stripe":{
                 "instantiateClass":"StripeAuthenticationStrategy",
-                "identifier":"ca_4v6vmjuzX22xsa5HBhu0PlqlVDstqlug",
-                "secret":"sk_test_Lt92KDmwECAwI3xexmkoye7l",
+                "identifier":"ca_4v6vhKDDxfEm7A9IHEcWGsBqhJYefepY",
+                "secret":"sk_live_c50qGDsPoUCnoi2xZ9AI9CaT",
                 "host":"connect.stripe.com",
                 "authorization_endpoint":"/oauth/authorize",
                 "authorization_params":{
