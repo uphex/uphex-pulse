@@ -14,6 +14,8 @@ class StreamCreate
          %w(visits likes pageImpressionsPaid pagePostsImpressionsPaid postImpressionsPaid postImpressionsFanPaid postVideoCompleteViewsPaid postVideoViewsPaid)
        when 'twitter'
          ['followers']
+       when 'mailchimp'
+         %w(hard_bounces soft_bounces unsubscribes forwards unique_opens unique_clicks)
      end
 
     metric_names.each do |name|

@@ -60,9 +60,9 @@ gem 'padrino', :git => "git://github.com/padrino/padrino-framework.git"
 gem 'sinatra-assetpack'
 
 #OAuth
-gem 'rack-oauth2'
+gem 'rack-oauth2','1.0.8'
 gem 'oauth'
-gem 'uphex-prototype-cynosure','0.0.8', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
+gem 'uphex-prototype-cynosure','0.0.9', :git => 'git@github.com:uphex/uphex-prototype-cynosure.git'
 
 #Scheduling
 gem 'resque'

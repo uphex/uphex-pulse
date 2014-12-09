@@ -59,11 +59,12 @@ GIT
 
 GIT
   remote: git@github.com:uphex/uphex-prototype-cynosure.git
-  revision: 465474348541753a2913727f4e943b474943292a
+  revision: 6e8bed8489a056e91aa1073c9276a8e508e41e91
   specs:
-    uphex-prototype-cynosure (0.0.8)
+    uphex-prototype-cynosure (0.0.9)
       koala
       legato
+      mailchimp-api
       oauth2
       twitter
 
@@ -111,6 +112,7 @@ GEM
     diff-lcs (1.2.5)
     equalizer (0.0.9)
     eventmachine (1.0.3)
+    excon (0.40.0)
     execjs (2.0.2)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
@@ -122,7 +124,7 @@ GEM
     http_router (0.11.1)
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
-    httpclient (2.3.4.1)
+    httpclient (2.5.1)
     i18n (0.6.9)
     jsmin (1.0.1)
     json (1.8.1)
@@ -131,11 +133,14 @@ GEM
       addressable
       faraday
       multi_json
-    legato (0.3.3)
+    legato (0.4.0)
       multi_json
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mailchimp-api (2.0.5)
+      excon (>= 0.16.0)
+      json (>= 1.7.7)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     mime-types (1.25.1)
@@ -160,7 +165,7 @@ GEM
     polyglot (0.3.4)
     powerpack (0.0.9)
     rack (1.5.2)
-    rack-oauth2 (1.0.7)
+    rack-oauth2 (1.0.8)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
       httpclient (>= 2.2.0.2)
@@ -265,7 +270,7 @@ DEPENDENCIES
   oauth
   padrino!
   pg
-  rack-oauth2
+  rack-oauth2 (= 1.0.8)
   rack-test!
   rake
   resque
@@ -281,5 +286,5 @@ DEPENDENCIES
   uglifier
   uphex-estimation!
   uphex-flatty!
-  uphex-prototype-cynosure (= 0.0.8)!
+  uphex-prototype-cynosure (= 0.0.9)!
   warden
